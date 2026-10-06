@@ -814,5 +814,167 @@
     "status": "verify",
     "source_url": "https://www.mamaself.eu/admission",
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "daad-epos",
+    "name": "DAAD Development-Related Postgraduate Courses (EPOS)",
+    "provider": "German Academic Exchange Service (DAAD)",
+    "country": "Germany",
+    "region": "Nationwide",
+    "city": "Various",
+    "university": "Selected German state and state-recognised universities",
+    "program_field": [
+      "Civil Engineering",
+      "Materials Science"
+    ],
+    "degree_level": [
+      "Master",
+      "PhD"
+    ],
+    "funding_type": "Full scholarship for a listed development-related postgraduate course",
+    "amount": "EUR 992 per month for master's candidates, or EUR 1,300 rising to EUR 1,400 from February 2026 for doctoral candidates, plus health, accident and personal liability insurance and a travel allowance. A monthly rent subsidy and an allowance for accompanying family members may be granted in certain circumstances",
+    "currency": "EUR",
+    "deadline": null,
+    "deadline_notes": "There is no single DAAD deadline: each listed course sets its own, and applications go directly to the course rather than to DAAD. DAAD publishes a course list carrying the 2027/2028 application deadlines. Applicants may apply to a maximum of three courses and must rank them in order of priority.",
+    "duration": "12 to 42 months, depending on the study programme",
+    "eligibility": {
+      "nationality": [
+        "Graduates from developing and newly industrialised countries on the DAAD DAC list, which covers Sub-Saharan Africa, South and Central Asia, East Asia, South America, the Near and Middle East and parts of Europe",
+        "Nepal appears on the OECD DAC List of ODA Recipients as a Least Developed Country, which is the list DAAD draws on"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {
+        "english": "IELTS or TOEFL for courses taught in English; the institutional TOEFL is not accepted",
+        "german": "B1 minimum at the time of application for courses taught in German, with a six-month preparatory language course included in the scholarship"
+      },
+      "age_limit": null,
+      "other": "Requires a bachelor's degree (normally four years) in a related subject, results in the upper third of the cohort, and at least two years of related professional experience after the bachelor's degree at the time of application. Academic degrees should normally be no more than six years old. Applicants who have been resident in Germany for longer than 15 months at the application deadline cannot be considered. Applications must be sent directly to the chosen course; documents sent to DAAD are not forwarded."
+    },
+    "benefits": [
+      "EUR 992 monthly stipend for master's candidates",
+      "Health, accident and personal liability insurance",
+      "Travel allowance",
+      "Possible monthly rent subsidy",
+      "Possible allowance for accompanying family members",
+      "Six-month preparatory German course for German-taught courses"
+    ],
+    "application_url": "https://www2.daad.de/deutschland/stipendium/datenbank/en/21148-scholarship-database?detail=50076777",
+    "official_url": "https://www.daad.de/en/information-services-for-higher-education-institutions/further-information-on-daad-programmes/epos/",
+    "description": "DAAD scholarships for graduates from developing and newly industrialised countries to take a listed development-related postgraduate course at a German university. Applicants need a bachelor's degree and at least two years of professional experience, and apply directly to the individual course rather than to DAAD.",
+    "tags": [
+      "Germany",
+      "government",
+      "development-related",
+      "professional-experience-required"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://www2.daad.de/deutschland/stipendium/datenbank/en/21148-scholarship-database?detail=50076777",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "gates-cambridge",
+    "name": "Gates Cambridge Scholarship",
+    "provider": "Gates Cambridge Trust, University of Cambridge",
+    "country": "United Kingdom",
+    "region": "Cambridge",
+    "city": "Cambridge",
+    "university": "University of Cambridge",
+    "program_field": [
+      "Civil Engineering",
+      "Materials Science"
+    ],
+    "degree_level": [
+      "Master",
+      "PhD"
+    ],
+    "funding_type": "Full-cost scholarship",
+    "amount": "The University Composition Fee at the appropriate rate, a maintenance allowance of GBP 23,152 for 12 months at the 2026-27 rate (pro rata for shorter courses, and up to four years for PhD scholars), one economy single airfare at the beginning and end of the course, and inbound visa costs including the Immigration Health Surcharge. Discretionary additions include academic development funding of GBP 750 to GBP 4,000 and a Dependent Children Allowance",
+    "currency": "GBP",
+    "deadline": null,
+    "deadline_notes": "Gates Cambridge publishes no single date: applications are made through the University of Cambridge graduate application, so the deadline is the course-specific Cambridge funding deadline. There are two rounds, a US round and an International round, with roughly a third of the awards in the US round.",
+    "duration": "One-year postgraduate courses, or PhD study funded for up to four years",
+    "eligibility": {
+      "nationality": [
+        "Citizens of any country outside the United Kingdom"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "Open to applicants for a full-time or part-time PhD, an MLitt, or a one-year full-time postgraduate course, in any subject available at Cambridge. Undergraduate degrees, MASt courses, part-time degrees other than the PhD, and professional or non-standard degrees such as the MBA, EMBA, MFin and PGCE are not considered. Selection weighs outstanding intellectual ability, reasons for the choice of course, a commitment to improving the lives of others and leadership potential. Around 70 full-cost scholarships are offered each year, about two-thirds of them to PhD students. Applicants already part-way through a course cannot apply to fund the remainder of it."
+    },
+    "benefits": [
+      "Full University Composition Fee",
+      "Maintenance allowance of GBP 23,152 for 12 months at the 2026-27 rate",
+      "Economy airfare at the start and end of the course",
+      "Inbound visa costs and Immigration Health Surcharge",
+      "Discretionary academic development funding of GBP 750 to GBP 4,000",
+      "Discretionary Dependent Children Allowance"
+    ],
+    "application_url": "https://www.gatescambridge.org/apply/how-to-apply/",
+    "official_url": "https://www.gatescambridge.org/",
+    "description": "Full-cost scholarship at the University of Cambridge for postgraduate students from outside the United Kingdom, in any subject the university offers. Around 70 are awarded each year, roughly two-thirds of them to PhD students. Applications are made through the Cambridge graduate application, so the deadline is the course-specific funding deadline.",
+    "tags": [
+      "United Kingdom",
+      "university",
+      "full-cost",
+      "leadership"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://www.gatescambridge.org/programme/the-scholarship/",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "tu-delft-van-effen",
+    "name": "Justus & Louise van Effen Excellence Scholarship",
+    "provider": "Delft University of Technology (TU Delft)",
+    "country": "Netherlands",
+    "region": "Delft",
+    "city": "Delft",
+    "university": "Delft University of Technology",
+    "program_field": [
+      "Civil Engineering",
+      "Materials Science"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Full first-year tuition plus a living-expenses contribution, extended to the second year subject to study progress",
+    "amount": "Full tuition fees for the first year of a TU Delft MSc programme at the statutory or institutional rate according to the registered nationality, plus a contribution towards living expenses. Second-year allowances require at least 48 of 60 ECTS to have been completed",
+    "currency": "EUR",
+    "deadline": "2026-12-01",
+    "deadline_notes": "The deadline is 1 December 2026 at 23:59 CET for the 2027-2029 intake, and a complete MSc application must already have been submitted by then. Two scholarships are available per faculty, and applicants are informed by the end of March 2027.",
+    "duration": "Two-year TU Delft MSc programme; the scholarship covers the first year and is extended to the second subject to study progress",
+    "eligibility": {
+      "nationality": [
+        "International applicants; tuition is calculated at the statutory or institutional rate according to the applicant's registered nationality"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {
+        "english": "An English language certificate must be uploaded with the MSc application before the scholarship deadline"
+      },
+      "age_limit": null,
+      "other": "Applicants must be (conditionally) admitted to one of the two-year regular TU Delft MSc programmes; International Joint Education Programmes are excluded. They must have achieved excellent results in a previous programme relevant to the master's applied for, indicated as being within the top 10% of graduates, although proof of ranking is not required. A complete MSc application, the scholarship application form, one reference letter and the English certificate must all be submitted before the deadline. Scholarship holders may not receive any other partial or full scholarship funding in addition."
+    },
+    "benefits": [
+      "Full first-year tuition at the statutory or institutional rate",
+      "Contribution towards living expenses",
+      "Second-year allowance subject to completing at least 48 of 60 ECTS"
+    ],
+    "application_url": "https://www.tudelft.nl/en/education/programmes/practical-matters/scholarships",
+    "official_url": "https://www.tudelft.nl/en/education/programmes/practical-matters/scholarships",
+    "description": "Scholarship for excellent international applicants admitted to a two-year regular TU Delft MSc programme, covering first-year tuition and contributing to living expenses. Two are available per faculty, and International Joint Education Programmes are excluded. The deadline for the 2027-2029 intake is 1 December 2026.",
+    "tags": [
+      "Netherlands",
+      "university",
+      "tuition",
+      "merit-based",
+      "verified-deadline"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "upcoming",
+    "source_url": "https://www.tudelft.nl/en/education/programmes/practical-matters/scholarships",
+    "last_verified": "2026-10-07"
   }
 ]

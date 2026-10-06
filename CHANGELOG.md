@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.8.0] - 2026-10-07
+
+### Added
+
+Three records, 27 → **30**, filling out the destinations that had only a single entry each:
+
+- **Justus & Louise van Effen Excellence Scholarship** (TU Delft, Netherlands) — full first-year tuition at the statutory or institutional rate plus a contribution to living expenses; two awards per faculty. **Carries a real verified deadline: 1 December 2026, 23:59 CET**, which makes it the second record in the catalog with an actual closing date rather than a window.
+- **Gates Cambridge Scholarship** (United Kingdom) — full-cost, around 70 awards a year, roughly two-thirds to PhD students, in any subject Cambridge offers. Open to citizens of any country outside the UK.
+- **DAAD EPOS** (Germany) — DAAD's development-related postgraduate courses, EUR 992 per month for master's candidates plus health, accident and liability insurance and a travel allowance.
+
+Netherlands, Germany and the United Kingdom now hold 2 records each.
+
+### Notes
+
+- **DAAD EPOS requires two years of professional experience** after the bachelor's degree, and degrees should normally be no more than six years old. It joins JJ/WBGSP (three years) as a programme with an experience gate, so the constraint is recorded in the catalog rather than discovered after preparing an application.
+- **Nepal's eligibility was verified, not assumed.** The DAAD country-list PDF could not be retrieved — `static.daad.de` is unreachable from this machine — so eligibility was confirmed against the OECD DAC List of ODA Recipients, the list DAAD draws on. Nepal appears there as a Least Developed Country (lower-middle income).
+- **TU Delft excludes International Joint Education Programmes**, so the Justus & Louise van Effen scholarship cannot be combined with an Erasmus Mundus master's. It also forbids holding any other partial or full scholarship at the same time.
+- **Gates Cambridge funds one-year postgraduate courses and the PhD, not two-year master's degrees**, and excludes MASt courses, part-time degrees other than the PhD, and professional degrees such as the MBA, EMBA and MFin. Its deadline is the course-specific Cambridge funding deadline, which it does not publish as a single date.
+- Link probe: **47 unique links, 0 dead.** Three DAAD URLs are unreachable from this machine — a documented sandbox limitation, not a broken link — and were confirmed live through a different fetch path.
+
 ## [0.7.0] - 2026-10-07
 
 ### Added

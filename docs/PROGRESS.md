@@ -77,13 +77,24 @@ Detailed log of development work on ScholarHub. For the high-level roadmap with 
 - **No 2027 deadline exists for any of the three yet**, so all three carry `deadline_notes` rather than an invented `deadline`. MaMaSELF's most recent were 13 Feb / 20 Mar / 15 May 2026; REM+ 2's 2026 edition is closed pending 2027 news.
 - Verified: `npm test` 0 errors / 5 warnings (no new warnings — all three records carry `deadline_notes`); build clean; link probe **41 unique links, 0 dead**, all eight new URLs returning 200; browser confirmed 27 opportunities, 12 destinations, the Europe filter at 8, and all three new cards rendering.
 
+### Single-entry countries (seventh pass, same day, v0.8.0)
+- Targeted the destinations that held only one record each. 27 → **30 records**; Netherlands, Germany and the UK now hold 2 each, leaving France, Switzerland and Sweden on 1.
+- **TU Delft Justus & Louise van Effen** is the notable one: its official page publishes a real deadline, **1 December 2026 (23:59 CET)**, for the 2027-2029 intake. That makes it the second record in the catalog with an actual closing date rather than a window — the other being ETH Zurich ESOP on 30 November 2026. Both fall within two months.
+- **Gates Cambridge** — full-cost, around 70 awards a year, two-thirds to PhD students, any subject Cambridge offers, open to citizens of any country outside the UK. £23,152 maintenance allowance at the 2026-27 rate plus the full University Composition Fee. Its deadline is the course-specific Cambridge funding deadline, which it does not publish as one date.
+- **DAAD EPOS** — development-related postgraduate courses at German universities, EUR 992/month for master's candidates plus insurance and travel, 12 to 42 months.
+- **Nepal's eligibility was verified rather than assumed.** DAAD's own country-list PDF could not be retrieved (`static.daad.de` is unreachable from this machine, confirmed by both the link probe and a direct `curl`), so eligibility was checked against the **OECD DAC List of ODA Recipients** — the list DAAD draws on. Nepal appears there as a Least Developed Country, lower-middle income.
+- **Two exclusions recorded rather than glossed over:** TU Delft excludes **International Joint Education Programmes**, so this scholarship cannot be combined with an Erasmus Mundus master's, and it forbids holding any other scholarship at the same time. Gates Cambridge funds one-year postgraduate courses and the PhD but **not two-year master's degrees**, and excludes MASt, part-time degrees other than the PhD, and professional degrees such as the MBA, EMBA and MFin.
+- **An experience gate worth flagging for Sajan:** DAAD EPOS requires **two years** of professional experience after the bachelor's degree, and degrees should normally be no more than six years old. With 08/2024–11/2025 he has roughly 15 months, so he is short of this one as well as JJ/WBGSP's three years.
+- Verified: `npm test` 0 errors / 5 warnings; build clean; link probe **47 unique links, 0 dead**; browser confirmed 30 opportunities, 12 destinations, Netherlands/Germany/UK each at 2, and the TU Delft card rendering a "Dec 1, 2026" deadline chip.
+
 ### Known gaps
-- 27 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards. Broader Europe (8) is closest.
+- 30 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards. Broader Europe (8) is closest.
 - Link liveness is opt-in, not part of `npm test`. It proves a URL resolves — never that the page still says what the record claims.
-- 4 of 41 links could not be reached from this machine (`www.campuschina.org`, `www2.daad.de`, `www.dfat.gov.au`, `www.master-biopham.eu`). All were confirmed live through a different fetch path, but the probe reports them unreachable rather than OK.
+- 7 of 47 links could not be reached from this machine (`www.campuschina.org`, `www2.daad.de`, `www.dfat.gov.au`, `www.master-biopham.eu`). All were confirmed live through a different fetch path, but the probe reports them unreachable rather than OK. `static.daad.de` is blocked outright, which is why the EPOS country list had to be verified through the OECD list instead.
 - The `Non-degree` filter and profile option are wired through the data, validator and UI, but `docs/ROADMAP.md` Phase 1 still describes coverage in degree terms; the short-course track is not yet its own roadmap line.
 - Dark-mode colour contrast is fixed and measured (see above), but there is still **no accessibility audit**: keyboard navigation, ARIA labels and screen-reader compatibility are untested, and light-mode contrast has never been measured at all. No screenshots in the README, no AI provider adapter, and no slide-out drawer for small screens.
-- The 2027 application windows for EESIC, REM+ 2 and MaMaSELF are all unpublished. EESIC's opens in October 2026 and its closing date needs capturing once it appears.
+- Only 2 of 30 records carry a single verified closing date. The rest use `deadline_notes` because their cycles are windows, field-split, country-specific, or not yet published for 2027. **EESIC's closing date is the most valuable missing field** — its window opens in October 2026.
+- France, Switzerland and Sweden still hold only one record each.
 
 ## 2026-09-25 — Bootstrap
 
