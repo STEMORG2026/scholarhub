@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.9.0] - 2026-10-07
+
+### Added
+
+Three records, 30 → **33**, filling the last destinations that held only a single entry each. **Every Phase 1 destination now holds at least two records.**
+
+- **KTH Scholarship** (Sweden) — full tuition waiver for a one or two-year master's at KTH Royal Institute of Technology, covering both years subject to satisfactory first-year results. **Carries a real verified deadline: 15 January 2027** (applications open 1 December 2026), which makes it the third record with an actual closing date rather than a window.
+- **Swiss Government Excellence Scholarships** (Switzerland) — CHF 2,450 per month for a 12-month research stay or a 36-month PhD, open to applicants from 183 countries. Maximum age 35, and the application must be backed by a supervisor in Switzerland.
+- **Université Paris-Saclay International Master's Scholarship** (France) — EUR 10,000 per year plus up to EUR 900 towards travel and visa costs, in any academic field. Applicants must be under 30 and enrolling in France for the first time.
+
+France, Switzerland and Sweden now hold 2 records each, so no Phase 1 destination is a single entry any more.
+
+### Notes
+
+- **The KTH deadline is the most concrete addition.** Its 2027 window (1 December 2026 to 15 January 2027) is the third real closing date in the catalog, alongside ETH Zurich ESOP (30 November 2026) and TU Delft Justus & Louise van Effen (1 December 2026). KTH excludes the Erasmus+ and EIT joint programmes and Computer Simulations for Science and Engineering — those fall under the separate KTH Joint Programme Scholarship — and applicants must list KTH as their first priority.
+- **The Swiss scheme's deadline is set by country of origin**, published by the Swiss diplomatic representation handling the application, so the record carries `deadline_notes` and no single date. It also carries an age limit of 35 and requires a named Swiss supervisor; both are recorded as constraints rather than left implicit.
+- **Paris-Saclay cannot be combined with Eiffel, France Excellence Europa or an Erasmus Mundus scholarship**, and applicants receiving other funding above EUR 600 per month are ineligible. Its published dates are for the 2026 cycle (applications closed 31 March 2026); equivalent 2027 dates were not yet published, so the record is `verify` with `deadline_notes`.
+- **Two source URLs had moved and were re-found rather than trusted.** The first KTH URL tried and a Lund global-scholarship URL both returned 404; the live KTH page is `kth.se/en/studies/master/admissions/scholarships/kth-scholarship-1.72827`.
+- Link probe: **50 links checked, 0 dead, 7 unreachable** from this machine — the unreachable set is a documented sandbox limitation, not broken links.
+
 ## [0.8.0] - 2026-10-07
 
 ### Added

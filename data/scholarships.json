@@ -976,5 +976,156 @@
     "status": "upcoming",
     "source_url": "https://www.tudelft.nl/en/education/programmes/practical-matters/scholarships",
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "kth-scholarship",
+    "name": "KTH Scholarship",
+    "provider": "KTH Royal Institute of Technology",
+    "country": "Sweden",
+    "region": "Stockholm",
+    "city": "Stockholm",
+    "university": "KTH Royal Institute of Technology",
+    "program_field": [
+      "Civil Engineering",
+      "Materials Science"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Merit-based tuition fee waiver",
+    "amount": "Covers the full KTH tuition fee for the first and second year, provided first-year study results are satisfactory. Living costs are not included",
+    "currency": "SEK",
+    "deadline": "2027-01-15",
+    "deadline_notes": "Applications open on 1 December 2026 and close on 15 January 2027, with results announced on 1 April 2027. Supporting documents for the underlying master's application must be submitted by 2 February.",
+    "duration": "One or two-year master's programme; the waiver covers both years subject to satisfactory first-year results",
+    "eligibility": {
+      "nationality": [
+        "Open to fee-paying international students; the scholarship covers the tuition fee charged to fee-paying students"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "Applicants must be fee-paying students who have applied to a KTH master's programme as their first priority and paid the application fee; programmes listed as second, third or fourth priority cannot be funded. Available for all master's programmes with two years spent at KTH, the joint master's programmes in Molecular Techniques in Life Science and in Biostatistics and Data Science, and the one-year master's in Architectural Lighting Design. Joint Erasmus+ and EIT programmes are not eligible, nor is Computer Simulations for Science and Engineering; applicants to those may instead apply for the KTH Joint Programme Scholarship. Selection weighs grades, the ranking of the degree-awarding university, research experience or publications, relevant work experience, and a stated contribution to sustainable development. In 2026, 65 of 718 admitted applicants (9%) were nominated."
+    },
+    "benefits": [
+      "Full tuition fee for the first year",
+      "Full tuition fee for the second year, subject to satisfactory results",
+      "No additional documents required beyond the master's application"
+    ],
+    "application_url": "https://www.kth.se/en/studies/master/admissions/scholarships/kth-scholarship-1.72827",
+    "official_url": "https://www.kth.se/en/studies/master/admissions/scholarships/kth-scholarship-1.72827",
+    "description": "Merit-based tuition fee waiver at KTH Royal Institute of Technology covering the full fee for a one or two-year master's programme. Applicants must apply to a KTH master's as their first priority and be fee-paying students. The 2027 application window runs from 1 December 2026 to 15 January 2027.",
+    "tags": [
+      "Sweden",
+      "university",
+      "tuition-waiver",
+      "merit-based",
+      "verified-deadline"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "upcoming",
+    "source_url": "https://www.kth.se/en/studies/master/admissions/scholarships/kth-scholarship-1.72827",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "swiss-government-excellence",
+    "name": "Swiss Government Excellence Scholarships",
+    "provider": "Swiss Confederation, Federal Commission for Scholarships for Foreign Students (FCS/ESKAS)",
+    "country": "Switzerland",
+    "region": "Nationwide",
+    "city": "Various",
+    "university": "Any Swiss cantonal university, university of applied sciences, ETH Zurich or EPFL, or an institute of the ETH Domain (PSI, WSL, Empa, Eawag)",
+    "program_field": [
+      "Civil Engineering",
+      "Materials Science"
+    ],
+    "degree_level": [
+      "PhD"
+    ],
+    "funding_type": "Government research scholarship",
+    "amount": "CHF 2,450 per month, for a research stay of 12 months or a PhD of 36 months. Maximum age 35 at the time of application",
+    "currency": "CHF",
+    "deadline": null,
+    "deadline_notes": "Applications opened on 20 August 2026 for the 2027-2028 academic year. Deadlines are set by country of origin and published by the Swiss diplomatic representation handling the application, so there is no single date. Decisions are announced by the end of May.",
+    "duration": "12 months for a research stay, or 36 months for a PhD",
+    "eligibility": {
+      "nationality": [
+        "Open to applicants from 183 countries; applications are submitted to the Swiss diplomatic representation in the applicant's country"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": 35,
+      "other": "Intended for early career researchers who have already completed a master's degree. The application must be supported by an academic supervisor in Switzerland willing to direct the proposed research. Selection is assessed on the candidate profile, the quality of the research project, and the potential for future research cooperation. Applying is free of charge; the issuing body warns against phishing offers that use the programme's name to request payment."
+    },
+    "benefits": [
+      "CHF 2,450 monthly allowance",
+      "Research stay or PhD funding",
+      "Placement at a Swiss university, ETH Zurich, EPFL or an ETH Domain institute"
+    ],
+    "application_url": "https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html",
+    "official_url": "https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html",
+    "description": "Swiss Confederation scholarships for early career researchers from 183 countries who already hold a master's degree, funding a 12-month research stay or a 36-month PhD at a Swiss university, ETH Zurich, EPFL or an ETH Domain institute. The application must be backed by a supervisor in Switzerland, and deadlines are set by country of origin.",
+    "tags": [
+      "Switzerland",
+      "government",
+      "research",
+      "supervisor-required",
+      "age-limit"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "paris-saclay-international-masters",
+    "name": "Université Paris-Saclay International Master's Scholarship",
+    "provider": "Université Paris-Saclay",
+    "country": "France",
+    "region": "Île-de-France",
+    "city": "Orsay and Saclay",
+    "university": "Université Paris-Saclay and its constituent institutions (AgroParisTech, CentraleSupélec, ENS Paris-Saclay, INSTN-CEA, IOGS, Université Évry Paris-Saclay, UVSQ)",
+    "program_field": [
+      "Civil Engineering",
+      "Materials Science"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Merit-based scholarship for a master's programme",
+    "amount": "EUR 10,000 per year, paid monthly from September to June, plus a yearly flat fee of up to EUR 900 towards travel and visa costs depending on the country of origin. The amount is reduced during months spent abroad or on internships outside Paris-Saclay laboratories",
+    "currency": "EUR",
+    "deadline": null,
+    "deadline_notes": "The published dates are for the 2026 cycle: master's programme coordinators selected candidates by 25 March 2026 and the scholarship application, with recommendations, closed on 31 March 2026, with results in mid-May. Equivalent dates for the following cycle were not published when this record was checked.",
+    "duration": "One academic year, automatically renewed for a second year for M1 laureates admitted to an M2 programme",
+    "eligibility": {
+      "nationality": [
+        "Open to students of foreign nationality; applicants must be enrolling in a French higher education institution for the first time, excluding exchange programmes and Erasmus Mundus joint masters without a French degree"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": 30,
+      "other": "Applicants must be under 30 years of age during the year of application and admitted to an eligible master's programme at Université Paris-Saclay before the programme coordinator's deadline; late applications are not accepted. All academic fields are eligible, and all master's programmes except vocational apprenticeships. The scholarship cannot be combined with the France Excellence Eiffel or France Excellence Europa scholarships, nor with an Erasmus Mundus scholarship, and applicants receiving other funding above EUR 600 per month are ineligible. Payment is made only on arrival and after registration; no advance payment is possible."
+    },
+    "benefits": [
+      "EUR 10,000 per year paid monthly",
+      "Travel and visa flat fee of up to EUR 900",
+      "Automatic renewal for a second year for M1 laureates",
+      "Support with administrative procedures and the accommodation search"
+    ],
+    "application_url": "https://www.universite-paris-saclay.fr/en/admission/bourses-et-aides-financieres/international-masters-scholarships-program",
+    "official_url": "https://www.universite-paris-saclay.fr/en/admission/bourses-et-aides-financieres/international-masters-scholarships-program",
+    "description": "Scholarship of EUR 10,000 per year for international students admitted to a master's programme at Université Paris-Saclay, in any academic field. Applicants must be under 30 and enrolling in France for the first time, and cannot hold an Eiffel, France Excellence Europa or Erasmus Mundus scholarship at the same time.",
+    "tags": [
+      "France",
+      "university",
+      "merit-based",
+      "age-limit",
+      "no-cumulation"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://www.universite-paris-saclay.fr/en/admission/bourses-et-aides-financieres/international-masters-scholarships-program",
+    "last_verified": "2026-10-07"
   }
 ]
