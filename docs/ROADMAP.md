@@ -13,10 +13,11 @@ Living document tracking project progress, current development focus, and planne
 | 2026-10-07 | Source provenance | ✅ Done | All 14 records carry a dated `source_url` and `last_verified`; warnings 40 → 5 |
 | 2026-10-07 | Link liveness gate | ✅ Done | `npm run check:links`; found and fixed 2 dead official links (Tsinghua, Canterbury) |
 | 2026-10-07 | Deadline support | ✅ Done | `deadline_notes` field + provenance-aware deadline display; ETH ESOP 2026-11-30 verified |
+| 2026-10-07 | Catalog expansion | ✅ Done | 14 → 19 records, 10 → 11 destinations; added RESCO, TERRA, BIOPHAM, TFMASA and the SI Scholarship (Sweden); 28 links probed, 0 dead |
 
 ## Current development focus (NOW)
 
-- **Data expansion**: Reach 15–25 verified scholarship records per country/region for Phase 1 targets (USA, China, Europe, Australia, New Zealand) in Civil Engineering and Materials Science. This is now the largest remaining gap — provenance is done, breadth is not.
+- **Data expansion**: 19 records now; no region yet reaches the Phase 1 target of 15–25 verified entries (USA, China, Europe, Australia, New Zealand). Europe has the most depth, with four named Erasmus Mundus joint masters in construction, earthen architecture, materials science and aeronautics. Sweden was added this pass. This remains the largest gap — provenance is done, breadth is not.
 - **Deadline coverage**: Schema and display support landed on 2026-10-07, but only one record carries a single verified closing date. Add real dates as official cycles publish them, and use `deadline_notes` where a cycle has no single date.
 - **Accessibility audit**: Verify keyboard navigation, ARIA labels, screen reader compatibility, and color contrast. Known issue: chips and status badges use hardcoded light colours with no dark-mode override.
 - **AI provider seam**: Define the adapter interface contract (SEAM) so future provider integrations have a stable boundary.

@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.3.0] - 2026-10-07
+
+### Added
+
+Five records, taking the catalog from 14 to 19 and adding Sweden, which had no coverage despite being named in the Phase 1 scope:
+
+- **RESCO** — Erasmus Mundus Joint Master in Renewable Energy and Sustainable Construction (Hungary, Spain, Portugal, France).
+- **TERRA** — European Master in Earthen Architecture and Construction (Portugal, Spain, France, Italy); first edition in the 2026/2027 academic year.
+- **BIOPHAM** — Erasmus Mundus Joint Master in Bio & Pharmaceutical Materials Science.
+- **TFMASA** — International Master in Transfers-Fluids-Materials for Aeronautics Sustainable Applications (France, Belgium, Germany).
+- **SI Scholarship for Global Professionals** — Swedish Institute; fully funded, restricted to 34 listed countries.
+
+Each carries a `source_url` and a `last_verified` date, plus `deadline_notes` where the cycle has no single closing date.
+
+### Changed
+
+- Card chips now distinguish a verified closing date from "Dates in detail", so a record with window or field-split dates is visible without implying one deadline.
+- Added the Sweden flag to the destination icons.
+
+### Notes
+
+- One candidate was deliberately **excluded**: Erasmus Mundus STEPS (Sustainable Transportation and Electric Power Systems) describes itself as "a highly specialized education in Electrical Engineering". Adding it would have meant mislabelling it as Civil Engineering or Materials Science, which the data rules forbid.
+
 ## [0.2.0] - 2026-10-07
 
 ### Added

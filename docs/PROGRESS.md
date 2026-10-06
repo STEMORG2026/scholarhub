@@ -20,8 +20,16 @@ Detailed log of development work on ScholarHub. For the high-level roadmap with 
 - Removed the `mobile-menu` button and its CSS: it was `display:none` in every media query, so it could never be seen or clicked.
 - The repository had **no commits** — the entire working tree was untracked. Created the initial commit.
 
+### Data expansion (second pass, same day)
+- Added 5 records, taking the catalog from 14 to 19 and destinations from 10 to 11: **RESCO** (renewable energy and sustainable construction), **TERRA** (earthen architecture and construction), **BIOPHAM** (bio and pharmaceutical materials science), **TFMASA** (transfers-fluids-materials for aeronautics) — all Erasmus Mundus joint masters — plus the **SI Scholarship for Global Professionals** (Sweden, which had no coverage despite being named in the Phase 1 scope).
+- **Excluded on purpose:** Erasmus Mundus STEPS describes itself as "a highly specialized education in Electrical Engineering". Including it would have required mislabelling it as Civil Engineering or Materials Science, which the data rules forbid. Electrical Engineering belongs to the Phase 2 field expansion.
+- **Verified a negative result worth keeping:** Nepal is *not* among the 34 eligible countries for the SI Scholarship for Global Professionals. The full country list sits in the record's `eligibility.nationality`, so the exclusion is visible immediately rather than discovered after preparation.
+- Link probe re-run: 28 unique links, **0 dead**. `www.master-biopham.eu` is unreachable from this machine but was confirmed live through a different fetch path.
+- Card chips now show "Dates in detail" when a record has `deadline_notes` but no single verified date, so window and field-split cycles are visible without implying one deadline.
+- Added the Sweden flag to the destination icons.
+
 ### Known gaps
-- Still 14 records. The Phase 1 target of 15–25 verified records per country/region is not met; these remain discovery leads, not confirmed open awards.
+- 19 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards.
 - Link liveness is opt-in, not part of `npm test`. It proves a URL resolves — never that the page still says what the record claims.
 - 4 of 21 links could not be reached from this machine (`www.campuschina.org`, `www2.daad.de`, `www.dfat.gov.au`). All three were confirmed live through a different fetch path, but the probe reports them unreachable rather than OK.
 - No accessibility audit, no screenshots, no AI provider adapter, and no slide-out drawer for small screens.

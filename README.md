@@ -2,7 +2,7 @@
 
 A small, open-source scholarship discovery companion for engineering students. Search a curated starter catalog, keep a private shortlist, and save study preferences locally—no account or backend required.
 
-> **Data coverage is intentionally a starter set, not the requested complete directory.** This release contains 14 discovery records covering 10 destinations. Many details (especially annual deadlines, award values, and country-specific eligibility) change. Unknown values are intentionally omitted; every entry links to its official source and records the date a contributor last checked it. Verify all information before applying.
+> **Data coverage is intentionally a starter set, not the requested complete directory.** This release contains 19 discovery records covering 11 destinations. Many details (especially annual deadlines, award values, and country-specific eligibility) change. Unknown values are intentionally omitted; every entry links to its official source and records the date a contributor last checked it. Verify all information before applying.
 
 ## Features
 
@@ -45,9 +45,9 @@ The generated `dist/` directory can be deployed to Vercel, Netlify, or GitHub Pa
 
 ## Data and verification
 
-The canonical starter catalog is [`data/scholarships.json`](data/scholarships.json). Its format and status semantics are described in [`docs/DATA-SCHEMA.md`](docs/DATA-SCHEMA.md). These records are discovery leads, not verified open awards. Every record now carries a `source_url` and the `last_verified` date on which a contributor read it. Award amounts and deadlines are populated only where the official page stated them: one record (ETH Zurich ESOP) currently carries a single verified closing date, and several carry a deadline window or a field/country-specific note rather than a misleading date. Do not infer that an opportunity is open. Official sources linked in each record take precedence over this repository.
+The canonical starter catalog is [`data/scholarships.json`](data/scholarships.json). Its format and status semantics are described in [`docs/DATA-SCHEMA.md`](docs/DATA-SCHEMA.md). These records are discovery leads, not verified open awards. Every record carries a `source_url` and the `last_verified` date on which a contributor read it. Award amounts and deadlines are populated only where the official page stated them: one record (ETH Zurich ESOP) carries a single verified closing date, while several carry a deadline window, field-split dates, or a country-specific rule in `deadline_notes` rather than a misleading single date. Do not infer that an opportunity is open. Official sources linked in each record take precedence over this repository.
 
-Country/program coverage currently includes selected opportunities in the USA, China, Germany, UK, France, Netherlands, Switzerland, broader Europe, Australia, and New Zealand. Not every listed country or field has a verified matching award. Phase-1 requested coverage (15–25 verified scholarships per country/region) is **not complete**.
+Country/program coverage currently includes selected opportunities in the USA, China, Germany, UK, France, Netherlands, Switzerland, Sweden, broader Europe, Australia, and New Zealand. Broader Europe includes four named Erasmus Mundus joint masters in construction, earthen architecture, materials science and aeronautics. Not every listed country or field has a verified matching award, and no region yet reaches the Phase-1 target of 15–25 verified scholarships, so that target is **not complete**.
 
 ## Privacy
 
