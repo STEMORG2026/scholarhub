@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.6.0] - 2026-10-07
+
+### Fixed
+
+**Dark-mode contrast.** Several elements set hardcoded light surfaces with no dark counterpart, so they rendered as bright patches on a dark card — and the hero's stat numbers were effectively invisible. Measured by reading the real computed styles in a running browser and computing the WCAG ratio, not by eye:
+
+| Element | Before | After |
+|---|---|---|
+| Hero stat number (`24`, `12`, `Free`) | **1.39:1** | 10.75:1 |
+| Hero eyebrow | 2.82:1 | 7.25:1 |
+| Hero copy | 3.00:1 | 6.04:1 |
+| Hero stat label | 3.41:1 | 5.61:1 |
+| Chip / field chip | — | 5.94:1 |
+| Status badge | — | 5.75:1 |
+| Match ring | — | 6.84:1 |
+
+Everything now meets WCAG AA (4.5:1). The affected elements were `.hero-stats strong`, `.hero-stats span`, `.hero-copy`, `.eyebrow`, `.welcome h1 em`, `.stat-divider`, `.chip`, `.field-chip`, `.status-badge`, `.status-open/closed/upcoming`, `.match-ring` and `.card-icon`. `.deadline-chip` was the only one that already had a dark override.
+
+### Notes
+
+- The roadmap's own known issue — "chips and status badges use hardcoded light colours with no dark-mode override" — was accurate but incomplete. The hero panel had the same defect and it was the worst instance, at 1.39:1, which is below the threshold at which text is legible at all.
+- Only dark mode was wrong. Light mode was never affected, which is why this survived a build, a test run and several browser passes: the default theme is light.
+
 ## [0.5.0] - 2026-10-07
 
 ### Added

@@ -16,13 +16,14 @@ Living document tracking project progress, current development focus, and planne
 | 2026-10-07 | Catalog expansion | ✅ Done | 14 → 19 records, 10 → 11 destinations; added RESCO, TERRA, BIOPHAM, TFMASA and the SI Scholarship (Sweden); 28 links probed, 0 dead |
 | 2026-10-07 | USA and China depth | ✅ Done | 19 → 22 records; added JJ/WBGSP, Tongji University and the HIT Scholarship; China now at 4 records. Humphrey (non-degree) and CAS-TWAS (9-year-stale source) excluded |
 | 2026-10-07 | Short-course support | ✅ Done | `Non-degree` added to the `degree_level` enum; 22 → 24 records with the two Manaaki short-term schemes; field/degree filters derived from the catalog; 33 links probed, 0 dead |
+| 2026-10-07 | Dark-mode contrast | ✅ Done | Hero stats measured 1.39:1 and were effectively invisible; chips, badges, match ring and card icons had no dark override. All now ≥ 5.6:1 (WCAG AA) |
 
 ## Current development focus (NOW)
 
 - **Data expansion**: 24 records now; no region yet reaches the Phase 1 target of 15–25 verified entries. China (4) and broader Europe (5) have the most depth. USA growth is structurally slower, because most US graduate funding is restricted to US citizens or permanent residents — JJ/WBGSP is one of the few routes open to developing-country nationals. This remains the largest gap: provenance is done, breadth is not.
 - **Short-course track**: `Non-degree` landed on 2026-10-07 and currently holds two New Zealand schemes. The Hubert H. Humphrey Fellowship is now unblocked by the schema change but its eligibility and programme pages returned "Page not found" when checked, so no record was created; re-check before adding it.
 - **Deadline coverage**: Schema and display support landed on 2026-10-07, but only one record carries a single verified closing date. Add real dates as official cycles publish them, and use `deadline_notes` where a cycle has no single date.
-- **Accessibility audit**: Verify keyboard navigation, ARIA labels, screen reader compatibility, and color contrast. Known issue: chips and status badges use hardcoded light colours with no dark-mode override.
+- **Accessibility audit**: Colour contrast in dark mode was fixed on 2026-10-07 (hero panel, chips, badges, match ring, card icons — all now ≥ 5.6:1). Still outstanding: keyboard navigation, ARIA labels, screen-reader compatibility, and a contrast check of every remaining surface. Light mode has never been measured.
 - **AI provider seam**: Define the adapter interface contract (SEAM) so future provider integrations have a stable boundary.
 
 ## Phase 1 — Foundation (in progress)
@@ -40,7 +41,8 @@ Living document tracking project progress, current development focus, and planne
 - [x] Deadline display with provenance, plus `deadline_notes` (2026-10-07)
 - [ ] Expand to 15–25 individually verified entries per country/region
 - [ ] Add verified program/field coverage with regular human review
-- [ ] Accessibility testing and screenshots for README
+- [x] Dark-mode colour contrast measured and fixed — hero panel, chips, badges, match ring, card icons (2026-10-07)
+- [ ] Accessibility testing (keyboard navigation, ARIA, screen reader) and screenshots for README
 - [ ] AI provider adapter interface definition (SEAM)
 - [ ] Offline preparation roadmap generator (template-based, no LLM required)
 

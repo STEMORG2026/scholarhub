@@ -52,12 +52,28 @@ Detailed log of development work on ScholarHub. For the high-level roadmap with 
 - Link probe: **33 unique links, 0 dead.** Both new NZ sources return 200.
 - **Pushed for the first time.** All four commits existed only on local disk: the GitHub repository was public but empty, and `gh` had an invalid token. SSH key auth works independently of that token, so the blocker was the diagnosis, not the machine. Pushing returned `remote: This repository moved. Please use the new location: git@github.com:STEMORG2026/scholarhub.git` — the repo now lives under the **STEMORG2026** organisation, and `Er-Sajan-PLG/scholarhub` is a redirect (the same pattern as STEMMA). `origin` was repointed to the canonical URL. Verified by SHA and by tree: `origin/main` and `main` are both `88422b8`, working tree clean.
 
+### Dark-mode contrast (fifth pass, same day, v0.6.0)
+- **Found a real accessibility failure while checking a roadmap claim rather than repeating it.** The roadmap said "chips and status badges use hardcoded light colours with no dark-mode override". Grepping `styles.css` confirmed it — and showed the same defect was worse elsewhere: the hero panel sets its own dark background in dark mode, but its text colours were only ever tuned for the light panel.
+- **Measured, not eyeballed.** Read the real `getComputedStyle` values from the running page and computed the WCAG ratio. `.hero-stats strong` rendered `#394d3a` on `#27362b` — **1.39:1**, below the level at which text is legible at all. The stat numbers (`24`, `12`, `Free`) were effectively invisible.
+
+  | Element | Before | After |
+  |---|---|---|
+  | Hero stat number | **1.39:1** | 10.75:1 |
+  | Hero eyebrow | 2.82:1 | 7.25:1 |
+  | Hero copy | 3.00:1 | 6.04:1 |
+  | Hero stat label | 3.41:1 | 5.61:1 |
+  | Chip / status badge / match ring | no dark override | 5.75–6.84:1 |
+
+- Fixed by adding dark overrides for `.hero-stats strong`, `.hero-stats span`, `.hero-copy`, `.eyebrow`, `.welcome h1 em`, `.stat-divider`, `.chip`, `.field-chip`, `.status-badge`, `.status-open/closed/upcoming`, `.match-ring` and `.card-icon` (five hardcoded tints). `.deadline-chip` was the only element that already had one.
+- **Why this survived four earlier passes:** the default theme is light, so every previous screenshot was taken in light mode. Light mode was never wrong. It took deliberately switching theme and reading computed styles to see it.
+- Verified in a dark-mode browser session: `app dark` confirmed on the root, chip `rgb(44,54,48)` on card `rgb(32,41,35)`, card icon `rgb(43,52,46)`, plus screenshots of both the hero and the card grid.
+
 ### Known gaps
 - 24 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards.
 - Link liveness is opt-in, not part of `npm test`. It proves a URL resolves — never that the page still says what the record claims.
 - 5 of 33 links could not be reached from this machine (`www.campuschina.org`, `www2.daad.de`, `www.dfat.gov.au`, `www.master-biopham.eu`). All were confirmed live through a different fetch path, but the probe reports them unreachable rather than OK.
 - The `Non-degree` filter and profile option are wired through the data, validator and UI, but `docs/ROADMAP.md` Phase 1 still describes coverage in degree terms; the short-course track is not yet its own roadmap line.
-- No accessibility audit, no screenshots, no AI provider adapter, and no slide-out drawer for small screens.
+- Dark-mode colour contrast is fixed and measured (see above), but there is still **no accessibility audit**: keyboard navigation, ARIA labels and screen-reader compatibility are untested, and light-mode contrast has never been measured at all. No screenshots in the README, no AI provider adapter, and no slide-out drawer for small screens.
 
 ## 2026-09-25 — Bootstrap
 
