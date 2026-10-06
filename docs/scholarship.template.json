@@ -1,0 +1,33 @@
+{
+  "id": "example-award-name",
+  "name": "Official scholarship name",
+  "provider": "Awarding organization",
+  "country": "Country",
+  "region": "Region or Multiple",
+  "city": "City or Various",
+  "university": "Host university or Participating institutions",
+  "program_field": ["Civil Engineering"],
+  "degree_level": ["Master"],
+  "funding_type": "As stated in the current official call",
+  "amount": "Unknown — see official source",
+  "currency": "EUR",
+  "deadline": null,
+  "deadline_notes": "Use only when the cycle has no single date: a window, or field/country-specific dates. Remove this field when it would be empty.",
+  "duration": "As stated in official terms",
+  "eligibility": {
+    "nationality": ["See official eligibility"],
+    "gpa_minimum": null,
+    "language_requirements": {},
+    "age_limit": null,
+    "other": "Summarize conditions and link to official rules"
+  },
+  "benefits": [],
+  "application_url": "https://example.org/apply",
+  "official_url": "https://example.org/scholarship",
+  "description": "Factual summary without promises.",
+  "tags": [],
+  "last_updated": "YYYY-MM-DD",
+  "status": "verify",
+  "source_url": "https://example.org/scholarship",
+  "last_verified": "YYYY-MM-DD"
+}

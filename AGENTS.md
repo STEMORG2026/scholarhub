@@ -1,0 +1,76 @@
+# AGENTS.md — ScholarHub
+
+Repository-level guidance for agents and contributors working inside `scholarhub/`.
+
+## Project identity
+
+ScholarHub is a static, client-side scholarship discovery application. There is no server, no database, and no authentication. All personalization (profile, shortlist, theme) lives in browser localStorage. The canonical data source is `data/scholarships.json`.
+
+## Scope discipline
+
+- **NOW** — features required by the current milestone (see `docs/ROADMAP.md`).
+- **SEAM** — cheap contracts protecting known future changes (e.g., provider adapter interface).
+- **LATER** — documented but not implemented.
+- **OUT OF SCOPE** — backend servers, authentication, paid services, cloud databases, analytics pipelines. Do not add dependencies that assume these exist.
+
+## Governance precedence
+
+1. User instructions (highest)
+2. This file (`AGENTS.md`)
+3. `docs/` documentation
+4. Implementation details (lowest)
+
+## Development commands
+
+```sh
+npm install          # install dependencies (uses .npm-cache locally if needed)
+npm run dev          # start Vite dev server
+npm test             # node --test on data/scholarships.test.js, then offline catalog validation
+npm run check:links  # catalog validation plus a liveness probe of every official link (needs network)
+npm run build        # production build to dist/
+npm run preview      # preview production build
+node scripts/validate-catalog.mjs  # standalone catalog validation
+node scripts/validate-catalog.mjs --links --catalog=<path>  # validate a fixture catalog
+```
+
+There is no TypeScript, no linting config, and no framework-specific test runner beyond `node --test`. Keep it simple.
+
+## Data rules
+
+- Every scholarship record must have a stable kebab-case `id`, an `official_url` starting with `https://`, and a `status` of `open`, `closed`, `upcoming`, or `verify`.
+- Never invent deadlines, award amounts, or eligibility criteria. Use `null` for unknown values and `"verify"` status when the current cycle is unconfirmed.
+- Set `deadline` only when the official page publishes a **single** closing date. `last_verified` is then required, and `status` must not be `verify` (the validator enforces both). Use `deadline_notes` for an application window, field-split deadlines, or a country-specific rule.
+- `source_url` must be a page a human actually opened. Never add a URL you have not read.
+- Run `npm run check:links` before proposing data changes. A `404` on an official link is a blocking defect. `401`/`403`/`405`/`429` means **unverified, not broken** — many government and university sites refuse automated requests.
+- Official sources take precedence over this repository. Link them directly.
+- Records are human-reviewed proposals. AI-generated content is not canonical until a human commits it.
+
+## File boundaries
+
+| Path | Purpose |
+|------|---------|
+| `src/main.jsx` | React application (all views, state, filtering) |
+| `src/styles.css` | All styling including dark mode |
+| `data/scholarships.json` | Canonical scholarship catalog |
+| `data/scholarships.test.js` | Catalog validation tests |
+| `scripts/validate-catalog.mjs` | Standalone validation script |
+| `docs/` | Architecture, schema, API notes, roadmap |
+| `.github/` | Issue templates, PR template |
+
+Do not create new top-level directories without documenting the reason. Country subdirectories under `data/scholarships/` are reserved for a future split-loader; the current app reads only the flat JSON file.
+
+## Commit conventions
+
+Use Conventional Commits: `feat:`, `fix:`, `data:`, `docs:`, `test:`, `chore:`. One logical change per commit. Never force-push or rewrite history on `main`.
+
+## AI assistant policy
+
+The AI settings UI is a placeholder. No provider integration exists yet. If adding one:
+- Keys must stay in browser memory/localStorage only, never sent to any server owned by this project.
+- Clearly disclose that prompts leave the browser.
+- Do not treat model output as authoritative scholarship data.
+
+## Privacy
+
+No PII leaves the browser. Profile data is stored under `sh-profile` in localStorage. Users on shared devices should clear storage after use.
+

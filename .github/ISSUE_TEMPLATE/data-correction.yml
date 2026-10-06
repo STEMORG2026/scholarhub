@@ -1,0 +1,33 @@
+name: Scholarship data correction
+description: Report an outdated, incorrect, or broken scholarship record
+title: "[Data correction]: "
+labels: [data]
+body:
+  - type: input
+    id: record
+    attributes:
+      label: Scholarship record ID
+      placeholder: e.g. fulbright-foreign-student
+    validations:
+      required: true
+  - type: input
+    id: official-url
+    attributes:
+      label: Official source URL
+      description: Use the scholarship provider or university's page.
+    validations:
+      required: true
+  - type: input
+    id: checked
+    attributes:
+      label: Date checked
+      placeholder: YYYY-MM-DD
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What should change?
+      description: Include the current catalog value and authoritative replacement/evidence.
+    validations:
+      required: true

@@ -1,0 +1,64 @@
+# Development Progress
+
+Detailed log of development work on ScholarHub. For the high-level roadmap with checkboxes, see [ROADMAP.md](ROADMAP.md).
+
+## 2026-10-07 — Verification pass and deadline support
+
+### Completed
+- Re-read all 14 records against their official pages and backfilled `source_url` + `last_verified` (2026-10-07) on every one. Catalog warnings fell 40 → 5.
+- **Found and fixed two dead official links.** The Tsinghua financial-aid URL (`yz.tsinghua.edu.cn/en/Admissions/Financial_Aid.htm`) and the University of Canterbury first-year scholarship URL both returned `404`. Both replaced with the current pages. Neither was detectable by the existing checks, which only validated the `https://` prefix — the catalog passed validation while two links were broken.
+- Added `npm run check:links`: a liveness probe over all 21 unique official links. Verified with negative controls — a deliberately dead URL and two integrity violations each produce exit code 1 (confirmed: `dead-link exit=1`, `bad-rules exit=1`, real catalog `exit=0`).
+- Added the `deadline_notes` field, populated where the official cycle has no single date: NSF GRFP (field-split dates), Chevening (Aug–Oct 2026 window), Erasmus Mundus (Oct–Jan window), Eiffel (institution nomination), NL Scholarship (institution dates), Australia Awards (country dates), Melbourne (automatic consideration).
+- Recorded the one unambiguous verified closing date found: **ETH Zurich ESOP, 2026-11-30** (window 1–30 Nov 2026, 23:59 MEZ, for an HS27 start).
+- Refreshed verified amounts and benefits: NSF GRFP ($37,000 stipend + $16,000 education allowance), Eiffel (€1,200 master's / €2,100 doctorate per month from January 2026), NL Scholarship (€5,000), Melbourne (living allowance A$41,100 per year; up to $135,000), Australia Awards (full benefit list).
+- Set `status` from verified pages where the cycle state is unambiguous: Chevening `open`, ETH ESOP and NSF GRFP `upcoming`, Melbourne `open`.
+- UI: cards and the detail dialog now show a deadline when one exists, plus a "source last checked" row. The hardcoded "Check official source" is now only the fallback when no date is recorded.
+
+### Fixed
+- The offline assistant guide appended the user's question twice — two `setMessages` calls in `answer()` both pushed the `you` message.
+- The hero stat claimed "5 regions" while the catalog holds 10 distinct destinations; it is now derived from the data.
+- Removed the `mobile-menu` button and its CSS: it was `display:none` in every media query, so it could never be seen or clicked.
+- The repository had **no commits** — the entire working tree was untracked. Created the initial commit.
+
+### Known gaps
+- Still 14 records. The Phase 1 target of 15–25 verified records per country/region is not met; these remain discovery leads, not confirmed open awards.
+- Link liveness is opt-in, not part of `npm test`. It proves a URL resolves — never that the page still says what the record claims.
+- 4 of 21 links could not be reached from this machine (`www.campuschina.org`, `www2.daad.de`, `www.dfat.gov.au`). All three were confirmed live through a different fetch path, but the probe reports them unreachable rather than OK.
+- No accessibility audit, no screenshots, no AI provider adapter, and no slide-out drawer for small screens.
+
+## 2026-09-25 — Bootstrap
+
+### Completed
+- Created project structure: Vite + React frontend, static JSON data layer
+- Built responsive scholarship discovery UI with search, multi-faceted filtering (country, field, degree, funding type, status), and card layout
+- Implemented localStorage-backed features: saved shortlist, user profile form, dark/light theme toggle
+- Added profile-fit heuristic for sorting scholarships by relevance to user preferences
+- Populated starter catalog with 14 scholarship records across 10 countries/regions (USA, China, Germany, Europe, UK, France, Netherlands, Switzerland, Australia, New Zealand) covering Civil Engineering and Materials Science
+- Verified official source URLs via web fetch (NSF GRFP, Chevening, Campus France, DAAD database)
+- Fixed broken NSF GRFP URL to current canonical path
+- Wrote comprehensive documentation: README, CONTRIBUTING, CODE_OF_CONDUCT, LICENSE (MIT), CHANGELOG, DATA-SCHEMA, ARCHITECTURE, API notes
+- Created GitHub issue templates (data correction, bug report, feature request) and PR template
+- Added `node --test` validation suite for catalog integrity (unique IDs, required fields, URL format, status enum, date format)
+- Created standalone `scripts/validate-catalog.mjs` for CI or manual use
+- Initialized git repository, configured SSH remote to `git@github.com:Er-Sajan-PLG/scholarhub.git`
+- Created public GitHub repository via `gh repo create`
+- Added AGENTS.md with repository governance, scope discipline, development commands, and data rules
+- Added docs/ROADMAP.md with progress log, current focus, and phased milestones
+- Added docs/PROGRESS.md (this file) for detailed development history
+
+### Decisions made
+- **No backend**: Static site deployable to Vercel/Netlify/GitHub Pages. All personalization is client-side.
+- **No authentication**: Explicit constraint. Profile lives in localStorage only.
+- **JSON flat files**: Easiest for community contribution; no database dependency.
+- **`verify` status**: Used when current cycle dates/terms are unconfirmed rather than guessing.
+- **AI as placeholder**: Settings panel exists but no provider integration yet. Keys must never leave browser.
+- **npm over pnpm**: Simpler for a standalone project without workspace dependencies.
+
+### Known gaps
+- Only 14 records total; target is 15–25 per country/region
+- No real deadlines populated (all `null`)
+- AI assistant does not connect to any model
+- No accessibility audit completed
+- No screenshots in README
+- Country subdirectories under `data/scholarships/` exist but are unused by the app
+

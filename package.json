@@ -1,0 +1,22 @@
+{
+  "name": "scholarhub",
+  "version": "0.2.0",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test && node scripts/validate-catalog.mjs",
+    "validate": "node scripts/validate-catalog.mjs",
+    "check:links": "node scripts/validate-catalog.mjs --links"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "lucide-react": "latest"
+  },
+  "devDependencies": {}
+}
