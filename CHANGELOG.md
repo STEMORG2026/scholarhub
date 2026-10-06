@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.14.0] - 2026-10-07
+
+### Added
+
+Two United States records, catalog 40 → **42** and the USA 2 → **4**. This was the region the roadmap called structurally hard, because most US graduate funding is restricted to citizens and permanent residents — so the pass was aimed at awards that are explicitly open to Nepali applicants, and the first thing it did was confirm that the existing records were honest about the restriction.
+
+- **Knight-Hennessy Scholars (Stanford University)** — the strongest find. The programme states it "encourage[s] citizens and residents of all countries to apply", sets **no quotas by discipline, programme or world region**, and requires no institutional endorsement. It funds up to three years of any full-time Stanford graduate degree, including a master's or PhD in civil and environmental engineering: tuition and fees, a living stipend, one annual economy-class round trip, and a one-time relocation stipend. **Verified deadline 6 October 2026** for the 2027 cohort, which has now closed; the 2028 cycle opens in summer 2027.
+- **Hubert H. Humphrey Fellowship** — a non-degree Fulbright fellowship for mid-career professionals, ten to twelve months at a U.S. host university with a professional affiliation placement. **Nepal is confirmed on the eligible-country list**, under South and Central Asia, and the programme is administered there by the Binational Fulbright Commission. It requires five years of full-time professional experience, and the fields closest to engineering sit under the Sustainable Lands impact area — natural resources and environmental policy, and urban and regional planning.
+
+### Notes
+
+- **The two existing USA records were checked for the restriction and are correct.** NSF GRFP already carries `eligibility.nationality: "U.S. citizens, nationals, or permanent residents"` and Fulbright already routes applicants to their home-country commission. A catalog that lists a citizen-restricted award without saying so is worse than one that omits it, and this pass confirmed that was not the case here.
+- **Knight-Hennessy carries a real constraint worth stating: the first bachelor's degree must have been earned in January 2020 or later** for the 2027 cohort, extended by two years for military service. That is a genuine filter, not a footnote, and it is recorded in `eligibility.other` along with the excluded Stanford programmes (Honors Cooperative Program, Master of Liberal Arts, JSD, MLS, coterminal degrees).
+- **Its funding does not cover a whole doctorate, and the record says so.** The fellowship runs up to three years; for a PhD the department funds the remaining years. "Fully funded" would have been the easy phrase and the wrong one.
+- **Aga Khan Foundation International Scholarship Programme was examined and left out.** Its country list names Afghanistan, Bangladesh, India, Pakistan and others but **not Nepal**, and the page presents the list as examples rather than exhaustive. Nepal's absence is therefore suggestive, not conclusive — and an eligibility question that cannot be settled is not a basis for a record.
+- **The ANSO-CAS-TWAS/UNESCO PhD Scholarship is a lead, not a record.** It funds up to 40 PhD students a year from developing countries in China, at CNY 6,000–7,000 a month with tuition and insurance waived, and "Engineering Sciences" is one of its ten fields. But the page consulted **does not name Nepal**, eligibility is delegated to TWAS's developing-country list, and the call it describes is closed. Worth a dedicated check rather than a guess.
+- **The `Non-degree` track now holds three records across two countries** (the two New Zealand short-term schemes and Humphrey), and `docs/ROADMAP.md` Phase 1 now names it as its own line rather than leaving it buried in the degree-level list.
+- The catalog now carries **seven verified closing dates**. Knight-Hennessy's is in the past — it closed the day before this pass — which is the point: a verified date that has passed still documents the cycle for the next one.
+- Link probe: **70 checked, 0 dead**, all five new URLs returning `OK [200]`.
+
 ## [0.13.0] - 2026-10-07
 
 ### Fixed

@@ -1498,5 +1498,118 @@
     "status": "open",
     "source_url": "https://marie-sklodowska-curie-actions.ec.europa.eu/actions/doctoral-networks",
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "knight-hennessy-scholars",
+    "name": "Knight-Hennessy Scholars (Stanford University)",
+    "provider": "Stanford University",
+    "country": "United States",
+    "region": "California",
+    "city": "Stanford",
+    "university": "Stanford University",
+    "program_field": [
+      "Engineering",
+      "Civil Engineering",
+      "Environmental Engineering",
+      "Materials Science"
+    ],
+    "degree_level": [
+      "Master",
+      "PhD"
+    ],
+    "funding_type": "Full graduate fellowship, held alongside a Stanford degree programme",
+    "amount": "Funding for up to three years: a fellowship applied to tuition and associated fees, a stipend for living and academic expenses such as room and board, books, supplies and local transport, a travel stipend covering one annual economy-class round trip to Stanford, and a one-time relocation stipend for newly enrolling scholars. Scholars in their second and third years may apply for supplemental academic-enrichment funds. Where a degree runs longer than three years — as a PhD usually does — the department funds the remaining years, so the fellowship itself does not cover a full doctorate.",
+    "currency": "USD",
+    "deadline": "2026-10-06",
+    "deadline_notes": "The application to join the 2027 cohort closed on 6 October 2026 at 13:00 Pacific Time, and the 2028 cohort application opens in summer 2027. The Knight-Hennessy application is separate from, and runs concurrently with, the Stanford degree-programme application, which carries its own departmental deadline — a candidate must be accepted by and enrol in a full-time Stanford graduate programme to take up the fellowship.",
+    "duration": "The fellowship funds up to three years of graduate study; a PhD is normally funded by the department for the years beyond that",
+    "eligibility": {
+      "nationality": [
+        "No restriction by nationality. The programme states that it encourages citizens and residents of all countries to apply and sets no quotas by discipline, programme or world region, and it does not require an institutional endorsement."
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "Two baseline requirements. First, the applicant must apply to, be accepted by and enrol in a full-time Stanford graduate degree programme starting the same year as the fellowship, which means a second, separate application. Second, the first bachelor's degree must have been earned in January 2020 or later for the 2027 cohort, a window extended by two years for applicants who served in the military; applicants completing a first degree by September 2027 are also eligible. Stanford programmes excluded from the fellowship are the Honors Cooperative Program, the Master of Liberal Arts, the JSD and MLS law degrees, coterminal degrees, and a current PhD student adding an MA or MS in the same discipline."
+    },
+    "benefits": [
+      "Tuition and associated fees covered for up to three years",
+      "A stipend for living and academic expenses",
+      "One annual economy-class round trip to Stanford",
+      "A one-time relocation stipend on enrolment",
+      "No nationality quota and no institutional endorsement required",
+      "A multidisciplinary community of scholars across every Stanford graduate programme"
+    ],
+    "application_url": "https://apply.knight-hennessy.stanford.edu/apply/",
+    "official_url": "https://knight-hennessy.stanford.edu/admission",
+    "description": "Stanford's flagship graduate fellowship, open to citizens and residents of every country with no quotas by discipline or region, funding up to three years of any full-time Stanford graduate degree including a master's or PhD in civil and environmental engineering. It requires a separate, concurrent application to the Stanford degree programme and a first bachelor's degree earned in January 2020 or later. The 2027 cohort application closed on 6 October 2026; the 2028 cycle opens in summer 2027.",
+    "tags": [
+      "United States",
+      "stanford",
+      "fully-funded",
+      "any-nationality",
+      "no-quota",
+      "engineering",
+      "verified-deadline"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "closed",
+    "source_url": "https://knight-hennessy.stanford.edu/program-overview/funding",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "humphrey-fellowship",
+    "name": "Hubert H. Humphrey Fellowship Program",
+    "provider": "Fulbright / U.S. Department of State, administered in Nepal by the Commission for Educational Exchange between the United States and Nepal",
+    "country": "United States",
+    "region": "Hosted at selected U.S. universities",
+    "city": "Assigned by the programme",
+    "university": "Selected U.S. host universities, assigned by the programme rather than chosen by the applicant",
+    "program_field": [
+      "Environmental Policy",
+      "Urban and Regional Planning",
+      "Natural Resources"
+    ],
+    "degree_level": [
+      "Non-degree"
+    ],
+    "funding_type": "Non-degree professional fellowship",
+    "amount": "Covers a ten- to twelve-month programme of academic study at a U.S. host university plus a professional affiliation placement. The official programme pages and the Nepal country page consulted describe the structure of the award but do not publish a stipend figure, so no amount is recorded here.",
+    "currency": "USD",
+    "deadline": null,
+    "deadline_notes": "Deadlines are set per country and are not published centrally — the programme states only that applicants must apply through their Binational Fulbright Commission or the Public Affairs Section of the U.S. Embassy, and that deadlines vary by country. In Nepal the programme is administered by the Commission for Educational Exchange between the United States and Nepal, whose Humphrey page states that applications for the 2026-27 cohort are closed and that a new announcement is pending, so no date is recorded.",
+    "duration": "Ten to twelve months of academic study and professional affiliation in the United States",
+    "eligibility": {
+      "nationality": [
+        "Nepal appears on the programme eligibility list under the South and Central Asia region, which spans 148 countries and regions; in Nepal the programme is administered by the Binational Fulbright Commission"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "Requires a bachelor's degree or equivalent, a minimum of five years of full-time professional experience, demonstrated leadership and a record of public service, demonstrated English ability, and limited prior experience in the United States. It awards no degree: fellows design an individual programme of academic study and professional affiliation instead of enrolling in one. Fields are grouped into four impact areas, of which Sustainable Lands covers Agricultural and Rural Development, Natural Resources, Sustainability and Environmental Policy, and Urban and Regional Planning — policy and planning subjects adjacent to civil and environmental engineering rather than engineering degrees themselves."
+    },
+    "benefits": [
+      "Ten to twelve months in the United States at a designated host university",
+      "A professional affiliation placement with a U.S. organisation in the fellow’s field",
+      "Academic study designed around the fellow’s own objectives rather than a fixed curriculum",
+      "Leadership training and access to a network of more than 6,600 fellows from 163 countries",
+      "Administered in Nepal by the Binational Fulbright Commission, which sets the national deadline"
+    ],
+    "application_url": "https://usefnepal.org/fulbright/humphrey/program-description/",
+    "official_url": "https://www.humphreyfellowship.org/how-to-apply/eligibility/",
+    "description": "A non-degree Fulbright fellowship for mid-career professionals, running ten to twelve months at a U.S. host university with a professional affiliation placement. Nepal is on the eligible-country list and the programme is administered there by the Binational Fulbright Commission. The fields most relevant to a civil engineer are under the Sustainable Lands impact area — natural resources and environmental policy, and urban and regional planning. It requires five years of full-time professional experience, and the 2026-27 cohort is closed with the next announcement pending.",
+    "tags": [
+      "United States",
+      "fulbright",
+      "non-degree",
+      "nepal-eligible",
+      "mid-career",
+      "environmental-policy",
+      "urban-planning"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "closed",
+    "source_url": "https://usefnepal.org/fulbright/humphrey/program-description/",
+    "last_verified": "2026-10-07"
   }
 ]
