@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.11.0] - 2026-10-07
+
+### Added
+
+Four Erasmus Mundus Joint Masters, 33 → **37 records** and Europe 8 → **12**. All four sit in civil, structural or materials engineering, and all were found through the official EACEA catalogue rather than an aggregator.
+
+- **Flood Risk Management (FRM)** — IHE Delft (coordinator), TU Dresden, Universitat Politècnica de Catalunya and the University of Ljubljana. **Carries a real verified deadline: 3 January 2027** for applicants from Partner Countries, which includes Nepal; programme-country applicants are due 7 February 2027. EUR 1,400 per month for up to 24 months plus all participation costs. **Civil engineering is an explicitly accepted first degree.**
+- **Risk Assessment and Management of Civil Infrastructures (NORISK)** — University of Minho, Universitat Politècnica de Catalunya, University of Padova and La Rochelle Université. EUR 1,400 per month with the EUR 9,000 participation cost fully covered, and up to seven scholarships a year reserved for Partner Country students.
+- **Advanced Structural Analysis and Design using Composite Materials (FRP++)** — University of Minho, University of Girona, University of Naples Federico II and INSA Toulouse. Same funding structure; **Nepal appears explicitly on the programme's Partner Country and NDICI lists**, so the quota is read off the page rather than inferred.
+- **Mechanics of Sustainable Materials and Structures (MS²)** — TU Dortmund, University of Trento and École Centrale de Nantes, awarding a multiple degree from all three.
+
+### Notes
+
+- **The catalogue holds 218 projects; these four came from a parsed list of 210.** The EACEA catalogue page renders 20 entries at a time and ignores its own search parameter, but it accepts `?page=N`, so paging through it yields the full set to screen by keyword. Two markup traps: the HTML breaks lines *inside* tags (`<span\n class="…"`), so any regex for a tag must tolerate whitespace, and a keyword screen over programme names returns 75 candidates, most of them irrelevant — it is only a first pass.
+- **Scholarship availability was verified per programme, not inferred from catalogue membership.** The catalogue itself warns that some listed programmes no longer offer Erasmus Mundus scholarships, and one of them proved the point.
+- **AMIR (Advanced Materials Innovative Recycling) was rejected on a verified ground.** Its fees page states plainly that "Erasmus Mundus full scholarships are not available for the next cohort" — only a EUR 15,000 EIT partial grant, which leaves the first six months unfunded. It is a strong programme, but it does not belong in a scholarship catalog on the strength of its EMJM label.
+- **MBUILD was rejected** because its site returns an empty 89-byte page. **FRP++'s scholarships page is stale** — it still describes a "third edition in 2024/2025" while its applications page says fifth edition 2026/2027; the applications page was treated as authoritative.
+- **NORISK and FRP++ have both closed their 2026 calls**, so neither carries a `deadline`; both use `deadline_notes` and are marked `verify`. Only Flood Risk Management has a live future date.
+- The catalog now carries **four verified closing dates**, all within the next four months: ETH Zurich ESOP (30 November 2026), TU Delft Justus & Louise van Effen (1 December 2026), **Flood Risk Management (3 January 2027)** and KTH (15 January 2027).
+- Link probe: **59 links checked, 0 dead**, 7 unreachable from this machine — a documented sandbox limitation, not broken links.
+
 ## [0.10.0] - 2026-10-07
 
 ### Fixed

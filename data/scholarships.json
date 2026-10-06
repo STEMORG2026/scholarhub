@@ -1127,5 +1127,211 @@
     "status": "verify",
     "source_url": "https://www.universite-paris-saclay.fr/en/admission/bourses-et-aides-financieres/international-masters-scholarships-program",
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "ms2-emjm",
+    "name": "Erasmus Mundus Joint Master in Mechanics of Sustainable Materials and Structures (MS²)",
+    "provider": "Erasmus Mundus Joint Masters (European Union)",
+    "country": "Europe",
+    "region": "Germany, Italy and France",
+    "city": "Dortmund, Trento and Nantes",
+    "university": "TU Dortmund University (Germany), University of Trento (Italy) and École Centrale de Nantes (France)",
+    "program_field": [
+      "Civil Engineering",
+      "Materials Science"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Erasmus Mundus Joint Masters scholarship",
+    "amount": "About EUR 1,400 per month for two years, with full tuition fees covered",
+    "currency": "EUR",
+    "deadline": null,
+    "deadline_notes": "The funding page states the application period runs from 1 January to 15 March, but writes the year as a placeholder ('20XY'), so no specific year is published. Admission and the scholarship are separate procedures: applicants must also apply to TU Dortmund's master's admissions in parallel.",
+    "duration": "Two years (120 ECTS) across three countries, awarded as a multiple degree by the participating institutions",
+    "eligibility": {
+      "nationality": [
+        "Open to applicants of any nationality; scholarships are awarded on a competitive basis"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "Selection is scored on two reference letters (15 points) and a motivation letter of up to two pages (10 points), among other criteria. The programme is run by the architecture and civil engineering faculties of the three universities, and covers advanced mechanics for innovative materials and structures, materials and structures under extreme conditions, and related areas. Exact bachelor's subject requirements were not stated on the pages checked."
+    },
+    "benefits": [
+      "About EUR 1,400 per month for two years",
+      "Full tuition fees covered",
+      "Study across Germany, Italy and France",
+      "Multiple degree from three universities"
+    ],
+    "application_url": "https://www.ms2master.com/how-to-apply",
+    "official_url": "https://www.ms2master.com",
+    "description": "Erasmus Mundus joint master's in the mechanics of sustainable materials and structures, taught by TU Dortmund, the University of Trento and École Centrale de Nantes. Funding is about EUR 1,400 per month for two years with tuition covered. The published application window is 1 January to 15 March, but the site does not state the year.",
+    "tags": [
+      "Europe",
+      "erasmus-mundus",
+      "structural-engineering",
+      "materials",
+      "multiple-degree"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://www.ms2master.com/funding",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "norisk-emjm",
+    "name": "Erasmus Mundus Joint Master in Risk Assessment and Management of Civil Infrastructures (NORISK)",
+    "provider": "Erasmus Mundus Joint Masters (European Union)",
+    "country": "Europe",
+    "region": "Portugal, Spain, Italy and France",
+    "city": "Guimarães, Barcelona, Padova and La Rochelle",
+    "university": "University of Minho (Portugal, coordinator), Universitat Politècnica de Catalunya (Spain), University of Padova (Italy) and La Rochelle Université (France)",
+    "program_field": [
+      "Civil Engineering"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Erasmus Mundus Joint Masters scholarship",
+    "amount": "EUR 1,400 per month for the duration of the programme, plus the full EUR 9,000 participation cost. Up to seven scholarships a year are reserved for Partner Country students, three for Programme Country students, three financed by NDICI and one by IPA",
+    "currency": "EUR",
+    "deadline": null,
+    "deadline_notes": "The 2026/2027 intake ran three calls, closing on 30 January, 15 April and 15 May 2026, all now passed. Erasmus Mundus scholarships are available only in the first call. Dates for the next intake were not published when this record was checked.",
+    "duration": "Two years starting 1 October, with three compulsory mobility periods and one optional workshop across Portugal, Spain, Italy and France",
+    "eligibility": {
+      "nationality": [
+        "Open to applicants of any nationality; separate scholarship quotas apply to Programme Country and Partner Country applicants, and Nepal falls in the Partner Country group"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "Requires at least 240 ECTS of prior study in civil engineering, industrial or systems engineering, materials engineering, environmental engineering or a related field. A mobility track including Padova requires 300 ECTS with specified subject credits, including 6 ECTS each in hydraulics, hydraulic and marine constructions, structural mechanics and structural engineering, 4 ECTS in geotechnics, and further credits in civil engineering, mathematics, physics or chemistry. English: TOEFL 525 paper-based or 72 internet-based, or IELTS 6.5. A EUR 250 deposit confirms acceptance and is refunded on enrolment. Five per cent of grants are reserved for women and five per cent for students with special educational needs. Between five and seven applicants from any one country are called to interview."
+    },
+    "benefits": [
+      "EUR 1,400 per month for the whole programme",
+      "Full EUR 9,000 participation cost covered, so no tuition is charged",
+      "Up to seven scholarships a year reserved for Partner Country students",
+      "Consortium scholarships of EUR 9,000 covering tuition",
+      "Health insurance included in the participation cost"
+    ],
+    "application_url": "https://msc-norisk.org/applications/",
+    "official_url": "https://msc-norisk.org/",
+    "description": "Erasmus Mundus joint master's in the risk assessment and management of civil infrastructures, taught across Portugal, Spain, Italy and France. Scholarships are EUR 1,400 per month with the EUR 9,000 participation cost fully covered, and up to seven a year are reserved for Partner Country students. Applicants need at least 240 ECTS in civil, materials, environmental or industrial engineering.",
+    "tags": [
+      "Europe",
+      "erasmus-mundus",
+      "civil-engineering",
+      "infrastructure",
+      "partner-country-quota"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://msc-norisk.org/applications/",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "frp-plus-plus-emjm",
+    "name": "Erasmus Mundus Joint Master in Advanced Structural Analysis and Design using Composite Materials (FRP++)",
+    "provider": "Erasmus Mundus Joint Masters (European Union)",
+    "country": "Europe",
+    "region": "Portugal, Spain, Italy and France",
+    "city": "Guimarães, Girona, Naples and Toulouse",
+    "university": "University of Minho (Portugal), University of Girona (Spain), University of Naples Federico II (Italy) and INSA Toulouse (France)",
+    "program_field": [
+      "Civil Engineering",
+      "Materials Science"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Erasmus Mundus Joint Masters scholarship",
+    "amount": "EUR 1,400 per month for the duration of the programme, plus the full EUR 9,000 participation cost. Consortium scholarships of EUR 9,000, EUR 6,500 and EUR 4,500 are also offered",
+    "currency": "EUR",
+    "deadline": null,
+    "deadline_notes": "The fifth edition runs in 2026/2027 with three calls that closed on 31 January, 14 June and 15 July 2026. EU scholarships are available only in the first call. The scholarships page still describes a 'third edition in 2024/2025' while the applications page says fifth edition 2026/2027; the applications page is the more current of the two. Dates for the next intake were not published when this record was checked.",
+    "duration": "Two years starting 1 October, with three compulsory mobility periods and one optional workshop across Portugal, Spain, Italy and France",
+    "eligibility": {
+      "nationality": [
+        "Open to applicants of any nationality, with separate scholarship quotas for Programme Country and Partner Country applicants. Nepal is listed explicitly among both the Partner Countries and the NDICI partner countries."
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "Requires a degree in civil engineering, mechanical or industrial engineering, materials engineering, aeronautical engineering, polymers engineering or a related field. A bachelor's with 240 ECTS is accepted, or 300 ECTS for mobility tracks including Naples. English: TOEFL 525 paper-based or 72 internet-based, or IELTS 6.5, with the certificate less than three years old; applicants without a certificate may still apply but score lower and will be interviewed to verify their English. Five per cent of grants are reserved for women and five per cent for students with special educational needs. A deposit confirms acceptance, with a minimum charge of EUR 250."
+    },
+    "benefits": [
+      "EUR 1,400 per month for the whole programme",
+      "Full EUR 9,000 participation cost covered, so no tuition is charged",
+      "Up to seven scholarships a year for Partner Country applicants, with Nepal explicitly eligible",
+      "Consortium scholarships of EUR 9,000, EUR 6,500 and EUR 4,500",
+      "Health insurance included in the participation cost"
+    ],
+    "application_url": "https://msc-frp.org/applications/",
+    "official_url": "https://msc-frp.org/",
+    "description": "Erasmus Mundus joint master's in advanced structural analysis and design using composite materials, taught across Portugal, Spain, Italy and France. Scholarships are EUR 1,400 per month with the EUR 9,000 participation cost covered. Nepal appears explicitly on the programme's Partner Country and NDICI lists, so applicants qualify for the Partner Country quota.",
+    "tags": [
+      "Europe",
+      "erasmus-mundus",
+      "structural-engineering",
+      "composite-materials",
+      "partner-country-quota"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://msc-frp.org/applications/",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "flux-emjm",
+    "name": "Erasmus Mundus Joint Master in Flood Risk Management (FRM)",
+    "provider": "Erasmus Mundus Joint Masters (European Union)",
+    "country": "Europe",
+    "region": "Netherlands, Germany, Spain and Slovenia",
+    "city": "Delft, Dresden, Barcelona and Ljubljana",
+    "university": "IHE Delft Institute for Water Education (Netherlands, coordinator), TU Dresden (Germany), Universitat Politècnica de Catalunya (Spain) and University of Ljubljana (Slovenia)",
+    "program_field": [
+      "Civil Engineering"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Erasmus Mundus Joint Masters scholarship",
+    "amount": "EUR 1,400 per month for up to 24 months, covering subsistence, accommodation, travel and installation, plus the participation costs including tuition and full insurance. Standard tuition is EUR 18,000",
+    "currency": "EUR",
+    "deadline": "2027-01-03",
+    "deadline_notes": "The Erasmus Mundus scholarship deadline is 3 January 2027 at 23:59 Dutch time for applicants from Partner Countries, which includes Nepal; applicants from Programme and IPA countries have until 7 February 2027. English test results may be uploaded as late as 1 February 2027 provided the application itself is submitted by 3 January 2027. Scholarship outcomes are announced in early April 2027. A separate reduced-fee scholarship, EUR 3,000 instead of EUR 18,000, closes on 15 April 2027.",
+    "duration": "Two years (24 months), four semesters across Germany, the Netherlands, Spain and Slovenia, ending in a research thesis",
+    "eligibility": {
+      "nationality": [
+        "Open to applicants of any nationality, with separate scholarship quotas for Programme Country and Partner Country applicants; Nepal is in the Partner Country group"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "Requires a first degree equivalent to at least 180 ECTS in civil or environmental engineering, geosciences, environmental sciences, limnology, oceanography, geography, geology or natural resources, with academic knowledge of mathematics and water-related subjects. Minimum GPA of B or B+ on the US system, or a 2nd upper classification on the UK system. An internationally recognised English language test is required. Applications may be submitted before the degree is completed if at least 120 ECTS have been passed, provided the degree is finished by 15 August. Eight further scholarships are reserved for NDICI countries and four for IPA countries, the latter with a deadline of 7 March 2027."
+    },
+    "benefits": [
+      "EUR 1,400 per month for up to 24 months",
+      "Participation costs covered, including tuition, library, laboratory and full insurance",
+      "No separate scholarship application — it is part of the admission form",
+      "Additional places reserved for NDICI and IPA country applicants",
+      "A reduced-fee route (EUR 3,000 instead of EUR 18,000) for applicants who miss the scholarship"
+    ],
+    "application_url": "https://www.floodriskmaster.org/apply",
+    "official_url": "https://www.floodriskmaster.org/scholarships",
+    "description": "Erasmus Mundus joint master's in flood risk management, coordinated by IHE Delft with TU Dresden, Universitat Politècnica de Catalunya and the University of Ljubljana. Civil engineering is an accepted first degree. Scholarships pay EUR 1,400 per month for up to 24 months plus all participation costs, and the deadline for applicants from Nepal's category is 3 January 2027.",
+    "tags": [
+      "Europe",
+      "erasmus-mundus",
+      "civil-engineering",
+      "water",
+      "verified-deadline",
+      "partner-country-quota"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "upcoming",
+    "source_url": "https://www.floodriskmaster.org/scholarships",
+    "last_verified": "2026-10-07"
   }
 ]
