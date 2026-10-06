@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.12.0] - 2026-10-07
+
+### Added
+
+Three records, 37 → **40** and Europe 12 → **15**, which brings the region to the lower bound of the Phase 1 target of 15–25. One of the three closes the coverage gap flagged in 0.11.0: **Europe had no PhD-level entry at all, and now has one.**
+
+- **Groundwater and Global Change — Impacts and Adaptation (GroundwatCH)** — IHE Delft (coordinator), TU Dresden and Instituto Superior Técnico, Universidade de Lisboa. **Civil engineering is named explicitly among the accepted first degrees**, alongside geologic, hydraulic, environmental and agricultural engineering. **Carries a real verified deadline: 3 January 2027** for Partner Country applicants, which includes Nepal. EUR 1,400 per month for 24 months plus all participation costs, about 15 scholarships a year across four intakes.
+- **EMerald Master in Georesources Engineering** — Université de Liège (coordinator), Université de Lorraine, Luleå University of Technology and TU Bergakademie Freiberg. Erasmus Mundus and EIT RawMaterials labelled. **Verified deadline 28 February 2027** for the scholarship round, which opened 3 November 2026; outcomes 16 April 2027. The full grant is EUR 33,600.
+- **Marie Skłodowska-Curie Actions Doctoral Networks (MSCA-DN)** — the European Union scheme that funds salaried PhD positions across international consortia. **This is the first Europe-located PhD record**, and it is the honest answer to "Europe offers nothing at doctorate level": the funding is real and open to any nationality, but it has no single deadline, because each funded project advertises its own vacancies continuously on EURAXESS.
+
+### Notes
+
+- **MSCA-DN does not fit the `deadline` field, and the record does not pretend it does.** Its `deadline` is `null` and the rolling-vacancy model is explained in `deadline_notes`, with `status: "open"` — the same treatment the three existing open-cycle records already use. Inventing a date would have been the easier and worse choice.
+- **A mobility rule is recorded, not glossed over.** MSCA-DN candidates must not have lived or worked in the country of the recruiting organisation for more than 12 months in the previous 36 — a real constraint on the route, and the reason the record points at EURAXESS rather than at a single application page.
+- **i-MESC was examined and left out.** It is a genuine energy-materials EMJM (batteries, supercaps, fuel cells) and a good thematic match for the catalog, but its admission criteria require a bachelor in chemistry, physics, chemical engineering, materials science or material process engineering, and its application page contradicts itself — one line says applications are open until 4 February, the next says the form is closed. Neither is a basis for a record.
+- **EMerald's fit is recorded honestly rather than assumed.** Civil engineering is *not* on its list of accepted degrees; it qualifies only through the general "bachelor degree in engineering" route, and then only with basic knowledge of geology and at least 22.5 ECTS of university mathematics. That constraint is written into `eligibility.other`, so a civil-engineering applicant is not misled by the Erasmus Mundus label.
+- **Groundwater and EMerald came out of the same EACEA catalogue pagination technique recorded in 0.11.0**, not from a new source. The method is now repeatable rather than lucky.
+- The catalog now carries **six verified closing dates**: ETH Zurich ESOP (30 November 2026), TU Delft Justus & Louise van Effen (1 December 2026), **Flood Risk Management (3 January 2027)**, **Groundwater and Global Change (3 January 2027)**, KTH (15 January 2027) and **EMerald (28 February 2027)**.
+- **Broader Europe reaches 15, the lower bound of the Phase 1 target**, and is the first region to do so. The remaining Phase 1 destinations still hold 2–4 each.
+- Link probe: **65 links checked, 0 dead**, 7 unreachable from this machine — unchanged, and still a documented sandbox limitation rather than broken links. All six new URLs returned `OK [200]`.
+- README screenshots were re-captured, because the previous pair showed the old count of 37 in the hero.
+
 ## [0.11.0] - 2026-10-07
 
 ### Added

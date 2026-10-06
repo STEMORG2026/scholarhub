@@ -1333,5 +1333,170 @@
     "status": "upcoming",
     "source_url": "https://www.floodriskmaster.org/scholarships",
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "groundwater-emjm",
+    "name": "Erasmus Mundus Joint Master in Groundwater and Global Change — Impacts and Adaptation (GroundwatCH)",
+    "provider": "Erasmus Mundus Joint Masters (European Union)",
+    "country": "Europe",
+    "region": "Netherlands, Germany and Portugal",
+    "city": "Delft, Dresden and Lisbon",
+    "university": "IHE Delft Institute for Water Education (Netherlands, coordinator), TU Dresden (Germany) and Instituto Superior Técnico, Universidade de Lisboa (Portugal)",
+    "program_field": [
+      "Civil Engineering",
+      "Environmental Engineering",
+      "Earth Sciences"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Erasmus Mundus Joint Masters scholarship",
+    "amount": "EUR 1,400 per month for 24 months, covering subsistence, travel and installation, plus the participation costs including tuition, library and laboratory costs and full insurance",
+    "currency": "EUR",
+    "deadline": "2027-01-03",
+    "deadline_notes": "The Erasmus Mundus scholarship deadline is 3 January 2027 at 23:59 Dutch time for applicants from Partner Countries, which includes Nepal; applicants from Programme Countries have until 7 February 2027. Applicants who do not yet hold an English test result may upload it as late as 1 February 2027 and still be considered for a scholarship. Admission and scholarship outcomes are announced in April 2027. Applications arriving after the scholarship deadline are still considered for academic admission but not for the scholarship, and applicants funding their own studies must apply and confirm funding by 15 April 2027. About 15 scholarships a year are awarded across roughly four intakes, around 60 in total for intakes starting between 2024 and 2027.",
+    "duration": "Two years (120 ECTS), taught in English across the Netherlands, Germany and Portugal",
+    "eligibility": {
+      "nationality": [
+        "Open to applicants of any nationality, with separate scholarship lists for Programme Country and Partner Country applicants; Nepal is in the Partner Country group"
+      ],
+      "gpa_minimum": "CGPA of at least B/B+ on the US system, or a 2nd upper classification on the UK system",
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "Requires a first degree equivalent to at least 180 ECTS. A bachelor degree in geologic, hydraulic, civil, environmental or agricultural engineering, geosciences, environmental sciences, climate sciences, geography, geology or a similar subject is accepted — civil engineering is named explicitly. Sufficient academic knowledge of mathematics is required. Applications may be submitted before the degree is finished if at least 120 ECTS are complete, provided the degree is awarded by 15 August of the year the programme starts. Students who have previously held an EMJM scholarship are not eligible."
+    },
+    "benefits": [
+      "EUR 1,400 per month for the full two years",
+      "Participation costs covered, including tuition, library and laboratory costs and full insurance",
+      "No separate scholarship application — the scholarship is requested inside the admission form",
+      "Around 15 scholarships a year, open to Partner and Programme Country applicants alike",
+      "Joint degree accredited in each consortium country"
+    ],
+    "application_url": "https://www.groundwatermaster.eu/admission-and-application",
+    "official_url": "https://www.groundwatermaster.eu/scholarships",
+    "description": "Erasmus Mundus joint master's in groundwater and global change, coordinated by IHE Delft with TU Dresden and IST Lisbon. Civil engineering is named explicitly among the accepted first degrees. Scholarships pay EUR 1,400 per month for two years plus all participation costs, and the deadline for applicants from Nepal's category is 3 January 2027.",
+    "tags": [
+      "Europe",
+      "erasmus-mundus",
+      "civil-engineering",
+      "water",
+      "climate",
+      "verified-deadline",
+      "partner-country-quota"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "upcoming",
+    "source_url": "https://www.groundwatermaster.eu/scholarships",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "emerald-emjm",
+    "name": "EMerald Master in Georesources Engineering",
+    "provider": "Erasmus Mundus Joint Masters (European Union)",
+    "country": "Europe",
+    "region": "Belgium, France, Sweden and Germany",
+    "city": "Liège, Nancy, Luleå and Freiberg",
+    "university": "Université de Liège (Belgium, coordinator), Université de Lorraine (France), Luleå University of Technology (Sweden) and TU Bergakademie Freiberg (Germany)",
+    "program_field": [
+      "Mining Engineering",
+      "Geological Engineering",
+      "Materials Science"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Erasmus Mundus Joint Masters scholarship",
+    "amount": "EUR 33,600 in total, paid as 24 monthly allowances of EUR 1,400, plus the participation costs paid directly to the coordinating university",
+    "currency": "EUR",
+    "deadline": "2027-02-28",
+    "deadline_notes": "The Erasmus Mundus scholarship round for the 2027 intake opened on 3 November 2026 and closes on 28 February 2027; the 40 highest-rated applicants are invited to interview and every candidate is told the outcome on 16 April 2027. Self-funded applicants apply in a second round with no published closing date, non-EU candidates interviewed in May and EU candidates in July. Only the Erasmus Mundus scholarship is available for this call — the EUR 15,000 EIT RawMaterials grant is marked not available for 2027. Incomplete application forms are not considered.",
+    "duration": "Two years (120 ECTS), fully taught in English, with each student hosted by at least two of the four partner universities",
+    "eligibility": {
+      "nationality": [
+        "Open to applicants worldwide; the Erasmus Mundus scholarship is awarded without a nationality quota"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {
+        "TOEFL": "87 (internet-based)",
+        "IELTS": "6.5"
+      },
+      "age_limit": null,
+      "other": "At least 22.5 ECTS of university-level mathematics is required, because the programme awards an engineering diploma. Two routes qualify: a bachelor degree in engineering with basic knowledge of geology, or one of a listed set of degrees — minerals, mining, chemical, geological or metallurgical engineering, materials engineering oriented towards metals extraction and processing, or a master degree in geology. Civil engineering is not named explicitly and would qualify only through the general engineering route, so applicants from a civil background should expect to evidence geology coursework. A one-page CV and a motivation video are required, and the motivation letter must not be written with AI tools. Students who have previously held an EMJM scholarship are not eligible."
+    },
+    "benefits": [
+      "EUR 1,400 per month for 24 months, EUR 33,600 in total",
+      "Travel, visa, installation and subsistence costs covered",
+      "Participation costs paid directly to the coordinating university",
+      "Awarded only in full, to full-time students",
+      "Non-European self-funded students pay EUR 8,000 a year and may request a fee waiver"
+    ],
+    "application_url": "https://www.emerald.uliege.be/apply-3/apply/",
+    "official_url": "https://www.emerald.uliege.be/fees-and-scholarships/",
+    "description": "Erasmus Mundus and EIT-labelled joint master's in georesources engineering, coordinated by the Université de Liège with partners in France, Sweden and Germany. It balances geology and mineral-resource knowledge with process engineering, and the Erasmus Mundus scholarship is worth EUR 33,600 over two years. The 2027 scholarship round runs from 3 November 2026 to 28 February 2027.",
+    "tags": [
+      "Europe",
+      "erasmus-mundus",
+      "mining-engineering",
+      "materials",
+      "verified-deadline"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "upcoming",
+    "source_url": "https://www.emerald.uliege.be/apply-3/apply/",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "msca-doctoral-networks",
+    "name": "Marie Skłodowska-Curie Actions Doctoral Networks (MSCA-DN)",
+    "provider": "European Commission — Horizon Europe",
+    "country": "Europe",
+    "region": "European Union member states and Horizon Europe associated countries",
+    "city": "Varies by project — each funded network recruits at its own partner institutions",
+    "university": "International consortia of at least three independent organisations from different EU member states or Horizon Europe associated countries, combining universities, research institutions and companies; further partners may join from any country in the world",
+    "program_field": [
+      "Engineering",
+      "Materials Science",
+      "Energy",
+      "Natural Sciences"
+    ],
+    "degree_level": [
+      "PhD"
+    ],
+    "funding_type": "Salaried doctoral position funded by the European Union",
+    "amount": "A living allowance plus a mobility allowance, and where applicable family, long-term leave and special-needs allowances; the exact salary is set by the recruiting institution and its country",
+    "currency": "EUR",
+    "deadline": null,
+    "deadline_notes": "There is no single application deadline, and that is the important point: Doctoral Networks recruit continuously. Each funded project advertises its own PhD vacancies and candidates apply to those vacancies directly, most of them listed on the EURAXESS portal, which is updated daily. What runs to a calendar is the call for the consortia themselves — the 2026 Doctoral Networks call is open with a proposal deadline of 24 November 2026 at 17:00 CET — because new vacancies appear as each call's projects begin recruiting. A candidate should therefore monitor EURAXESS rather than wait for a date.",
+    "duration": "Each fellowship runs between 3 and 36 months, or between 3 and 48 months for a Joint Doctorate; the networks themselves last up to four years, or five for Joint Doctorates",
+    "eligibility": {
+      "nationality": [
+        "Candidates may be of any nationality, including Nepali"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "Candidates must not already hold a doctoral degree at the date of recruitment, and must be enrolled in a doctoral programme during the project. A mobility rule applies: in general the candidate must not have lived or worked in the country of the recruiting organisation for more than 12 months in the 36 months immediately before recruitment. Industrial Doctorates additionally require at least 50% of the researcher's time to be spent outside academia. Requirements specific to each post — degree subject, grades, language — are set by the recruiting project, not centrally."
+    },
+    "benefits": [
+      "A living allowance and a separate mobility allowance, paid as an employment contract",
+      "Family, long-term leave and special-needs allowances where applicable",
+      "Fully funded research, training and networking budget",
+      "Secondments with other partners in the network, including industry",
+      "Open to any nationality, with no quota by country"
+    ],
+    "application_url": "https://euraxess.ec.europa.eu/jobs/search?f%5B0%5D=job_is_eu_founded%3A546&f%5B1%5D=job_is_eu_founded%3A548&f%5B2%5D=job_is_eu_founded%3A4348&f%5B3%5D=job_is_eu_founded%3A4349",
+    "official_url": "https://marie-sklodowska-curie-actions.ec.europa.eu/actions/doctoral-networks",
+    "description": "The European Union scheme that funds salaried PhD positions across international research consortia. Unlike a scholarship it has no single deadline — projects advertise vacancies continuously on the EURAXESS portal and candidates apply to individual posts. Open to any nationality, with a mobility rule that the candidate must not have spent more than 12 months of the previous 36 in the recruiting country.",
+    "tags": [
+      "Europe",
+      "phd",
+      "salaried-position",
+      "no-deadline",
+      "any-nationality"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "open",
+    "source_url": "https://marie-sklodowska-curie-actions.ec.europa.eu/actions/doctoral-networks",
+    "last_verified": "2026-10-07"
   }
 ]
