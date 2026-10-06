@@ -660,5 +660,159 @@
     "status": "verify",
     "source_url": "https://www.nzscholarships.govt.nz/vocational-short-term-scholarships/",
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "eesic-emjm",
+    "name": "Erasmus Mundus Joint Master in Engineering for Environmental Sustainability and International Cooperation (EESIC)",
+    "provider": "Erasmus Mundus consortium (University of Trento, IST Lisboa, UPV Valencia)",
+    "country": "Europe",
+    "region": "Portugal, Spain, Italy",
+    "city": "Lisbon, Valencia, Trento",
+    "university": "Instituto Superior Técnico, Universidade de Lisboa (Portugal); Universitat Politècnica de València (Spain); University of Trento (Italy)",
+    "program_field": [
+      "Civil Engineering"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Erasmus Mundus Joint Master scholarship, with partial fee waivers for top-ranked candidates without a scholarship",
+    "amount": "EUR 1,400 per month for up to 24 months, with tuition and mandatory participation costs waived for scholarship holders. Admitted students without a scholarship pay EUR 8,000 per year, reduced by 75% to EUR 2,000 per year for the highest-ranked candidates",
+    "currency": "EUR",
+    "deadline": null,
+    "deadline_notes": "The call for applications for the 2027-2029 cohort opens in October 2026; the admission page did not carry a closing date when this record was checked. The previous 2026-2028 call is published in the site FAQ as a reference only.",
+    "duration": "Two years (120 ECTS): one semester each in Lisbon, Valencia and Trento, then a fourth semester of project work and thesis with a partner organisation",
+    "eligibility": {
+      "nationality": [
+        "Open to students worldwide",
+        "Some scholarships may be reserved for applicants from targeted regions: Western Balkans, Neighbourhood South, Asia, Central Asia, Middle East, Pacific, Sub-Saharan Africa, Latin America, Caribbean"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "Selection scores academic merit, the suitability of the applicant's background for EESIC, motivation, recommendation letters, previous experience and an interview. Applicants who already hold an EMJM scholarship are not eligible for another. The programme awards degrees in environmental engineering and is coordinated by the University of Trento's Department of Civil, Environmental and Mechanical Engineering; the accepted bachelor's fields were not listed on the pages checked."
+    },
+    "benefits": [
+      "EUR 1,400 monthly allowance",
+      "Tuition and mandatory participation costs waived",
+      "Mobility across three European universities",
+      "Fourth-semester project work with an associated partner"
+    ],
+    "application_url": "https://eesic.eu/admission",
+    "official_url": "https://eesic.eu/",
+    "description": "Erasmus Mundus Joint Master in engineering for environmental sustainability and international cooperation, awarding degrees in environmental engineering. Students spend one semester each in Lisbon, Valencia and Trento, then a fourth semester of project work and thesis with an associated partner. The call for the 2027-2029 cohort opens in October 2026.",
+    "tags": [
+      "Europe",
+      "erasmus-mundus",
+      "environmental-engineering",
+      "sustainability",
+      "international-cooperation"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://eesic.eu/admission",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "rem-plus-plus-emjm",
+    "name": "Erasmus Mundus Joint Master in Renewable Energy in the Marine Environment (REM+ 2)",
+    "provider": "Erasmus Mundus consortium (EHU, UCC, POLITO, ECN)",
+    "country": "Europe",
+    "region": "Spain, Ireland, Italy, France",
+    "city": "Multiple",
+    "university": "University of the Basque Country (Spain), University College Cork (Ireland), Politecnico di Torino (Italy), École Centrale de Nantes (France)",
+    "program_field": [
+      "Renewable Energy"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Erasmus Mundus Joint Master scholarship (EMJM grant)",
+    "amount": "Participation costs EUR 10,000 for Programme Country students or EUR 18,000 for Partner Country students; subsistence up to EUR 33,600 at EUR 1,400 per month",
+    "currency": "EUR",
+    "deadline": null,
+    "deadline_notes": "The 2026 edition is closed and the site says news about the 2027 edition will follow, so no 2027 dates are published. Fees are due by 26 July before the start of each academic year.",
+    "duration": "Two years (120 ECTS) across four universities in Spain, Ireland, Italy and France",
+    "eligibility": {
+      "nationality": [
+        "Open to students worldwide; separate participation-cost rates apply to Programme Country and Partner Country students"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": null,
+      "other": "The admission page was replaced by a notice dated 16 September 2026 stating that the selection and admission procedure is under review by the Joint Programme Board and will be republished. The accepted bachelor's fields therefore could not be verified from the source, and should be confirmed against the 2027 call before preparing an application."
+    },
+    "benefits": [
+      "Participation costs covered",
+      "Subsistence allowance",
+      "Mobility across four European universities"
+    ],
+    "application_url": "https://master-remplus2.eu/admission/",
+    "official_url": "https://master-remplus2.eu/",
+    "description": "Erasmus Mundus Joint Master in renewable energy in the marine environment, covering wave, tidal and gradient energy systems. Delivered by four universities in Spain, Ireland, Italy and France. The 2026 edition is closed and the 2027 admission procedure was under revision when this record was checked.",
+    "tags": [
+      "Europe",
+      "erasmus-mundus",
+      "renewable-energy",
+      "marine",
+      "offshore"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://master-remplus2.eu/scholarship-coverage/",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "mamaself-emjm",
+    "name": "MaMaSELF+ Erasmus Mundus Master in Materials Science",
+    "provider": "Erasmus Mundus consortium (Université de Rennes, coordinating)",
+    "country": "Europe",
+    "region": "France, Germany, Italy, Poland",
+    "city": "Multiple",
+    "university": "Université de Rennes (France, coordinator), Université de Montpellier (France), LMU Munich and TUM (Germany), University of Turin (Italy), Adam Mickiewicz University Poznań (Poland)",
+    "program_field": [
+      "Materials Science"
+    ],
+    "degree_level": [
+      "Master"
+    ],
+    "funding_type": "Erasmus Mundus scholarship covering travel, installation, living allowance and tuition",
+    "amount": "EUR 33,600 over the two years, covering travel costs, installation costs and a living allowance; scholarship holders pay no tuition. Otherwise tuition is EUR 6,000 per year for non-EU students and EUR 3,000 per year for EU students",
+    "currency": "EUR",
+    "deadline": null,
+    "deadline_notes": "The most recent published deadlines were for the 2026 entry: 13 February 2026 for non-European students, 20 March 2026 for European students, and 15 May 2026 for applications without a scholarship. Dates for the 2027 intake were not published when this record was checked.",
+    "duration": "Two years, taught in English across the consortium universities",
+    "eligibility": {
+      "nationality": [
+        "Open to students worldwide",
+        "Applicants from India must hold a four-year bachelor's degree including a bachelor's thesis to register at TUM or LMU"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {
+        "english": "IELTS Academic 6.5 overall; TOEFL iBT 80, or 88 at LMU and TUM; Cambridge CAE or CPE; or CEFR B2-C2 depending on the site"
+      },
+      "age_limit": null,
+      "other": "Requires a 180-ECTS bachelor's degree in Physics, Chemistry, Materials Science or a related discipline such as geo-science, nano-science or materials engineering. Bachelor's degrees in Mechanical Engineering and Mechatronics are explicitly not considered adapted to the programme, and applicants from civil engineering, medicine or pharmacy are not accepted unless they have a strong chemistry or physics background at bachelor's level and submit a course syllabus."
+    },
+    "benefits": [
+      "EUR 33,600 total scholarship",
+      "Travel costs",
+      "Installation costs",
+      "Living allowance",
+      "Tuition fees waived for scholarship holders"
+    ],
+    "application_url": "https://application.mamaself.eu/",
+    "official_url": "https://www.mamaself.eu/",
+    "description": "Erasmus Mundus Joint Master in materials science, taught in English across a six-university consortium in France, Germany, Italy and Poland. This is a materials science programme: bachelor's degrees in mechanical engineering, mechatronics, civil engineering, medicine or pharmacy are not accepted without a strong chemistry or physics background at bachelor's level.",
+    "tags": [
+      "Europe",
+      "erasmus-mundus",
+      "materials-science",
+      "physics",
+      "chemistry"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://www.mamaself.eu/admission",
+    "last_verified": "2026-10-07"
   }
 ]

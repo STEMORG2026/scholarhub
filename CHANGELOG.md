@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.7.0] - 2026-10-07
+
+### Added
+
+Three Erasmus Mundus Joint Masters, taking the catalog from 24 to **27 records** and Europe to **8** — now the deepest destination, ahead of China and New Zealand on 4.
+
+- **EESIC** — Engineering for Environmental Sustainability and International Cooperation. Instituto Superior Técnico (Lisbon), Universitat Politècnica de València, University of Trento: one semester at each, then a fourth semester of project work and thesis with an associated partner. **The call for the 2027-2029 cohort opens in October 2026** — the only record in the catalog whose next application window is opening now.
+- **REM+ 2** — Renewable Energy in the Marine Environment, covering wave, tidal and gradient energy systems. University of the Basque Country, University College Cork, Politecnico di Torino, École Centrale de Nantes.
+- **MaMaSELF+** — Materials Science, across six universities in France, Germany, Italy and Poland.
+
+### Notes
+
+- **MaMaSELF excludes civil engineering.** Its admission page states that bachelor's degrees in Mechanical Engineering and Mechatronics "are not adapted to the Mamaself program", and that applicants from civil engineering, medicine or pharmacy "will not be accepted unless they have a good background in Chemistry or Physics". This is recorded in `eligibility.other` rather than glossed over: the record is in scope for materials-science students, but a civil engineer needs chemistry or physics at bachelor's level.
+- **EESIC reserves some scholarships for targeted regions, including Asia.** Its admission page lists nine targeted regions; the EU's "Region 5 Asia" grouping covers South Asia, so an applicant from Nepal may fall inside a reserved quota. The country list was not published on the pages checked, so this is recorded as a possibility, not a promise.
+- **REM+ 2's admission page is a placeholder.** It was replaced by a notice dated 16 September 2026 stating that the selection and admission procedure is "under review by the Joint Programme Board". The record is `verify`, and its `eligibility.other` says plainly that the accepted fields could not be verified — the alternative was to guess them.
+- **None of the three publishes a 2027 deadline yet**, so all three use `deadline_notes` instead of a fabricated `deadline`. MaMaSELF's most recent dates were 13 February, 20 March and 15 May 2026; REM+ 2's 2026 edition is closed with news of the 2027 edition pending.
+- Link probe: **41 unique links, 0 dead.** All eight new URLs return 200.
+
 ## [0.6.0] - 2026-10-07
 
 ### Fixed

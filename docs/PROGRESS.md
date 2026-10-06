@@ -68,12 +68,22 @@ Detailed log of development work on ScholarHub. For the high-level roadmap with 
 - **Why this survived four earlier passes:** the default theme is light, so every previous screenshot was taken in light mode. Light mode was never wrong. It took deliberately switching theme and reading computed styles to see it.
 - Verified in a dark-mode browser session: `app dark` confirmed on the root, chip `rgb(44,54,48)` on card `rgb(32,41,35)`, card icon `rgb(43,52,46)`, plus screenshots of both the hero and the card grid.
 
+### EMJM depth (sixth pass, same day, v0.7.0)
+- Added 3 Erasmus Mundus Joint Masters, 24 → **27 records**; Europe 5 → **8**, now the deepest destination.
+- **Discovery method:** the official EACEA catalogue (218 projects) plus its RSS feed, screened by keyword for civil/structural/construction/materials/energy. Aggregator sites were used only to *find* candidate names and never cited — every record's `source_url` is the programme's own page.
+- **EESIC** is the notable find because of timing: its admission page states the call for the **2027-2029 cohort opens in October 2026**. It is the only record in the catalog with a window opening now. €1,400/month for up to 24 months, tuition waived for scholarship holders; non-scholarship places are €8,000/year with a 75% reduction to €2,000/year for the highest-ranked candidates. It also reserves some scholarships for nine **targeted regions including "Region 5 Asia"** — which may cover Nepal, though the country list was not published, so the record says "may" rather than claiming it.
+- **REM+ 2** (marine renewable energy: wave, tidal, gradient systems) — four universities in Spain, Ireland, Italy and France. Its admission page has been **replaced by a placeholder** dated 16 September 2026: "the selection and admission procedure … is currently under review by the Joint Programme Board". Rather than infer the accepted fields, the record is `verify` and `eligibility.other` states that they could not be verified.
+- **MaMaSELF+** (materials science) — **and a finding worth keeping: it excludes civil engineering.** The admission page says bachelor's degrees in Mechanical Engineering and Mechatronics "are not adapted to the Mamaself program", and that civil engineering, medicine or pharmacy applicants "will not be accepted unless they have a good background in Chemistry or Physics". Recorded in `eligibility.other`. The record stays in scope for materials-science readers; a civil engineer now learns the prerequisite instead of the exclusion.
+- **No 2027 deadline exists for any of the three yet**, so all three carry `deadline_notes` rather than an invented `deadline`. MaMaSELF's most recent were 13 Feb / 20 Mar / 15 May 2026; REM+ 2's 2026 edition is closed pending 2027 news.
+- Verified: `npm test` 0 errors / 5 warnings (no new warnings — all three records carry `deadline_notes`); build clean; link probe **41 unique links, 0 dead**, all eight new URLs returning 200; browser confirmed 27 opportunities, 12 destinations, the Europe filter at 8, and all three new cards rendering.
+
 ### Known gaps
-- 24 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards.
+- 27 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards. Broader Europe (8) is closest.
 - Link liveness is opt-in, not part of `npm test`. It proves a URL resolves — never that the page still says what the record claims.
-- 5 of 33 links could not be reached from this machine (`www.campuschina.org`, `www2.daad.de`, `www.dfat.gov.au`, `www.master-biopham.eu`). All were confirmed live through a different fetch path, but the probe reports them unreachable rather than OK.
+- 4 of 41 links could not be reached from this machine (`www.campuschina.org`, `www2.daad.de`, `www.dfat.gov.au`, `www.master-biopham.eu`). All were confirmed live through a different fetch path, but the probe reports them unreachable rather than OK.
 - The `Non-degree` filter and profile option are wired through the data, validator and UI, but `docs/ROADMAP.md` Phase 1 still describes coverage in degree terms; the short-course track is not yet its own roadmap line.
 - Dark-mode colour contrast is fixed and measured (see above), but there is still **no accessibility audit**: keyboard navigation, ARIA labels and screen-reader compatibility are untested, and light-mode contrast has never been measured at all. No screenshots in the README, no AI provider adapter, and no slide-out drawer for small screens.
+- The 2027 application windows for EESIC, REM+ 2 and MaMaSELF are all unpublished. EESIC's opens in October 2026 and its closing date needs capturing once it appears.
 
 ## 2026-09-25 — Bootstrap
 
