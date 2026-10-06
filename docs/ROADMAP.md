@@ -14,10 +14,11 @@ Living document tracking project progress, current development focus, and planne
 | 2026-10-07 | Link liveness gate | ✅ Done | `npm run check:links`; found and fixed 2 dead official links (Tsinghua, Canterbury) |
 | 2026-10-07 | Deadline support | ✅ Done | `deadline_notes` field + provenance-aware deadline display; ETH ESOP 2026-11-30 verified |
 | 2026-10-07 | Catalog expansion | ✅ Done | 14 → 19 records, 10 → 11 destinations; added RESCO, TERRA, BIOPHAM, TFMASA and the SI Scholarship (Sweden); 28 links probed, 0 dead |
+| 2026-10-07 | USA and China depth | ✅ Done | 19 → 22 records; added JJ/WBGSP, Tongji University and the HIT Scholarship; China now at 4 records. Humphrey (non-degree) and CAS-TWAS (9-year-stale source) excluded |
 
 ## Current development focus (NOW)
 
-- **Data expansion**: 19 records now; no region yet reaches the Phase 1 target of 15–25 verified entries (USA, China, Europe, Australia, New Zealand). Europe has the most depth, with four named Erasmus Mundus joint masters in construction, earthen architecture, materials science and aeronautics. Sweden was added this pass. This remains the largest gap — provenance is done, breadth is not.
+- **Data expansion**: 22 records now; no region yet reaches the Phase 1 target of 15–25 verified entries. China (4) and broader Europe (5) have the most depth. USA growth is structurally slower, because most US graduate funding is restricted to US citizens or permanent residents — JJ/WBGSP is one of the few routes open to developing-country nationals. This remains the largest gap: provenance is done, breadth is not.
 - **Deadline coverage**: Schema and display support landed on 2026-10-07, but only one record carries a single verified closing date. Add real dates as official cycles publish them, and use `deadline_notes` where a cycle has no single date.
 - **Accessibility audit**: Verify keyboard navigation, ARIA labels, screen reader compatibility, and color contrast. Known issue: chips and status badges use hardcoded light colours with no dark-mode override.
 - **AI provider seam**: Define the adapter interface contract (SEAM) so future provider integrations have a stable boundary.

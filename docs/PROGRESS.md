@@ -28,8 +28,20 @@ Detailed log of development work on ScholarHub. For the high-level roadmap with 
 - Card chips now show "Dates in detail" when a record has `deadline_notes` but no single verified date, so window and field-split cycles are visible without implying one deadline.
 - Added the Sweden flag to the destination icons.
 
+### USA and China depth (third pass, same day)
+- Added 3 records, taking the catalog from 19 to 22 and China to 4 entries — the joint-most with broader Europe:
+  - **JJ/WBGSP** (Joint Japan/World Bank Graduate Scholarship Program) — open to developing-country nationals, with *infrastructure management* named as a key development area; study at 44 participating master's programmes across 24 universities in the U.S., Europe, Africa, Oceania and Japan. Two application windows for 2027: 18 January – 26 February, and 29 March – 21 May.
+  - **Tongji University scholarships** — Chinese Government Scholarship streams (Bilateral, Silk Road, High Level Postgraduate), Shanghai Municipal Government Scholarship, and university awards.
+  - **HIT International Students Scholarship** — Harbin Institute of Technology; a tuition-fee waiver only, awarded in tiers of 100/50/30/20 per cent with **no living stipend**. The 2026 window ran 1 October 2025 to 31 May 2026.
+- **Two candidates excluded, both for honest reasons:**
+  - **Hubert H. Humphrey Fellowship** is explicitly *non-degree* ("graduate-level study and professional experiences"), and the `degree_level` enum covers only Bachelor/Master/PhD/PostDoc. Adding it requires a schema change, not a data change.
+  - **CAS-TWAS President's Fellowship**: the official UCAS page still shows the **2017** call (age limit "on 31 December 2017", deadline "31 MARCH 2017"). A nine-year-stale page is not a valid `source_url`, so no record was created even though the programme is real.
+- **Recorded a structural limit rather than padding the catalog:** most US graduate funding is restricted to US citizens or permanent residents (NSF GRFP is explicit about this). USA depth is genuinely harder to grow than China or Europe; the realistic routes are programmes like JJ/WBGSP that place developing-country nationals at US universities.
+- `country` gained the value **"Multiple countries"** for JJ/WBGSP, whose participating programmes span five continents. Labelling it "United States" would have implied study in the US, which the programme does not guarantee.
+- Link probe: **31 unique links, 0 dead.**
+
 ### Known gaps
-- 19 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards.
+- 22 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards.
 - Link liveness is opt-in, not part of `npm test`. It proves a URL resolves — never that the page still says what the record claims.
 - 4 of 21 links could not be reached from this machine (`www.campuschina.org`, `www2.daad.de`, `www.dfat.gov.au`). All three were confirmed live through a different fetch path, but the probe reports them unreachable rather than OK.
 - No accessibility audit, no screenshots, no AI provider adapter, and no slide-out drawer for small screens.
