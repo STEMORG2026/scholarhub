@@ -339,7 +339,7 @@
     "benefits": ["Tuition", "Living allowance", "Travel and establishment support per scheme terms"],
     "application_url": "https://www.nzscholarships.govt.nz/international-tertiary-students/",
     "official_url": "https://www.nzscholarships.govt.nz/",
-    "description": "New Zealand government scholarships for people from eligible partner countries. The programme covers undergraduate and postgraduate study plus thematic and vocational short-term training. Use official country and eligibility guidance before applying.",
+    "description": "New Zealand government scholarships for undergraduate and postgraduate study by people from eligible partner countries. Separate Manaaki schemes fund thematic cohort training and vocational short-term training, and are recorded individually. Use the official country and eligibility guidance before applying.",
     "tags": ["New Zealand", "government", "international"],
     "last_updated": "2026-10-07",
     "status": "verify",
@@ -380,7 +380,7 @@
     "region": "Hungary, Spain, Portugal, France",
     "city": "Multiple",
     "university": "Four European institutions in Budapest, A Coruña, Braga & Guimarães, and Le Havre",
-    "program_field": ["Civil Engineering"],
+    "program_field": ["Civil Engineering", "Renewable Energy"],
     "degree_level": ["Master"],
     "funding_type": "Erasmus Mundus scholarship (competitive)",
     "amount": "See the programme's fees and scholarships page",
@@ -582,6 +582,83 @@
     "last_updated": "2026-10-07",
     "status": "closed",
     "source_url": "https://studyathit.hit.edu.cn/18367/list.htm",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "nz-thematic-short-term",
+    "name": "Manaaki New Zealand Thematic Short Term Cohort Training Scholarships",
+    "provider": "New Zealand Ministry of Foreign Affairs and Trade",
+    "country": "New Zealand",
+    "region": "Nationwide",
+    "city": "Various",
+    "university": "New Zealand education institutions",
+    "program_field": ["Renewable Energy"],
+    "degree_level": ["Non-degree"],
+    "funding_type": "Fully funded short course (individual or cohort)",
+    "amount": "Full tuition fees, training-related costs, a weekly living allowance, and travel costs where applicable",
+    "currency": "NZD",
+    "deadline": null,
+    "deadline_notes": "Applications are channelled through the New Zealand Embassy or High Commission in each eligible country, which promotes the course and nominates candidates. No public deadline is published on the scheme page.",
+    "duration": "Courses run two to four weeks, in New Zealand or online",
+    "eligibility": {"nationality": ["Citizens of eligible Pacific, ASEAN, African, and Latin American and Caribbean countries; see the official page for the full country list"], "gpa_minimum": null, "language_requirements": {}, "age_limit": null, "other": "Themes are Governance (public sector leadership, public health management, trade policy, good governance, diplomatic training) and Climate Change and Resilience (renewable energy project management, geothermal energy project management, food and agribusiness value chains). Applicants must have lived in their country of citizenship for at least two years, be at least 18, not be serving in the military, and have employer endorsement. Not all courses are open to all eligible countries."},
+    "benefits": ["Full tuition fees", "Training-related costs", "Weekly living allowance", "Travel costs where applicable"],
+    "application_url": "https://www.nzscholarships.govt.nz/thematic-short-term-training-scholarships/",
+    "official_url": "https://www.nzscholarships.govt.nz/thematic-short-term-training-scholarships/",
+    "description": "New Zealand government short-course scholarships for mid- and senior-level professionals from eligible Pacific, ASEAN, African and Latin American and Caribbean countries. Courses run two to four weeks, in New Zealand or online, under Governance and Climate Change and Resilience themes. The renewable-energy route is Renewable Energy Project Management; most other courses are not engineering, so the field label covers that route rather than the whole scheme.",
+    "tags": ["New Zealand", "government", "short-course", "renewable-energy"],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://www.nzscholarships.govt.nz/thematic-short-term-training-scholarships/",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "nz-vocational-short-term",
+    "name": "Manaaki New Zealand Vocational Short Term Training Scholarships",
+    "provider": "New Zealand Ministry of Foreign Affairs and Trade",
+    "country": "New Zealand",
+    "region": "Nationwide",
+    "city": "Various",
+    "university": "New Zealand certified training providers",
+    "program_field": [
+      "Renewable Energy"
+    ],
+    "degree_level": [
+      "Non-degree"
+    ],
+    "funding_type": "Fully funded short training course or work placement (subject to country eligibility)",
+    "amount": "Full tuition fees, training-related costs, a weekly living allowance, and travel costs where applicable",
+    "currency": "NZD",
+    "deadline": null,
+    "deadline_notes": "Application timing differs by country: some allow applications all year round, while others open and close within published dates. Applicants contact the New Zealand Embassy or High Commission in their own country for the dates and the application form, so no single public deadline exists.",
+    "duration": "One week to 12 months, as a training course with a New Zealand certified provider, a work placement, or an online or in-country course",
+    "eligibility": {
+      "nationality": [
+        "Citizens of eligible Pacific countries and territories only: Federated States of Micronesia, Fiji, French Polynesia, Kiribati, Marshall Islands, Naoero, New Caledonia, Niue, Palau, Papua New Guinea, Samoa, Solomon Islands, Timor-Leste, Tokelau, Tonga, Tuvalu, Vanuatu, Wallis and Futuna"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": 18,
+      "other": "Open to Pacific countries and territories only. Applicants must have lived in their country of citizenship for at least two years, be at least 18 at the start of the scholarship, not be serving in the military, and have at least one year of full-time (or two years of part-time) work experience related to their career or proposed training. Employer endorsement and English language evidence are required. Funded themes include Climate Change and Resilience, of which renewable energy is one; not all courses are open to all countries."
+    },
+    "benefits": [
+      "Full tuition fees",
+      "Training-related costs",
+      "Weekly living allowance",
+      "Travel and related costs where applicable"
+    ],
+    "application_url": "https://www.nzscholarships.govt.nz/vocational-short-term-scholarships/",
+    "official_url": "https://www.nzscholarships.govt.nz/vocational-short-term-scholarships/",
+    "description": "New Zealand government short-term training and work-placement scholarships for professionals from eligible Pacific countries and territories. Terms range from one week to 12 months and the chosen programme must align with New Zealand priority themes, of which renewable energy is one. Applications are made through the local New Zealand Embassy or High Commission, and the scheme is not open to applicants from outside the Pacific.",
+    "tags": [
+      "New Zealand",
+      "government",
+      "short-course",
+      "renewable-energy",
+      "pacific"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "verify",
+    "source_url": "https://www.nzscholarships.govt.nz/vocational-short-term-scholarships/",
     "last_verified": "2026-10-07"
   }
 ]

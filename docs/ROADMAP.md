@@ -15,17 +15,19 @@ Living document tracking project progress, current development focus, and planne
 | 2026-10-07 | Deadline support | ✅ Done | `deadline_notes` field + provenance-aware deadline display; ETH ESOP 2026-11-30 verified |
 | 2026-10-07 | Catalog expansion | ✅ Done | 14 → 19 records, 10 → 11 destinations; added RESCO, TERRA, BIOPHAM, TFMASA and the SI Scholarship (Sweden); 28 links probed, 0 dead |
 | 2026-10-07 | USA and China depth | ✅ Done | 19 → 22 records; added JJ/WBGSP, Tongji University and the HIT Scholarship; China now at 4 records. Humphrey (non-degree) and CAS-TWAS (9-year-stale source) excluded |
+| 2026-10-07 | Short-course support | ✅ Done | `Non-degree` added to the `degree_level` enum; 22 → 24 records with the two Manaaki short-term schemes; field/degree filters derived from the catalog; 33 links probed, 0 dead |
 
 ## Current development focus (NOW)
 
-- **Data expansion**: 22 records now; no region yet reaches the Phase 1 target of 15–25 verified entries. China (4) and broader Europe (5) have the most depth. USA growth is structurally slower, because most US graduate funding is restricted to US citizens or permanent residents — JJ/WBGSP is one of the few routes open to developing-country nationals. This remains the largest gap: provenance is done, breadth is not.
+- **Data expansion**: 24 records now; no region yet reaches the Phase 1 target of 15–25 verified entries. China (4) and broader Europe (5) have the most depth. USA growth is structurally slower, because most US graduate funding is restricted to US citizens or permanent residents — JJ/WBGSP is one of the few routes open to developing-country nationals. This remains the largest gap: provenance is done, breadth is not.
+- **Short-course track**: `Non-degree` landed on 2026-10-07 and currently holds two New Zealand schemes. The Hubert H. Humphrey Fellowship is now unblocked by the schema change but its eligibility and programme pages returned "Page not found" when checked, so no record was created; re-check before adding it.
 - **Deadline coverage**: Schema and display support landed on 2026-10-07, but only one record carries a single verified closing date. Add real dates as official cycles publish them, and use `deadline_notes` where a cycle has no single date.
 - **Accessibility audit**: Verify keyboard navigation, ARIA labels, screen reader compatibility, and color contrast. Known issue: chips and status badges use hardcoded light colours with no dark-mode override.
 - **AI provider seam**: Define the adapter interface contract (SEAM) so future provider integrations have a stable boundary.
 
 ## Phase 1 — Foundation (in progress)
 
-**Scope:** USA, China, Europe (UK, Germany, France, Netherlands, Sweden, Switzerland), Australia, New Zealand. Fields: Civil Engineering, Materials Science.
+**Scope:** USA, China, Europe (UK, Germany, France, Netherlands, Sweden, Switzerland), Australia, New Zealand. Fields: Civil Engineering, Materials Science, plus Renewable Energy where a programme funds it explicitly. Degree levels: Bachelor, Master, PhD, and — since 2026-10-07 — `Non-degree` for funded short courses and professional fellowships.
 
 - [x] Static client-side app with search, filters, saved list, profile storage
 - [x] Responsive layout with dark/light mode

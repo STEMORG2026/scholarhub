@@ -18,6 +18,9 @@ const LINK_CONCURRENCY = 5;
 const USER_AGENT = 'scholarhub-catalog-validator/1.0 (+https://github.com/Er-Sajan-PLG/scholarhub)';
 
 const VALID_STATUSES = new Set(['open', 'closed', 'upcoming', 'verify']);
+// `Non-degree` exists so that funded short courses, fellowships and training
+// placements can be recorded without falsely filing them as a degree.
+const VALID_DEGREE_LEVELS = new Set(['Bachelor', 'Master', 'PhD', 'PostDoc', 'Non-degree']);
 const ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const URL_PATTERN = /^https:\/\//;
@@ -86,6 +89,13 @@ for (const entry of scholarships) {
 
   if (!Array.isArray(entry.program_field)) error(id, 'program_field must be an array');
   if (!Array.isArray(entry.degree_level)) error(id, 'degree_level must be an array');
+  if (Array.isArray(entry.degree_level)) {
+    for (const level of entry.degree_level) {
+      if (!VALID_DEGREE_LEVELS.has(level)) {
+        error(id, 'Invalid degree_level: ' + level + ' (allowed: ' + Array.from(VALID_DEGREE_LEVELS).join(', ') + ')');
+      }
+    }
+  }
   if (entry.benefits && !Array.isArray(entry.benefits)) error(id, 'benefits must be an array');
   if (entry.tags && !Array.isArray(entry.tags)) error(id, 'tags must be an array');
 

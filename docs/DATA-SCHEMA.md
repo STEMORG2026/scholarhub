@@ -10,7 +10,7 @@ The catalog is static JSON consumed in the browser. A scholarship entry is a rec
 | `name`, `provider`, `country` | string | Public display names. |
 | `region`, `city`, `university` | string | Use `Various`/`Multiple` when institution/location varies; avoid pretending there is one host. |
 | `program_field` | string[] | Controlled labels used by filters. |
-| `degree_level` | string[] | `Bachelor`, `Master`, `PhD`, `PostDoc`. |
+| `degree_level` | string[] | `Bachelor`, `Master`, `PhD`, `PostDoc`, `Non-degree`. `Non-degree` covers short courses, cohort training and professional fellowships that award a certificate rather than a degree. |
 | `funding_type`, `amount`, `currency` | string | Describe limits/conditions; don't infer a cash value from a benefit list. Currency uses ISO-style code where a numeric amount exists. |
 | `deadline` | `YYYY-MM-DD` or `null` | A single published closing date. `null` means unknown, cycle-dependent, or split by field/country — do not invent a date to fill the gap. If set, `last_verified` is required and `status` must not be `verify`. |
 | `deadline_notes` (optional) | string | Use when the cycle has no single date: an application window, field-split deadlines, or a country-specific rule. Prefer this over forcing a misleading `deadline`. Omit the field rather than leaving it empty. |

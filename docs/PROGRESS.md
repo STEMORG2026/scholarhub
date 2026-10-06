@@ -40,10 +40,22 @@ Detailed log of development work on ScholarHub. For the high-level roadmap with 
 - `country` gained the value **"Multiple countries"** for JJ/WBGSP, whose participating programmes span five continents. Labelling it "United States" would have implied study in the US, which the programme does not guarantee.
 - Link probe: **31 unique links, 0 dead.**
 
+### Short-course support (fourth pass, same day)
+- Added a **`Non-degree`** value to the `degree_level` enum, in the validator and the UI. This is the schema change the third pass identified as the blocker: funded short courses and professional fellowships award a certificate, not a degree, and had no honest label before. The validator now rejects any `degree_level` outside the declared enum.
+- Added **2 records**, taking the catalog from 22 to 24: the **Manaaki New Zealand Thematic Short Term Cohort Training Scholarships** (two-to-four-week cohort courses) and the **Manaaki New Zealand Vocational Short Term Training Scholarships** (one week to 12 months, course or work placement). Both are `Non-degree`, both carry `deadline_notes` instead of a `deadline` because applications run through the local New Zealand Embassy or High Commission with no single public date.
+- **Grounded a field label that had been inferred.** The thematic record was first tagged `Renewable Energy` from the scheme's title alone. Reading the page showed eight courses, of which only *Renewable Energy Project Management* is engineering — the rest are public sector leadership, public health management, trade policy, good governance, diplomatic training, geothermal energy project management, and food and agribusiness value chains. The description now names the renewable-energy course explicitly so the tag is defensible.
+- **Removed a double count.** `nz-scholarships` claimed the programme "covers undergraduate and postgraduate study plus thematic and vocational short-term training". Once the short-term schemes became records of their own, that sentence counted them twice; it is now narrowed to undergraduate and postgraduate study.
+- **Derived the field and degree filters from the catalog**, fixing the same class of defect as the earlier hardcoded "5 regions" hero stat. The filter now offers only levels the catalog can return (`Bachelor`, `Master`, `PhD`, `Non-degree` — no `PostDoc` records exist yet), while the profile goal selector keeps the full enum, because a goal may legitimately exceed current coverage. A single `DEGREE_LEVELS` constant is the source of truth, mirrored by the validator's `VALID_DEGREE_LEVELS`.
+- **Verified in a real browser, not assumed:** hero reads 24 opportunities and 12 destinations; the Non-degree filter returns exactly 2 records; the Renewable Energy filter returns 3; the profile form offers all five degree levels including PostDoc.
+- **Verified negative results worth keeping:** Nepal is eligible for **none** of the three Manaaki short-term schemes — thematic training covers Pacific, ASEAN, African and Latin American and Caribbean countries, and the vocational scheme is Pacific-only. Both are recorded in `eligibility.nationality`, so the constraint is visible before any preparation.
+- **English Language Training for Officials excluded** — a genuine Manaaki short-term scheme, but language training is not an engineering field and falls outside the declared scope.
+- Link probe: **33 unique links, 0 dead.** Both new NZ sources return 200.
+
 ### Known gaps
-- 22 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards.
+- 24 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards.
 - Link liveness is opt-in, not part of `npm test`. It proves a URL resolves — never that the page still says what the record claims.
-- 4 of 21 links could not be reached from this machine (`www.campuschina.org`, `www2.daad.de`, `www.dfat.gov.au`). All three were confirmed live through a different fetch path, but the probe reports them unreachable rather than OK.
+- 5 of 33 links could not be reached from this machine (`www.campuschina.org`, `www2.daad.de`, `www.dfat.gov.au`, `www.master-biopham.eu`). All were confirmed live through a different fetch path, but the probe reports them unreachable rather than OK.
+- The `Non-degree` filter and profile option are wired through the data, validator and UI, but `docs/ROADMAP.md` Phase 1 still describes coverage in degree terms; the short-course track is not yet its own roadmap line.
 - No accessibility audit, no screenshots, no AI provider adapter, and no slide-out drawer for small screens.
 
 ## 2026-09-25 — Bootstrap
