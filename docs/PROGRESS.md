@@ -50,6 +50,7 @@ Detailed log of development work on ScholarHub. For the high-level roadmap with 
 - **Verified negative results worth keeping:** Nepal is eligible for **none** of the three Manaaki short-term schemes — thematic training covers Pacific, ASEAN, African and Latin American and Caribbean countries, and the vocational scheme is Pacific-only. Both are recorded in `eligibility.nationality`, so the constraint is visible before any preparation.
 - **English Language Training for Officials excluded** — a genuine Manaaki short-term scheme, but language training is not an engineering field and falls outside the declared scope.
 - Link probe: **33 unique links, 0 dead.** Both new NZ sources return 200.
+- **Pushed for the first time.** All four commits existed only on local disk: the GitHub repository was public but empty, and `gh` had an invalid token. SSH key auth works independently of that token, so the blocker was the diagnosis, not the machine. Pushing returned `remote: This repository moved. Please use the new location: git@github.com:STEMORG2026/scholarhub.git` — the repo now lives under the **STEMORG2026** organisation, and `Er-Sajan-PLG/scholarhub` is a redirect (the same pattern as STEMMA). `origin` was repointed to the canonical URL. Verified by SHA and by tree: `origin/main` and `main` are both `88422b8`, working tree clean.
 
 ### Known gaps
 - 24 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards.
