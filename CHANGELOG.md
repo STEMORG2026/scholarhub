@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.13.0] - 2026-10-07
+
+### Fixed
+
+**A `prefers-reduced-motion` guard — and the false claim that had been justifying it for three passes.**
+
+The guard is small. Why it needed adding is not: since the ninth pass this item was carried as "a reduced-motion check — **the hero uses CSS animation** and there is no `prefers-reduced-motion` guard". That premise is false, and it had been repeated in `docs/PROGRESS.md`, `docs/ARCHITECTURE.md` and `docs/ROADMAP.md` without ever being measured. Measured now, in the running page:
+
+| Claim | Measured |
+|---|---|
+| "the hero uses CSS animation" | **0 of 1,808 elements** report a computed `animation-name` other than `none` |
+| `@keyframes` in the source | **0** — the string appears in neither `src/styles.css`, `src/main.jsx` nor `index.html` |
+| `animation` property in the source | **0 occurrences** |
+| The only motion present | a **0.2s `box-shadow, border` transition on 40 card surfaces** |
+
+There was never an animation to suppress. What the guard actually does is cover the card hover transitions — real motion, worth respecting — and anything animated later. That is what the stylesheet now says, next to the measurement, so the next person does not inherit the same assumption.
+
+### Added
+
+- **A `prefers-reduced-motion: reduce` block**, using `.01ms` rather than `0s` so that `transitionend` still fires. **Verified by a reversible control rather than asserted:** with the media query emulated, perceptible transitions (duration > 50ms) fall from **40 to 0** and the maximum transition duration falls from **0.2s to 0.00001s**; resetting the emulation restores 40. The rule's presence in the CSSOM was confirmed *first*, because a guard that never made it into the stylesheet would pass the same test.
+
+### Changed
+
+- **Corrected the false animation claim** in `docs/PROGRESS.md`, `docs/ARCHITECTURE.md` and `docs/ROADMAP.md`, and split the Phase 1 checkbox so the reduced-motion half is marked done. This is the second time this repository has carried a confident, unmeasured accessibility claim into its own documentation — the first was "dark mode is fixed" in 0.6.0, which survived four passes while light mode, the default, had never been measured at all. Both were written in exactly the same register as the claims that *had* been measured.
+- **EESIC re-checked.** Its admission page still carries no closing date as of 2026-10-07; it says the 2027-2029 call "will be published on this section in **October 2026**", which is the current month. The record's `deadline_notes` now quotes that wording and records the recheck date, and the targeted-region list is transcribed with its region numbers (including Region 5 Asia) along with the caveat that the page does not enumerate the countries in each region.
+
+### Notes
+
+- **`agent-browser` media emulation is `set media`, not `media`** — `agent-browser set media reduced-motion`, and `set media light` resets it. **`set viewport <w> <h>` also works**, verified: 1280×577 → 1024×768. The ninth-pass note that the viewport command "is not actually available" was wrong about the *invocation*, not the capability — the same class of error as the animation claim.
+- **The narrow-screen layout was checked while the viewport was open, and it holds.** At 390×844 there is no horizontal overflow (`scrollWidth` 390 = `innerWidth` 390), the sidebar collapses to a 64px icon rail, the filter selects stack, and cards render intact. The decorative `.hero-art` bleeds past the right edge as intended and is clipped by its panel. The roadmap's "no slide-out drawer below 850px" is a missing feature, not a broken layout.
+- **The link probe's "unreachable" count is not reproducible, and the docs had quoted it as a fixed fact.** Sampled nine times, `npm run check:links` reported **6 unreachable in seven runs and 7 in two**; `HTTP 412` on `www.campuschina.org` appeared in every run and `HTTP 503` on `www.nzscholarships.govt.nz` in one. `65 checked, 0 dead` is the stable result and the only half worth quoting — the rest is network weather. This is the same error as the animation claim in miniature: a single measurement written up in the register of a fact.
+
 ## [0.12.0] - 2026-10-07
 
 ### Added

@@ -119,3 +119,24 @@
 .app button:focus-visible,.app a:focus-visible,.app [tabindex]:focus-visible{outline:2px solid #2f6b4a;outline-offset:2px}
 .dark :focus-visible,.dark input:focus-visible,.dark select:focus-visible,
 .dark button:focus-visible,.dark a:focus-visible,.dark [tabindex]:focus-visible{outline-color:#9ecfa9}
+
+/* Reduced motion.
+   MEASURED 2026-10-07: this app contains no @keyframes and no `animation` property
+   at all. In the running page, 0 of 1,808 elements reported a computed
+   `animation-name` other than `none`, and the only motion present was a 0.2s
+   `box-shadow, border` transition on 40 card surfaces (computed
+   `transition-duration` > 0). Earlier project notes described a "hero CSS
+   animation" and listed a missing reduced-motion guard as an outstanding
+   accessibility defect; the animation never existed, and those notes are corrected.
+   The guard below is therefore about the hover transitions and about any animation
+   added later, not about suppressing an existing keyframe animation.
+   `.01ms` rather than `0s` on purpose: a zero duration can stop `transitionend`
+   from firing and leave code waiting on it. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}

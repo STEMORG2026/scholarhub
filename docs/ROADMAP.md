@@ -30,7 +30,7 @@ Living document tracking project progress, current development focus, and planne
 - **Live application windows**: most records sit between cycles, so most carry `deadline_notes` instead of a `deadline`. **Six** now have a single verified closing date, all within about five months: **ETH Zurich ESOP, 30 November 2026**, **TU Delft Justus & Louise van Effen, 1 December 2026**, **Erasmus Mundus Flood Risk Management and Groundwater and Global Change, both 3 January 2027** (Partner Country applicants), **KTH Scholarship, 15 January 2027** and **EMerald Georesources, 28 February 2027**. **EESIC's 2027-2029 call opened in October 2026** and its closing date is still unpublished — the most valuable missing field.
 - **Doctoral coverage**: **MSCA Doctoral Networks** closes the long-standing gap that Europe held no PhD-level record at all (2026-10-07). It is a salaried-position route with no deadline and a mobility rule rather than a scholarship, so the region's doctoral coverage is now non-empty rather than broad — a deadline-bearing doctoral funding route in Europe is the honest next step.
 - **Short-course track**: `Non-degree` landed on 2026-10-07 and currently holds two New Zealand schemes. The Hubert H. Humphrey Fellowship is now unblocked by the schema change but its eligibility and programme pages returned "Page not found" when checked, so no record was created; re-check before adding it.
-- **Accessibility audit**: Contrast is now measured and fixed in **both** themes (2026-10-07) — dark mode had 8 failures the earlier fix never reached, and light mode had 26 of 39 elements failing, the worst at 2.35:1. Focus rings, the dialog focus trap, Escape-to-close, live regions and the Ctrl/⌘ K shortcut all landed in the same pass, and README screenshots now exist. Still outstanding: a full screen-reader pass with real assistive technology, and a reduced-motion check.
+- **Accessibility audit**: Contrast is now measured and fixed in **both** themes (2026-10-07) — dark mode had 8 failures the earlier fix never reached, and light mode had 26 of 39 elements failing, the worst at 2.35:1. Focus rings, the dialog focus trap, Escape-to-close, live regions and the Ctrl/⌘ K shortcut all landed in the same pass, and README screenshots now exist. Still outstanding: a full screen-reader pass with real assistive technology. A `prefers-reduced-motion` guard landed on 2026-10-07 and is verified by emulating the media query — though the item was filed under a false premise: this app has no `@keyframes` and no `animation` property at all, so there was never a hero animation to suppress.
 - **AI provider seam**: Define the adapter interface contract (SEAM) so future provider integrations have a stable boundary.
 
 ## Phase 1 — Foundation (in progress)
@@ -50,7 +50,8 @@ Living document tracking project progress, current development focus, and planne
 - [ ] Add verified program/field coverage with regular human review
 - [x] Dark-mode colour contrast measured and fixed — hero panel, chips, badges, match ring, card icons (2026-10-07)
 - [x] Accessibility tested — contrast measured in both themes, visible focus, focus-trapped dialog with Escape, labelled controls and live regions; screenshots added (2026-10-07)
-- [ ] Screen-reader pass with real assistive technology, and a reduced-motion check
+- [x] Reduced-motion guard, verified by emulating the media query
+- [ ] Screen-reader pass with real assistive technology
 - [ ] AI provider adapter interface definition (SEAM)
 - [ ] Offline preparation roadmap generator (template-based, no LLM required)
 

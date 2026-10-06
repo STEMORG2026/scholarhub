@@ -679,12 +679,12 @@
     "amount": "EUR 1,400 per month for up to 24 months, with tuition and mandatory participation costs waived for scholarship holders. Admitted students without a scholarship pay EUR 8,000 per year, reduced by 75% to EUR 2,000 per year for the highest-ranked candidates",
     "currency": "EUR",
     "deadline": null,
-    "deadline_notes": "The call for applications for the 2027-2029 cohort opens in October 2026; the admission page did not carry a closing date when this record was checked. The previous 2026-2028 call is published in the site FAQ as a reference only.",
+    "deadline_notes": "The admission page still carried no closing date when rechecked on 7 October 2026. Its exact wording is that the call for applications for the 2027-2029 cohort \"will be published on this section in October 2026\" - the current month - so a date is expected imminently but had not appeared. The previous 2026-2028 call is published in the site FAQ as a reference, and the site states explicitly that it is only a reference and that all admission information will come from the new call.",
     "duration": "Two years (120 ECTS): one semester each in Lisbon, Valencia and Trento, then a fourth semester of project work and thesis with a partner organisation",
     "eligibility": {
       "nationality": [
         "Open to students worldwide",
-        "Some scholarships may be reserved for applicants from targeted regions: Western Balkans, Neighbourhood South, Asia, Central Asia, Middle East, Pacific, Sub-Saharan Africa, Latin America, Caribbean"
+        "Some scholarships may be reserved for applicants from targeted regions, listed on the admission page as Region 1 Western Balkans, Region 3 Neighbourhood South, Region 5 Asia, Region 6 Central Asia, Region 7 Middle East, Region 8 Pacific, Region 9 Sub-Saharan Africa, Region 10 Latin America and Region 11 Caribbean; the page does not enumerate the countries in each region, so Nepal's inclusion is not stated outright"
       ],
       "gpa_minimum": null,
       "language_requirements": {},
