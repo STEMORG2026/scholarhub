@@ -96,13 +96,32 @@ Detailed log of development work on ScholarHub. For the high-level roadmap with 
 - **EESIC was rechecked before this pass and its closing date is still unpublished** — the page says only that it "will be published on this section in October 2026". Its window is open, so it remains the highest-value record and the most valuable still-missing field.
 - Verified: `npm test` 0 errors / 5 warnings (unchanged — no new warnings); build clean; link probe **50 links checked, 0 dead, 7 unreachable**; browser confirmed 33 opportunities, 12 destinations, Sweden/France/Switzerland each at 2, and the three new cards rendering.
 
+### Accessibility audit (ninth pass, same day, v0.10.0)
+- **Contrast was measured, not eyeballed.** A browser probe read the computed colour and the *effective* background — walking up the ancestor chain past transparent layers — for every text surface on all five views, in both themes, and computed the WCAG ratio. Both themes were wrong; the one nobody had ever measured was the worse:
+
+  | Theme | Elements checked | Failing before |
+  |---|---|---|
+  | Light | 39 | **26** |
+  | Dark | 39 | 8 |
+
+- **Light mode was the real story.** Its worst elements were `.footer span` at **2.35:1**, `.disclaimer` at 2.56:1, `.workspace-label` at 2.68:1 and `.breadcrumbs` at 2.95:1. It had never been measured at all — and because the default theme *is* light, every screenshot in every earlier pass was taken in it while the failures sat in plain sight.
+- **Dark mode still had 8 failures the 0.6.0 fix never reached.** The worst was `.detail-grid b` at **2.18:1** — the deadline, amount and degree values *inside the detail dialog*, the most important content there. Also `.outline-btn` at 2.39:1, `.details-link` at 2.77:1 and `.modal-close` at 2.89:1. Pass 6 fixed the hero panel and stopped; the audit had never been systematic.
+- **The new colours were computed, not chosen.** A generator darkened each hue on light surfaces and lightened it on dark ones until the ratio cleared 4.6:1, preserving the palette's character. Result: **0 failures** on all 10 view × theme combinations, and 0 in the dialog (48 elements). `.deadline-chip` — the dated amber chip — already passed at 4.57:1 and is deliberately untouched; `.nav-item.active` keeps its green because the override is scoped `:not(.active)`.
+- **Three surfaces kept a *light* background in dark mode** (`.welcome-spark`, `.coming-note`, `.detail-note`), so their text was fighting the wrong panel. They now get a dark surface.
+- **There was no focus style anywhere, and several base rules set `outline:0`** — so a keyboard user had no visible indicator on any control (WCAG 2.4.7). A `:focus-visible` ring now covers links, buttons, inputs, selects and `[tabindex]`, verified as `solid 2px rgb(47,107,74)`.
+- **The detail dialog had correct ARIA but broken behaviour.** `role="dialog"`, `aria-modal="true"` and the label were all right, yet focus stayed *behind* the dialog (it landed on a background `<select>`), 83 background controls remained tabbable, and **Escape did nothing**. Now: focus moves in on open, Tab and Shift+Tab are trapped, Escape closes, and focus returns to the triggering button — each verified separately (React renders asynchronously, so a single-eval test reports false negatives).
+- **The `⌘ K` hint was decorative.** It has been rendered in the search box since the first commit with no listener behind it. It is now implemented (Cmd/Ctrl+K focuses search) and the hint renders `Ctrl K` on non-Mac platforms instead of always the Mac glyph.
+- **One control had no accessible name** — the assistant view's settings icon button; a screen reader announced only "button". Fixed. Live regions added: toast `role="status"`, result count `aria-live="polite"`, chat transcript `role="log"`. Hero art, card flag tiles and the status dot are now `aria-hidden`.
+- **Screenshots finally exist** — `docs/screenshots/discover-light.png` and `discover-dark.png`, captured from the running build and embedded in the README.
+- Verified: `npm test` 0 errors / 5 warnings; build clean; every claim above re-measured after the fix rather than asserted.
+
 ### Known gaps
 - 33 records. No region yet reaches the Phase 1 target of 15–25 verified records; these remain discovery leads, not confirmed open awards. Broader Europe (8) is closest.
 - Link liveness is opt-in, not part of `npm test`. It proves a URL resolves — never that the page still says what the record claims.
 - 7 of 50 links could not be reached from this machine (`www.campuschina.org`, `www2.daad.de`, `www.dfat.gov.au`, `www.master-biopham.eu`). All were confirmed live through a different fetch path, but the probe reports them unreachable rather than OK. `static.daad.de` is blocked outright, which is why the DAAD EPOS country list had to be verified through the OECD DAC list instead.
 - The `Non-degree` filter and profile option are wired through the data, validator and UI, but `docs/ROADMAP.md` Phase 1 still describes coverage in degree terms; the short-course track is not yet its own roadmap line.
-- Dark-mode colour contrast is fixed and measured (see above), but there is still **no accessibility audit**: keyboard navigation, ARIA labels and screen-reader compatibility are untested, and light-mode contrast has never been measured at all. No screenshots in the README, no AI provider adapter, and no slide-out drawer for small screens.
-- Only 3 of 33 records carry a single verified closing date. The rest use `deadline_notes` because their cycles are windows, field-split, country-specific, or not yet published for 2027. **EESIC's closing date is the most valuable missing field** — its window opened in October 2026.
+- **Contrast and keyboard access are now measured and fixed in both themes** (see above). Still outstanding: a screen-reader pass with real assistive technology, and a reduced-motion check — the hero uses CSS animation and there is no `prefers-reduced-motion` guard. No slide-out drawer for small screens; below 850px the sidebar collapses to an icon-only rail.
+- Only 3 of 33 records carry a single verified closing date. The rest use `deadline_notes` because their cycles are windows, field-split, country-specific, or not yet published for 2027. **EESIC's closing date is the most valuable missing field** — its window opened in October 2026 and the date was still unpublished when rechecked.
 - **Every Phase 1 destination now holds at least 2 records** — no destination is a single entry any more — but none reaches the 15–25 target. The deepest, broader Europe, is at 8.
 
 ## 2026-09-25 — Bootstrap

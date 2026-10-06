@@ -20,13 +20,14 @@ Living document tracking project progress, current development focus, and planne
 | 2026-10-07 | EMJM depth | ✅ Done | 24 → 27 records; Europe now 8, the deepest destination. Added EESIC (2027-2029 call opens October 2026), REM+ 2 and MaMaSELF+; 41 links probed, 0 dead |
 | 2026-10-07 | Single-entry countries | ✅ Done | 27 → 30 records; added TU Delft (real deadline 2026-12-01), Gates Cambridge and DAAD EPOS. Netherlands, Germany and UK now hold 2 each; 47 links probed, 0 dead |
 | 2026-10-07 | Last single-entry countries | ✅ Done | 30 → 33 records; added KTH (real deadline 2027-01-15), Swiss Government Excellence and Paris-Saclay. France, Switzerland and Sweden now hold 2 each — **every Phase 1 destination has ≥2**; 50 links probed, 0 dead |
+| 2026-10-07 | Accessibility audit | ✅ Done | Contrast measured across 5 views × 2 themes: **34 failing elements fixed** (light mode 26/39 failed, worst 2.35:1). Added focus rings (there were none), dialog focus trap + Escape + focus restore, a labelled icon button, live regions, and a working Ctrl/⌘ K shortcut. README screenshots added |
 
 ## Current development focus (NOW)
 
 - **Data expansion**: 33 records now; no region yet reaches the Phase 1 target of 15–25 verified entries. Broader Europe (8) is the deepest, then China and New Zealand (4 each), and **every remaining Phase 1 destination now holds 2 — no destination is a single entry any more**. USA growth is structurally slower, because most US graduate funding is restricted to US citizens or permanent residents — JJ/WBGSP is one of the few routes open to developing-country nationals. This remains the largest gap: provenance is done, breadth is not.
 - **Live application windows**: most records sit between cycles, so most carry `deadline_notes` instead of a `deadline`. **Three** now have a single verified closing date, all within about ten weeks: **ETH Zurich ESOP, 30 November 2026**, **TU Delft Justus & Louise van Effen, 1 December 2026** and **KTH Scholarship, 15 January 2027**. **EESIC's 2027-2029 call opened in October 2026** and its closing date is still unpublished — the most valuable missing field.
 - **Short-course track**: `Non-degree` landed on 2026-10-07 and currently holds two New Zealand schemes. The Hubert H. Humphrey Fellowship is now unblocked by the schema change but its eligibility and programme pages returned "Page not found" when checked, so no record was created; re-check before adding it.
-- **Accessibility audit**: Colour contrast in dark mode was fixed on 2026-10-07 (hero panel, chips, badges, match ring, card icons — all now ≥ 5.6:1). Still outstanding: keyboard navigation, ARIA labels, screen-reader compatibility, and a contrast check of every remaining surface. Light mode has never been measured.
+- **Accessibility audit**: Contrast is now measured and fixed in **both** themes (2026-10-07) — dark mode had 8 failures the earlier fix never reached, and light mode had 26 of 39 elements failing, the worst at 2.35:1. Focus rings, the dialog focus trap, Escape-to-close, live regions and the Ctrl/⌘ K shortcut all landed in the same pass, and README screenshots now exist. Still outstanding: a full screen-reader pass with real assistive technology, and a reduced-motion check.
 - **AI provider seam**: Define the adapter interface contract (SEAM) so future provider integrations have a stable boundary.
 
 ## Phase 1 — Foundation (in progress)
@@ -45,7 +46,8 @@ Living document tracking project progress, current development focus, and planne
 - [ ] Expand to 15–25 individually verified entries per country/region
 - [ ] Add verified program/field coverage with regular human review
 - [x] Dark-mode colour contrast measured and fixed — hero panel, chips, badges, match ring, card icons (2026-10-07)
-- [ ] Accessibility testing (keyboard navigation, ARIA, screen reader) and screenshots for README
+- [x] Accessibility tested — contrast measured in both themes, visible focus, focus-trapped dialog with Escape, labelled controls and live regions; screenshots added (2026-10-07)
+- [ ] Screen-reader pass with real assistive technology, and a reduced-motion check
 - [ ] AI provider adapter interface definition (SEAM)
 - [ ] Offline preparation roadmap generator (template-based, no LLM required)
 

@@ -7,6 +7,7 @@ A small, open-source scholarship discovery companion for engineering students. S
 ## Features
 
 - Responsive scholarship discovery cards with keyword, destination, field, and degree filters.
+- Keyboard accessible: visible focus rings on every control, a detail dialog that traps focus and closes on Escape, and a search shortcut (Ctrl/⌘ K).
 - Locally saved shortlist and profile; optional dark appearance.
 - Simple transparent profile-fit heuristic (not an eligibility determination).
 - Scholarship detail view with official links and explicit verification reminders.
@@ -17,7 +18,13 @@ A small, open-source scholarship discovery companion for engineering students. S
 
 ## Demo / screenshots
 
-Run the development server (`npm run dev`) to preview the application. Screenshots can be added here as the UI stabilizes.
+The discover view, in both themes (captured 2026-10-07):
+
+![ScholarHub discover view in the light theme — hero, filters and the start of the opportunity board](docs/screenshots/discover-light.png)
+
+![ScholarHub discover view in the dark theme](docs/screenshots/discover-dark.png)
+
+Run the development server (`npm run dev`) to try it locally.
 
 ## Tech stack
 
@@ -72,7 +79,7 @@ There is no login. Profile and shortlist data are stored in localStorage in the 
 - [x] Deadline display with provenance, plus `deadline_notes` for cycles that have no single date.
 - [ ] Expand to 15–25 **individually verified** active/relevant entries per requested country or region.
 - [ ] Add verified program/field coverage and regular human review of dates and terms.
-- [ ] Test accessibility and add screenshots.
+- [x] Accessibility tested and screenshots added: WCAG AA contrast measured in both themes, visible keyboard focus, a focus-trapped dialog that closes on Escape, labelled controls and live regions (2026-10-07).
 
 ### Phase 2 — planned
 - Add Canada, Japan, South Korea, India, Middle East, Africa, and South America.

@@ -29,5 +29,6 @@ index.html → src/main.jsx → static data/scholarships.json
 - Deadlines are recorded only where an official page publishes a single closing date (currently three records). Cycles that are a window, field-split, or country-specific carry `deadline_notes` instead. Comparable award amounts, acceptance rates, and applicant counts are not maintained. No popularity counter, geolocation ranking, reminders, roadmap export, or eligibility calculation is implemented.
 - Link liveness is not part of `npm test`. Run `npm run check:links` (needs the network). It can only prove that a URL resolves — never that the page still says what the record claims.
 - Below 850px the sidebar collapses to an icon-only rail. There is no slide-out drawer.
+- Accessibility: contrast is measured to WCAG AA in both themes, and visible focus, dialog keyboard handling (focus trap, Escape, focus restore), labelled controls and live regions are in place. A screen-reader pass with real assistive technology and a `prefers-reduced-motion` guard are not yet done.
 - AI provider adapters, model test, API key handling, cloud model calls, local model runtimes, and cost estimates are not implemented.
 - Content status may be `verify`; official pages are authoritative and may change independently.

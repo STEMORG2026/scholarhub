@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.10.0] - 2026-10-07
+
+### Fixed
+
+**Accessibility — contrast, in both themes.** Every colour was measured by reading the real computed style in a running browser and computing the WCAG ratio against the *effective* background (walking up the ancestor chain past transparent layers), across all five views. Both themes were wrong, and the one nobody had ever measured was the worse of the two:
+
+| Theme | Elements checked | Failing before |
+|---|---|---|
+| Light | 39 | **26** |
+| Dark | 39 | 8 |
+
+Light mode's worst offenders were `.footer span` at **2.35:1**, `.disclaimer` at 2.56:1 and `.workspace-label` at 2.68:1. Dark mode still had eight failures the 0.6.0 dark-mode fix never reached — `.details-link` at 2.77:1, `.outline-btn` at 2.39:1 and, most seriously, `.detail-grid b` at **2.18:1**, which is the deadline and amount text inside the detail dialog.
+
+The replacements were computed, not chosen by eye: the hue is darkened on light surfaces and lightened on dark ones until the ratio clears 4.6:1. All 39 elements now pass in both themes, plus the dialog (48 elements). Three surfaces — `.welcome-spark`, `.coming-note`, `.detail-note` — kept a *light* background in dark mode and now get a dark one. `.deadline-chip`, the dated amber chip, already passed at 4.57:1 and was deliberately left alone.
+
+### Added
+
+- **Visible keyboard focus.** There was no focus style anywhere, and several base rules set `outline:0`, so a keyboard user had **no visible indicator on any control** (WCAG 2.4.7). A `:focus-visible` ring now covers links, buttons, inputs, selects and anything with a tabindex, with a lighter ring in dark mode.
+- **A working `Ctrl`/`⌘ K` shortcut.** The search box has rendered a `⌘ K` hint since the first commit with nothing listening for it — a decorative control. It now focuses the search field, and the hint shows the correct key for the platform rather than always the Mac glyph.
+- **A properly behaved dialog.** `role="dialog"`, `aria-modal` and the label were already correct, but focus stayed *behind* the dialog, 83 background controls remained tabbable, and **Escape did nothing**. Focus now moves into the dialog on open, Tab and Shift+Tab are trapped inside it, Escape closes it, and focus returns to the button that opened it.
+- **Live regions**, so the app is no longer silent to a screen reader: the toast is `role="status"`, the result count is `aria-live="polite"`, and the assistant transcript is `role="log"`.
+- **README screenshots**, in both themes.
+
+### Notes
+
+- **An accessible name was missing** on the assistant view's settings icon button — a screen reader announced only "button". Every other icon-only control already had one.
+- **Decorative graphics are now hidden from assistive tech**: the hero illustration, the card flag tiles (the country is already in text) and the status dot.
+- **Two surfaces that looked fine were not.** The light-mode sweep also caught `.deadline-chip.notes` (3.94:1) and the empty-state text (3.36:1), neither of which had ever been measured.
+- **Why this survived every earlier pass:** the default theme is light, so every screenshot in every prior pass was light mode — and light mode had never been measured at all. The 0.6.0 dark-mode fix then created the impression that the theme work was finished.
+- Still outstanding: a screen-reader pass with real assistive technology, and a reduced-motion check.
+
 ## [0.9.0] - 2026-10-07
 
 ### Added
