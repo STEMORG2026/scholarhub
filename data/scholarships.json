@@ -50,6 +50,13 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://foreign.fulbrightonline.org/",
+    "nationality_scope": {
+      "mode": "agreement",
+      "note": "Eligibility is decided country by country: applications go through the Fulbright commission or U.S. embassy in the applicant's country of nomination, and each of those sets its own rules, fields and deadline. U.S. citizens are not eligible."
+    },
+    "country_notes": {
+      "Nepal": "Nepali applicants apply through the Binational Fulbright Commission in Nepal, which sets the country-specific fields and deadline."
+    },
     "last_verified": "2026-10-07",
     "deadline_notes": "There is no central deadline, and that is by design rather than an omission. The programme states that \"the Fulbright Program for Foreign Students and Foreign Language Teaching Assistants (FLTAs) application and selection process is administered by binational Fulbright Commissions/Foundations or U.S. Embassies\", and that candidates \"are required to submit their Fulbright application and provide all supporting documents to their respective Fulbright office per established country/award deadlines\". Eligibility, placement model and dates therefore differ by country of citizenship, and the applicant has to read their own country’s page. Checked 2026-10-07."
   },
@@ -78,6 +85,14 @@
     "last_updated": "2026-10-07",
     "status": "upcoming",
     "source_url": "https://www.nsf.gov/funding/opportunities/grfp-nsf-graduate-research-fellowship-program/nsf26-526/solicitation",
+    "nationality_scope": {
+      "mode": "listed",
+      "countries": [
+        "United States"
+      ],
+      "note": "Restricted to U.S. citizens, nationals and permanent residents."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -126,8 +141,13 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.campuschina.org/",
+    "nationality_scope": {
+      "mode": "unstated",
+      "note": "CSC runs several routes with different nationality rules — its bilateral programmes are routed through partner governments while its university programmes are open to international applicants — and this record does not reproduce the per-route lists."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07",
-    "deadline_notes": "The Chinese Government Scholarship runs one annual cycle rather than rolling admissions, and it is applied for through the Study in China portal and the receiving agency in the applicant’s own country. The cycle dates could not be read when this record was checked on 2026-10-07: campuschina.org returned HTTP 412 to every request over both HTTP and HTTPS and rendered an empty page in a real browser, csc.edu.cn returned HTTP 412 as well, and the host resolves only an IPv6 (AAAA) address. The link probe reaches the same conclusion by a different route, reporting the scholarship sub-path as unresolvable. The block is on this network rather than on the portal, so the record is kept and the gap is stated instead of guessed. The Chinese Embassy in Nepal’s Study in China section was also checked: it links to the CSC site but carried no dated notice at the time."
+    "deadline_notes": "The Chinese Government Scholarship runs one annual cycle rather than rolling admissions, and it is applied for through the Study in China portal and the receiving agency in the applicant’s own country. The cycle dates could not be read when this record was checked on 2026-10-07: campuschina.org returned HTTP 412 to every request over both HTTP and HTTPS and rendered an empty page in a real browser, csc.edu.cn returned HTTP 412 as well, and the host resolves only an IPv6 (AAAA) address. The link probe reaches the same conclusion by a different route, reporting the scholarship sub-path as unresolvable. The block is on this network rather than on the portal, so the record is kept and the gap is stated instead of guessed. The Chinese Embassy’s Study in China section was also checked: it links to the CSC site but carried no dated notice at the time."
   },
   {
     "id": "tsinghua-scholarships",
@@ -174,6 +194,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://yz.tsinghua.edu.cn/en/Financial_Aid/Scholarship_Application.htm",
+    "nationality_scope": {
+      "mode": "unstated",
+      "note": "Tsinghua administers several scholarship programmes with different nationality rules; this record does not reproduce them."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07",
     "deadline_notes": "Tsinghua’s scholarship page is a directory of routes rather than a single call, and each route runs its own cycle on its own page, so there is no one deadline to record. The routes listed when this record was checked on 2026-10-07 were the 2026 Chinese Government Scholarship, the 2026 Asian Future Leaders Scholarship Program (offered by the Bai Xian Asia Institute for full-time international students from Asia), the Atomic Energy Scholarship Program of China (listed under 2024), and program-specific full scholarships including Schwarzman Scholars, the International Master’s Program in Nuclear Engineering and Management, and several public administration programmes. Applicants must read the individual route’s page for its dates."
   },
@@ -202,6 +227,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www2.daad.de/deutschland/stipendium/datenbank/en/21148-scholarship-database/",
+    "nationality_scope": {
+      "mode": "unstated",
+      "note": "DAAD's scholarship database lists hundreds of programmes whose nationality rules differ by programme and by country of origin."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -229,6 +259,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.eacea.ec.europa.eu/scholarships/erasmus-mundus-catalogue_en",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open worldwide; each joint master adds its own academic criteria."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -256,6 +291,12 @@
     "last_updated": "2026-10-07",
     "status": "open",
     "source_url": "https://www.chevening.org/scholarships/application-timeline/",
+    "nationality_scope": {
+      "mode": "listed_elsewhere",
+      "list_url": "https://www.chevening.org/scholarships/",
+      "note": "Restricted to citizens of the countries and territories Chevening publishes as eligible. This record does not reproduce that list, so check it against your own country."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -283,6 +324,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.campusfrance.org/en/the-france-excellence-eiffel-scholarship-program",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to foreign nationals; French nationals are not eligible. Applications are submitted by the French host institution rather than by the applicant."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -310,6 +356,14 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.studyinnl.org/finances/nl-scholarship",
+    "nationality_scope": {
+      "mode": "regional",
+      "regions": [
+        "Outside the European Economic Area"
+      ],
+      "note": "Intended for applicants from outside the EEA, subject to the current scheme rules."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -337,6 +391,11 @@
     "last_updated": "2026-10-07",
     "status": "upcoming",
     "source_url": "https://ethz.ch/students/en/studies/financial/scholarships/excellencescholarship.html",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to international applicants."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -364,6 +423,14 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.dfat.gov.au/people-to-people/australia-awards/australia-awards-scholarships",
+    "nationality_scope": {
+      "mode": "regional",
+      "regions": [
+        "Indo-Pacific"
+      ],
+      "note": "Restricted to citizens of participating countries, with a focus on the Indo-Pacific. Australia Awards publishes the country list for each cycle, so check it against your own country."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -391,6 +458,11 @@
     "last_updated": "2026-10-07",
     "status": "open",
     "source_url": "https://scholarships.unimelb.edu.au/awards/graduate-research-scholarships",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to domestic and international applicants, subject to course and merit rules."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -417,14 +489,14 @@
     "duration": "Program-dependent",
     "eligibility": {
       "nationality": [
-        "Nepal IS eligible — it is named in the programme’s Asian countries list: Cambodia, Indonesia, Lao PDR, Malaysia, Nepal, Philippines, Thailand, Timor-Leste and Viet Nam",
+        "Eligibility is limited to the countries on the programme’s published partner lists: an Asian countries list (Cambodia, Indonesia, Lao PDR, Malaysia, Nepal, Philippines, Thailand, Timor-Leste and Viet Nam) and a Pacific list, and applicants must be citizens of a listed country",
         "Pacific applicants are covered by a separate list (Fiji postgraduate only, French Pacific, Kiribati, Naoero, Niue, the North Pacific states, Papua New Guinea, Samoa, Solomon Islands, Tonga, Tuvalu and Vanuatu)",
         "Cook Islands scholars apply through their own government scheme instead"
       ],
       "gpa_minimum": null,
       "language_requirements": {},
       "age_limit": null,
-      "other": "For Nepali applicants the levels available are postgraduate only: Postgraduate Certificate (6 months), Postgraduate Diploma (1 year), Master’s Degree (1-2 years) and PhD (3.5 years). Undergraduate study is NOT available to Nepali applicants — it is offered to Timor-Leste only. The programme states that it aims for scholars to commence study from Semester 1 of the year after they submit their application, and that it only accepts applications from citizens of the countries on its list. Study subjects are recommended per country against that country’s social and economic needs, so the field list is country-specific rather than universal."
+      "other": "Levels available depend on the country. For countries on the Asian list the levels are postgraduate only: Postgraduate Certificate (6 months), Postgraduate Diploma (1 year), Master’s Degree (1-2 years) and PhD (3.5 years). Undergraduate study is NOT available to those applicants — it is offered to Timor-Leste only. The programme states that it aims for scholars to commence study from Semester 1 of the year after they submit their application, and that it only accepts applications from citizens of the countries on its list. Study subjects are recommended per country against that country’s social and economic needs, so the field list is country-specific rather than universal."
     },
     "benefits": [
       "Tuition",
@@ -433,7 +505,7 @@
     ],
     "application_url": "https://www.nzscholarships.govt.nz/international-tertiary-students/",
     "official_url": "https://www.nzscholarships.govt.nz/",
-    "description": "New Zealand government scholarships for study by people from eligible partner countries. Undergraduate places are limited to Pacific applicants and Timor-Leste, so Nepali applicants may apply at postgraduate level only. Separate Manaaki schemes fund thematic cohort training and vocational short-term training, and are recorded individually. Use the official country and eligibility guidance before applying.",
+    "description": "New Zealand government scholarships for study by people from eligible partner countries. Undergraduate places are limited to Pacific applicants and Timor-Leste, so applicants from the Asian list may apply at postgraduate level only. Separate Manaaki schemes fund thematic cohort training and vocational short-term training, and are recorded individually. Use the official country and eligibility guidance before applying.",
     "tags": [
       "New Zealand",
       "government",
@@ -442,6 +514,34 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.nzscholarships.govt.nz/",
+    "nationality_scope": {
+      "mode": "listed",
+      "countries": [
+        "Cambodia",
+        "Indonesia",
+        "Laos",
+        "Malaysia",
+        "Nepal",
+        "Philippines",
+        "Thailand",
+        "Timor-Leste",
+        "Vietnam",
+        "Fiji",
+        "Kiribati",
+        "Nauru",
+        "Niue",
+        "Papua New Guinea",
+        "Samoa",
+        "Solomon Islands",
+        "Tonga",
+        "Tuvalu",
+        "Vanuatu"
+      ],
+      "note": "Two separate lists. Asian countries: Cambodia, Indonesia, Lao PDR, Malaysia, Nepal, the Philippines, Thailand, Timor-Leste and Viet Nam. Pacific: Fiji (postgraduate only), Kiribati, Naoero, Niue, Papua New Guinea, Samoa, Solomon Islands, Tonga, Tuvalu and Vanuatu. The official list also names 'French Pacific' and 'the North Pacific states', which are groupings rather than single countries and are not expanded here. Cook Islands scholars apply through their own government scheme instead."
+    },
+    "country_notes": {
+      "Nepal": "Nepal is named in the programme's Asian countries list, so Nepali applicants are eligible at the postgraduate levels."
+    },
     "last_verified": "2026-10-07",
     "deadline_notes": "There is no single global deadline: the programme instructs applicants to \"Select your region to find the application process for your country\", and the windows are country-specific. The tertiary applications page stated plainly on 2026-10-07 that \"Tertiary applications for the Manaaki New Zealand Scholarship Programme have now closed.\" The one window published on the how-to-apply page that day was for Samoa Foundation applicants: \"open midnight 4 August 2026 and close midday 4 September 2026\". The programme also warns that \"the Manaaki New Zealand Scholarship Programme application system may close early to countries with a large volume of applications\", so applying early matters. Applicants should read their own country’s tab rather than wait for a global date."
   },
@@ -488,6 +588,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.canterbury.ac.nz/study/getting-started/scholarships/incoming-first-year-scholarships/international-students",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to international students meeting the current award rules."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07",
     "deadline_notes": "The page publishes a different window for each award and each application round rather than one date. The headline line when it was rendered on 2026-10-07 was: \"Applications for students who plan to enrol in their first year of an undergraduate degree at UC in 2027 opened 11 June and closed 6 August 2026.\" Most of the first-year awards listed carried a closing date of 06 August. The international route that fits an applicant qualifying overseas — the entry that names UC International College and offshore study — closes 15 April for a Semester 2 2026 start (opening 07 March) or 31 October for a Semester 1 2027 start (opening 05 September), while applicants who qualified at a New Zealand secondary school use the August round instead. Because one record covers several awards and rounds, no single date is recorded in `deadline`. Note on provenance: this page is JavaScript-rendered and returns no content to a plain fetch — the figures above were read from the page as rendered in a browser, and the site returns HTTP 406 to a scripted request."
   },
@@ -516,6 +621,11 @@
     "last_updated": "2026-10-07",
     "status": "closed",
     "source_url": "https://resco-master.eu/",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open worldwide; Erasmus Mundus rules apply."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -543,6 +653,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://msc-terra.org/applications/",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open worldwide."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -569,6 +684,11 @@
     "last_updated": "2026-10-07",
     "status": "open",
     "source_url": "https://www.master-biopham.eu/",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open worldwide; Erasmus Mundus rules apply."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -594,6 +714,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://tfmasa.com/",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open worldwide; Erasmus Mundus rules apply."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -621,6 +746,47 @@
     "last_updated": "2026-10-07",
     "status": "closed",
     "source_url": "https://si.se/en/apply/scholarships/swedish-institute-scholarships-for-global-professionals/",
+    "nationality_scope": {
+      "mode": "listed",
+      "countries": [
+        "Armenia",
+        "Azerbaijan",
+        "Bangladesh",
+        "Belarus",
+        "Bolivia",
+        "Brazil",
+        "Colombia",
+        "Ecuador",
+        "Egypt",
+        "Ethiopia",
+        "Georgia",
+        "Guatemala",
+        "Indonesia",
+        "Iraq",
+        "Jordan",
+        "Kenya",
+        "Liberia",
+        "Malaysia",
+        "Mexico",
+        "Moldova",
+        "Morocco",
+        "Nigeria",
+        "Peru",
+        "Philippines",
+        "Rwanda",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Thailand",
+        "Uganda",
+        "Ukraine",
+        "Uzbekistan",
+        "Vietnam",
+        "Zambia"
+      ],
+      "note": "Restricted to citizens of the 34 countries the Swedish Institute names for this programme."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -648,6 +814,12 @@
     "last_updated": "2026-10-07",
     "status": "upcoming",
     "source_url": "https://www.worldbank.org/en/programs/scholarships/jj-wbgsp",
+    "nationality_scope": {
+      "mode": "listed_elsewhere",
+      "list_url": "https://www.worldbank.org/en/programs/scholarships",
+      "note": "Restricted to nationals of World Bank member developing countries on the programme’s published eligibility list. This record does not reproduce that list, so check it against your own country."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -675,6 +847,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://study.tongji.edu.cn/en/Admission_Information/Scholarship/School_Scholarship.htm",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to non-Chinese citizens."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -701,6 +878,11 @@
     "last_updated": "2026-10-07",
     "status": "closed",
     "source_url": "https://studyathit.hit.edu.cn/18367/list.htm",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to citizens of countries other than the People's Republic of China."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -728,6 +910,19 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.nzscholarships.govt.nz/thematic-short-term-training-scholarships/",
+    "nationality_scope": {
+      "mode": "regional",
+      "regions": [
+        "Pacific",
+        "ASEAN",
+        "Africa",
+        "Latin America and the Caribbean"
+      ],
+      "note": "Restricted to citizens of eligible Pacific, ASEAN, African, and Latin American and Caribbean countries. The official page carries the full country list, so check it against your own country."
+    },
+    "country_notes": {
+      "Nepal": "Nepal is not covered by this scheme; it is restricted to Pacific, ASEAN, African, and Latin American and Caribbean countries."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -778,6 +973,31 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.nzscholarships.govt.nz/vocational-short-term-scholarships/",
+    "nationality_scope": {
+      "mode": "listed",
+      "countries": [
+        "Micronesia",
+        "Fiji",
+        "French Polynesia",
+        "Kiribati",
+        "Marshall Islands",
+        "Nauru",
+        "New Caledonia",
+        "Niue",
+        "Palau",
+        "Papua New Guinea",
+        "Samoa",
+        "Solomon Islands",
+        "Timor-Leste",
+        "Tokelau",
+        "Tonga",
+        "Tuvalu",
+        "Vanuatu",
+        "Wallis and Futuna"
+      ],
+      "note": "Restricted to citizens of the listed Pacific countries and territories only."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -803,7 +1023,7 @@
     "eligibility": {
       "nationality": [
         "Open to students worldwide",
-        "Some scholarships may be reserved for applicants from targeted regions, listed on the admission page as Region 1 Western Balkans, Region 3 Neighbourhood South, Region 5 Asia, Region 6 Central Asia, Region 7 Middle East, Region 8 Pacific, Region 9 Sub-Saharan Africa, Region 10 Latin America and Region 11 Caribbean; the page does not enumerate the countries in each region, so Nepal's inclusion is not stated outright"
+        "Some scholarships may be reserved for applicants from targeted regions, listed on the admission page as Region 1 Western Balkans, Region 3 Neighbourhood South, Region 5 Asia, Region 6 Central Asia, Region 7 Middle East, Region 8 Pacific, Region 9 Sub-Saharan Africa, Region 10 Latin America and Region 11 Caribbean; the page does not enumerate the countries in each region, so which countries fall in each region is not stated outright"
       ],
       "gpa_minimum": null,
       "language_requirements": {
@@ -831,6 +1051,13 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://eesic.eu/admission",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open worldwide, but some scholarships are reserved for applicants from targeted regions, which the admission page lists as Region 1 Western Balkans, Region 3 Neighbourhood South, Region 5 Asia, Region 6 Central Asia, Region 7 Middle East, Region 8 Pacific, Region 9 Sub-Saharan Africa, Region 10 Latin America and Region 11 Caribbean. The page does not enumerate the countries inside each region."
+    },
+    "country_notes": {
+      "Nepal": "The admission page lists Region 5 Asia among the targeted regions but does not enumerate the countries inside it, so Nepal's inclusion is not stated outright."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -880,6 +1107,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://master-remplus2.eu/scholarship-coverage/",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open worldwide; separate participation-cost rates apply to Programme Country and Partner Country students."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -934,6 +1166,13 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.mamaself.eu/admission",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open worldwide."
+    },
+    "country_notes": {
+      "India": "Applicants from India must hold a four-year bachelor's degree including a bachelor's thesis to register at TUM or LMU."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -961,7 +1200,7 @@
     "eligibility": {
       "nationality": [
         "Graduates from developing and newly industrialised countries on the DAAD DAC list, which covers Sub-Saharan Africa, South and Central Asia, East Asia, South America, the Near and Middle East and parts of Europe",
-        "Nepal appears on the OECD DAC List of ODA Recipients as a Least Developed Country, which is the list DAAD draws on"
+        "Eligibility follows the OECD DAC List of ODA Recipients — the list DAAD draws on — which covers Least Developed Countries and other developing countries"
       ],
       "gpa_minimum": null,
       "language_requirements": {
@@ -991,6 +1230,14 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www2.daad.de/deutschland/stipendium/datenbank/en/21148-scholarship-database?detail=50076777",
+    "nationality_scope": {
+      "mode": "listed_elsewhere",
+      "list_url": "https://www.daad.de/en/studying-in-germany/scholarships/development-related-postgraduate-courses/",
+      "note": "Restricted to graduates from developing and newly industrialised countries on the DAAD list, which follows the OECD DAC List of ODA Recipients — Sub-Saharan Africa, South and Central Asia, East Asia, South America, the Near and Middle East and parts of Europe. Check the current list against your own country."
+    },
+    "country_notes": {
+      "Nepal": "Nepal appears on the OECD DAC List of ODA Recipients as a Least Developed Country, which is the list DAAD draws on, so Nepali applicants are eligible."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -1044,6 +1291,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.gatescambridge.org/programme/the-scholarship/",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to citizens of any country outside the United Kingdom."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -1096,6 +1348,11 @@
     "last_updated": "2026-10-07",
     "status": "upcoming",
     "source_url": "https://www.tudelft.nl/en/education/programmes/practical-matters/scholarships",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to international applicants; tuition is charged at the statutory or institutional rate according to the applicant's registered nationality."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -1146,6 +1403,11 @@
     "last_updated": "2026-10-07",
     "status": "upcoming",
     "source_url": "https://www.kth.se/en/studies/master/admissions/scholarships/kth-scholarship-1.72827",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to fee-paying international students; it covers the tuition fee charged to fee-paying students."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -1196,6 +1458,12 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html",
+    "nationality_scope": {
+      "mode": "listed_elsewhere",
+      "list_url": "https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html",
+      "note": "Open to applicants from 183 countries, and applications are submitted to the Swiss diplomatic representation in the applicant's own country. This record does not reproduce the country list, so check it against your own country."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -1247,6 +1515,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.universite-paris-saclay.fr/en/admission/bourses-et-aides-financieres/international-masters-scholarships-program",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to students of foreign nationality enrolling in a French higher education institution for the first time."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -1298,6 +1571,11 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://www.ms2master.com/funding",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to applicants of any nationality; scholarships are awarded competitively."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -1322,7 +1600,7 @@
     "duration": "Two years starting 1 October, with three compulsory mobility periods and one optional workshop across Portugal, Spain, Italy and France",
     "eligibility": {
       "nationality": [
-        "Open to applicants of any nationality; separate scholarship quotas apply to Programme Country and Partner Country applicants, and Nepal falls in the Partner Country group"
+        "Open to applicants of any nationality; separate scholarship quotas apply to Programme Country and Partner Country applicants."
       ],
       "gpa_minimum": null,
       "language_requirements": {},
@@ -1349,6 +1627,13 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://msc-norisk.org/applications/",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to any nationality, with separate scholarship quotas for Programme Country and Partner Country applicants."
+    },
+    "country_notes": {
+      "Nepal": "Nepal falls in the Partner Country group, to which separate scholarship quotas apply."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -1374,7 +1659,7 @@
     "duration": "Two years starting 1 October, with three compulsory mobility periods and one optional workshop across Portugal, Spain, Italy and France",
     "eligibility": {
       "nationality": [
-        "Open to applicants of any nationality, with separate scholarship quotas for Programme Country and Partner Country applicants. Nepal is listed explicitly among both the Partner Countries and the NDICI partner countries."
+        "Open to applicants of any nationality, with separate scholarship quotas for Programme Country and Partner Country applicants. The programme publishes its own Partner Country and NDICI lists."
       ],
       "gpa_minimum": null,
       "language_requirements": {},
@@ -1384,13 +1669,13 @@
     "benefits": [
       "EUR 1,400 per month for the whole programme",
       "Full EUR 9,000 participation cost covered, so no tuition is charged",
-      "Up to seven scholarships a year for Partner Country applicants, with Nepal explicitly eligible",
+      "Up to seven scholarships a year for Partner Country applicants",
       "Consortium scholarships of EUR 9,000, EUR 6,500 and EUR 4,500",
       "Health insurance included in the participation cost"
     ],
     "application_url": "https://msc-frp.org/applications/",
     "official_url": "https://msc-frp.org/",
-    "description": "Erasmus Mundus joint master's in advanced structural analysis and design using composite materials, taught across Portugal, Spain, Italy and France. Scholarships are EUR 1,400 per month with the EUR 9,000 participation cost covered. Nepal appears explicitly on the programme's Partner Country and NDICI lists, so applicants qualify for the Partner Country quota.",
+    "description": "Erasmus Mundus joint master's in advanced structural analysis and design using composite materials, taught across Portugal, Spain, Italy and France. Scholarships are EUR 1,400 per month with the EUR 9,000 participation cost covered. The programme publishes its Partner Country and NDICI lists, and applicants from those countries qualify for the Partner Country quota.",
     "tags": [
       "Europe",
       "erasmus-mundus",
@@ -1401,6 +1686,13 @@
     "last_updated": "2026-10-07",
     "status": "verify",
     "source_url": "https://msc-frp.org/applications/",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to any nationality, with separate scholarship quotas for Programme Country and Partner Country applicants."
+    },
+    "country_notes": {
+      "Nepal": "Nepal is listed explicitly among both the Partner Countries and the NDICI partner countries."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -1421,11 +1713,11 @@
     "amount": "EUR 1,400 per month for up to 24 months, covering subsistence, accommodation, travel and installation, plus the participation costs including tuition and full insurance. Standard tuition is EUR 18,000",
     "currency": "EUR",
     "deadline": "2027-01-03",
-    "deadline_notes": "The Erasmus Mundus scholarship deadline is 3 January 2027 at 23:59 Dutch time for applicants from Partner Countries, which includes Nepal; applicants from Programme and IPA countries have until 7 February 2027. English test results may be uploaded as late as 1 February 2027 provided the application itself is submitted by 3 January 2027. Scholarship outcomes are announced in early April 2027. A separate reduced-fee scholarship, EUR 3,000 instead of EUR 18,000, closes on 15 April 2027.",
+    "deadline_notes": "The Erasmus Mundus scholarship deadline is 3 January 2027 at 23:59 Dutch time for applicants from Partner Countries; applicants from Programme and IPA countries have until 7 February 2027. English test results may be uploaded as late as 1 February 2027 provided the application itself is submitted by 3 January 2027. Scholarship outcomes are announced in early April 2027. A separate reduced-fee scholarship, EUR 3,000 instead of EUR 18,000, closes on 15 April 2027.",
     "duration": "Two years (24 months), four semesters across Germany, the Netherlands, Spain and Slovenia, ending in a research thesis",
     "eligibility": {
       "nationality": [
-        "Open to applicants of any nationality, with separate scholarship quotas for Programme Country and Partner Country applicants; Nepal is in the Partner Country group"
+        "Open to applicants of any nationality, with separate scholarship quotas for Programme Country and Partner Country applicants"
       ],
       "gpa_minimum": null,
       "language_requirements": {},
@@ -1441,7 +1733,7 @@
     ],
     "application_url": "https://www.floodriskmaster.org/apply",
     "official_url": "https://www.floodriskmaster.org/scholarships",
-    "description": "Erasmus Mundus joint master's in flood risk management, coordinated by IHE Delft with TU Dresden, Universitat Politècnica de Catalunya and the University of Ljubljana. Civil engineering is an accepted first degree. Scholarships pay EUR 1,400 per month for up to 24 months plus all participation costs, and the deadline for applicants from Nepal's category is 3 January 2027.",
+    "description": "Erasmus Mundus joint master's in flood risk management, coordinated by IHE Delft with TU Dresden, Universitat Politècnica de Catalunya and the University of Ljubljana. Civil engineering is an accepted first degree. Scholarships pay EUR 1,400 per month for up to 24 months plus all participation costs, and the deadline for Partner Country applicants is 3 January 2027.",
     "tags": [
       "Europe",
       "erasmus-mundus",
@@ -1453,6 +1745,13 @@
     "last_updated": "2026-10-07",
     "status": "upcoming",
     "source_url": "https://www.floodriskmaster.org/scholarships",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to any nationality, with separate scholarship quotas for Programme Country and Partner Country applicants."
+    },
+    "country_notes": {
+      "Nepal": "Nepal is in the Partner Country group, to which separate scholarship quotas apply."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -1475,11 +1774,11 @@
     "amount": "EUR 1,400 per month for 24 months, covering subsistence, travel and installation, plus the participation costs including tuition, library and laboratory costs and full insurance",
     "currency": "EUR",
     "deadline": "2027-01-03",
-    "deadline_notes": "The Erasmus Mundus scholarship deadline is 3 January 2027 at 23:59 Dutch time for applicants from Partner Countries, which includes Nepal; applicants from Programme Countries have until 7 February 2027. Applicants who do not yet hold an English test result may upload it as late as 1 February 2027 and still be considered for a scholarship. Admission and scholarship outcomes are announced in April 2027. Applications arriving after the scholarship deadline are still considered for academic admission but not for the scholarship, and applicants funding their own studies must apply and confirm funding by 15 April 2027. About 15 scholarships a year are awarded across roughly four intakes, around 60 in total for intakes starting between 2024 and 2027.",
+    "deadline_notes": "The Erasmus Mundus scholarship deadline is 3 January 2027 at 23:59 Dutch time for applicants from Partner Countries; applicants from Programme Countries have until 7 February 2027. Applicants who do not yet hold an English test result may upload it as late as 1 February 2027 and still be considered for a scholarship. Admission and scholarship outcomes are announced in April 2027. Applications arriving after the scholarship deadline are still considered for academic admission but not for the scholarship, and applicants funding their own studies must apply and confirm funding by 15 April 2027. About 15 scholarships a year are awarded across roughly four intakes, around 60 in total for intakes starting between 2024 and 2027.",
     "duration": "Two years (120 ECTS), taught in English across the Netherlands, Germany and Portugal",
     "eligibility": {
       "nationality": [
-        "Open to applicants of any nationality, with separate scholarship lists for Programme Country and Partner Country applicants; Nepal is in the Partner Country group"
+        "Open to applicants of any nationality, with separate scholarship lists for Programme Country and Partner Country applicants"
       ],
       "gpa_minimum": "CGPA of at least B/B+ on the US system, or a 2nd upper classification on the UK system",
       "language_requirements": {},
@@ -1495,7 +1794,7 @@
     ],
     "application_url": "https://www.groundwatermaster.eu/admission-and-application",
     "official_url": "https://www.groundwatermaster.eu/scholarships",
-    "description": "Erasmus Mundus joint master's in groundwater and global change, coordinated by IHE Delft with TU Dresden and IST Lisbon. Civil engineering is named explicitly among the accepted first degrees. Scholarships pay EUR 1,400 per month for two years plus all participation costs, and the deadline for applicants from Nepal's category is 3 January 2027.",
+    "description": "Erasmus Mundus joint master's in groundwater and global change, coordinated by IHE Delft with TU Dresden and IST Lisbon. Civil engineering is named explicitly among the accepted first degrees. Scholarships pay EUR 1,400 per month for two years plus all participation costs, and the deadline for Partner Country applicants is 3 January 2027.",
     "tags": [
       "Europe",
       "erasmus-mundus",
@@ -1508,6 +1807,13 @@
     "last_updated": "2026-10-07",
     "status": "upcoming",
     "source_url": "https://www.groundwatermaster.eu/scholarships",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to any nationality, with separate scholarship lists for Programme Country and Partner Country applicants."
+    },
+    "country_notes": {
+      "Nepal": "Nepal is in the Partner Country group, to which separate scholarship lists apply."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -1564,6 +1870,11 @@
     "last_updated": "2026-10-07",
     "status": "upcoming",
     "source_url": "https://www.emerald.uliege.be/apply-3/apply/",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open worldwide; the Erasmus Mundus scholarship is awarded without a nationality quota."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -1591,7 +1902,7 @@
     "duration": "Each fellowship runs between 3 and 36 months, or between 3 and 48 months for a Joint Doctorate; the networks themselves last up to four years, or five for Joint Doctorates",
     "eligibility": {
       "nationality": [
-        "Candidates may be of any nationality, including Nepali"
+        "Candidates may be of any nationality"
       ],
       "gpa_minimum": null,
       "language_requirements": {},
@@ -1618,6 +1929,11 @@
     "last_updated": "2026-10-07",
     "status": "open",
     "source_url": "https://marie-sklodowska-curie-actions.ec.europa.eu/actions/doctoral-networks",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to candidates of any nationality; the restriction is a mobility rule rather than a nationality rule."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -1676,12 +1992,17 @@
     "last_updated": "2026-10-07",
     "status": "closed",
     "source_url": "https://knight-hennessy.stanford.edu/program-overview/funding",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "No restriction by nationality, and no quotas by discipline, programme or world region."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
     "id": "humphrey-fellowship",
     "name": "Hubert H. Humphrey Fellowship Program",
-    "provider": "Fulbright / U.S. Department of State, administered in Nepal by the Commission for Educational Exchange between the United States and Nepal",
+    "provider": "Fulbright / U.S. Department of State, administered in each country by its Binational Fulbright Commission or the Public Affairs Section of the U.S. Embassy",
     "country": "United States",
     "region": "Hosted at selected U.S. universities",
     "city": "Assigned by the programme",
@@ -1695,14 +2016,14 @@
       "Non-degree"
     ],
     "funding_type": "Non-degree professional fellowship",
-    "amount": "Covers a ten- to twelve-month programme of academic study at a U.S. host university plus a professional affiliation placement. The official programme pages and the Nepal country page consulted describe the structure of the award but do not publish a stipend figure, so no amount is recorded here.",
+    "amount": "Covers a ten- to twelve-month programme of academic study at a U.S. host university plus a professional affiliation placement. The official programme pages and the country page consulted describe the structure of the award but do not publish a stipend figure, so no amount is recorded here.",
     "currency": "USD",
     "deadline": null,
-    "deadline_notes": "Deadlines are set per country and are not published centrally — the programme states only that applicants must apply through their Binational Fulbright Commission or the Public Affairs Section of the U.S. Embassy, and that deadlines vary by country. In Nepal the programme is administered by the Commission for Educational Exchange between the United States and Nepal, whose Humphrey page states that applications for the 2026-27 cohort are closed and that a new announcement is pending, so no date is recorded.",
+    "deadline_notes": "Deadlines are set per country and are not published centrally — the programme states only that applicants must apply through their Binational Fulbright Commission or the Public Affairs Section of the U.S. Embassy, and that deadlines vary by country. The Binational Fulbright Commission consulted states that applications for the 2026-27 cohort are closed and that a new announcement is pending, so no date is recorded.",
     "duration": "Ten to twelve months of academic study and professional affiliation in the United States",
     "eligibility": {
       "nationality": [
-        "Nepal appears on the programme eligibility list under the South and Central Asia region, which spans 148 countries and regions; in Nepal the programme is administered by the Binational Fulbright Commission"
+        "Applicants must be citizens of a country on the programme eligibility list, which spans 148 countries and regions; applications are made through the applicant's Binational Fulbright Commission or the Public Affairs Section of the U.S. Embassy"
       ],
       "gpa_minimum": null,
       "language_requirements": {},
@@ -1714,11 +2035,11 @@
       "A professional affiliation placement with a U.S. organisation in the fellow’s field",
       "Academic study designed around the fellow’s own objectives rather than a fixed curriculum",
       "Leadership training and access to a network of more than 6,600 fellows from 163 countries",
-      "Administered in Nepal by the Binational Fulbright Commission, which sets the national deadline"
+      "Administered by the Binational Fulbright Commission in the applicant's own country, which sets the national deadline"
     ],
     "application_url": "https://usefnepal.org/fulbright/humphrey/program-description/",
     "official_url": "https://www.humphreyfellowship.org/how-to-apply/eligibility/",
-    "description": "A non-degree Fulbright fellowship for mid-career professionals, running ten to twelve months at a U.S. host university with a professional affiliation placement. Nepal is on the eligible-country list and the programme is administered there by the Binational Fulbright Commission. The fields most relevant to a civil engineer are under the Sustainable Lands impact area — natural resources and environmental policy, and urban and regional planning. It requires five years of full-time professional experience, and the 2026-27 cohort is closed with the next announcement pending.",
+    "description": "A non-degree Fulbright fellowship for mid-career professionals, running ten to twelve months at a U.S. host university with a professional affiliation placement. Applicants must be citizens of a country on the programme's eligibility list and apply through their country's Binational Fulbright Commission or U.S. Embassy. The fields most relevant to a civil engineer are under the Sustainable Lands impact area — natural resources and environmental policy, and urban and regional planning. It requires five years of full-time professional experience, and the 2026-27 cohort is closed with the next announcement pending.",
     "tags": [
       "United States",
       "fulbright",
@@ -1731,6 +2052,14 @@
     "last_updated": "2026-10-07",
     "status": "closed",
     "source_url": "https://usefnepal.org/fulbright/humphrey/program-description/",
+    "nationality_scope": {
+      "mode": "listed_elsewhere",
+      "list_url": "https://www.humphreyfellowship.org/how-to-apply/eligibility/",
+      "note": "Restricted to the 148 countries and regions on the programme's eligibility list. Applications are routed through a local administering body rather than submitted centrally, so check your own country's entry on that list."
+    },
+    "country_notes": {
+      "Nepal": "Nepal appears on the programme eligibility list under the South and Central Asia region. In Nepal the programme is administered by the Binational Fulbright Commission rather than by the embassy."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -1755,7 +2084,7 @@
     "duration": "Up to 4 years; the stipend is paid for up to 48 months",
     "eligibility": {
       "nationality": [
-        "Nationals of developing countries in the South — Nepal appears on TWAS's developing-countries list (entry 088 of 138), so Nepali applicants are eligible",
+        "Nationals of developing countries in the South — eligibility follows TWAS's developing-countries list, which names 138 developing countries in the South",
         "Applicants must NOT hold Chinese citizenship"
       ],
       "gpa_minimum": null,
@@ -1776,7 +2105,7 @@
       "10 of the 40 places each year are prioritised for climate-related research"
     ],
     "official_url": "https://twas.org/opportunity/anso-cas-twasunesco-phd-scholarship",
-    "description": "A doctoral scholarship that places up to 40 students a year from developing countries into a Chinese PhD, funded jointly by ANSO, the Chinese Academy of Sciences and TWAS/UNESCO. It is a sub-category of the CAS-ANSO Scholarship (Degree Program) and was launched in 2022. Study is hosted at the University of Chinese Academy of Sciences (UCAS), the University of Science and Technology of China (USTC) or an institute of the Chinese Academy of Sciences, for up to four years. Nepal is on TWAS's developing-country list, so Nepali applicants qualify, and 10 of the 40 places are set aside for climate-related research.",
+    "description": "A doctoral scholarship that places up to 40 students a year from developing countries into a Chinese PhD, funded jointly by ANSO, the Chinese Academy of Sciences and TWAS/UNESCO. It is a sub-category of the CAS-ANSO Scholarship (Degree Program) and was launched in 2022. Study is hosted at the University of Chinese Academy of Sciences (UCAS), the University of Science and Technology of China (USTC) or an institute of the Chinese Academy of Sciences, for up to four years. Eligibility follows TWAS's developing-country list, and 10 of the 40 places are set aside for climate-related research.",
     "tags": [
       "China",
       "phd",
@@ -1787,6 +2116,14 @@
     "last_updated": "2026-10-07",
     "status": "closed",
     "source_url": "https://twas.org/opportunity/anso-cas-twasunesco-phd-scholarship",
+    "nationality_scope": {
+      "mode": "listed_elsewhere",
+      "list_url": "https://twas.org/opportunities/twas-developing-countries-list",
+      "note": "Restricted to nationals of developing countries in the South, using TWAS's published list of 138 countries and territories. Applicants must not hold Chinese citizenship. Check the current list against your own country."
+    },
+    "country_notes": {
+      "Nepal": "Nepal appears on TWAS's developing-countries list at entry 088 of 138, so Nepali applicants are eligible."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -1820,7 +2157,7 @@
         "english": "The CGRS D program states no language requirement of its own; the language requirements of the Canadian institution where the applicant is registered apply"
       },
       "age_limit": null,
-      "other": "This is the single most important restriction to understand before applying: CGRS D is NOT an entry route into a Canadian doctorate. An applicant who is not a Canadian citizen, permanent resident or protected person must be registered in their doctoral program of study at an eligible Canadian institution by the application deadline — so a Nepali applicant would have to be admitted to, and enrolled in, a Canadian PhD first, and would then be competing for the 15% international share of awards. Applicants must have completed no more than 36 months of full-time equivalent study in the doctoral program by December 31 of the calendar year of application; part-time terms count as half, and all doctoral study counts whether or not it was completed at the same institution or program. A maximum of three applications to CGRS D is allowed across a lifetime, and only one program in the Canada Research Training Awards Suite may be applied to per academic year. Applicants who have already received a doctoral-level scholarship from CIHR, NSERC or SSHRC — explicitly including a Vanier Canada Graduate Scholarship — are ineligible. An eligible doctoral program must be predominantly research-oriented and lead to a thesis, dissertation, major research project or comparable merit-reviewed output; clinically oriented programs, including clinical psychology, qualify only where they carry a significant autonomous research component. CIHR and NSERC award holders may not concurrently hold a tenure or tenure-track appointment. Applicants self-identifying as Black, and Indigenous applicants whose nations or communities are located in Canada, are eligible for additional designated funding. Applicants may propose to hold the award at a degree-granting institution outside Canada only if they are Canadian citizens, permanent residents or protected persons who have also completed a previous undergraduate or graduate degree at a Canadian institution; up to 20% of all doctoral awards may be held outside Canada. The Policy on Sensitive Technology Research and Affiliations of Concern does not apply to this suite."
+      "other": "This is the single most important restriction to understand before applying: CGRS D is NOT an entry route into a Canadian doctorate. An applicant who is not a Canadian citizen, permanent resident or protected person must be registered in their doctoral program of study at an eligible Canadian institution by the application deadline — so an international applicant would have to be admitted to, and enrolled in, a Canadian PhD first, and would then be competing for the 15% international share of awards. Applicants must have completed no more than 36 months of full-time equivalent study in the doctoral program by December 31 of the calendar year of application; part-time terms count as half, and all doctoral study counts whether or not it was completed at the same institution or program. A maximum of three applications to CGRS D is allowed across a lifetime, and only one program in the Canada Research Training Awards Suite may be applied to per academic year. Applicants who have already received a doctoral-level scholarship from CIHR, NSERC or SSHRC — explicitly including a Vanier Canada Graduate Scholarship — are ineligible. An eligible doctoral program must be predominantly research-oriented and lead to a thesis, dissertation, major research project or comparable merit-reviewed output; clinically oriented programs, including clinical psychology, qualify only where they carry a significant autonomous research component. CIHR and NSERC award holders may not concurrently hold a tenure or tenure-track appointment. Applicants self-identifying as Black, and Indigenous applicants whose nations or communities are located in Canada, are eligible for additional designated funding. Applicants may propose to hold the award at a degree-granting institution outside Canada only if they are Canadian citizens, permanent residents or protected persons who have also completed a previous undergraduate or graduate degree at a Canadian institution; up to 20% of all doctoral awards may be held outside Canada. The Policy on Sensitive Technology Research and Affiliations of Concern does not apply to this suite."
     },
     "benefits": [
       "CAD 40,000 per year for 36 months",
@@ -1848,6 +2185,16 @@
     "last_updated": "2026-10-07",
     "status": "open",
     "source_url": "https://nserc-crsng.canada.ca/en/funding-opportunity/canada-graduate-research-scholarship-doctoral-program",
+    "nationality_scope": {
+      "mode": "listed",
+      "countries": [
+        "Canada"
+      ],
+      "note": "Canadian citizens, permanent residents of Canada and protected persons. International applicants are eligible for up to 15% of awards only, and must already be registered in a doctoral programme at an eligible Canadian institution by the application deadline."
+    },
+    "country_notes": {
+      "Canada": "Canadian citizens, permanent residents and protected persons are the primary audience; the international allocation is capped at 15% of awards."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -1895,7 +2242,7 @@
       "Extension of the scholarship on advancing from a non-regular to a regular course, or from a master's to a doctoral course, subject to a MEXT examination"
     ],
     "official_url": "https://www.studyinjapan.go.jp/en/_mt/2026/04/01-2027_Research_Guidelines_E.pdf",
-    "description": "The Japanese Government's flagship scholarship for postgraduate study in Japan, covering a monthly allowance of 143,000 to 145,000 yen, waived tuition and fees, and a return air ticket. Applications are made through the Japanese diplomatic mission in the applicant's own country — the \"Embassy Recommendation\" route — which for Nepal is the Embassy of Japan in Kathmandu, and the mission runs its own selection round with its own deadline and its own examination and interview dates. The scholarship funds \"Research Students\": either non-regular students who spend up to two years preparing and researching before sitting a graduate entrance examination, or regular students enrolled directly in a master's, doctoral or professional degree course. Awardees may name up to three preferred Japanese universities and are placed by MEXT. Applications are free of charge, and a letter of provisional acceptance from a Japanese university is a strong factor in the final selection. Nepal's 2027 round closed on 31 May 2026, with the next call expected around April 2027.",
+    "description": "The Japanese Government's flagship scholarship for postgraduate study in Japan, covering a monthly allowance of 143,000 to 145,000 yen, waived tuition and fees, and a return air ticket. Applications are made through the Japanese diplomatic mission in the applicant's own country — the \"Embassy Recommendation\" route — and the mission runs its own selection round with its own deadline and its own examination and interview dates. The scholarship funds \"Research Students\": either non-regular students who spend up to two years preparing and researching before sitting a graduate entrance examination, or regular students enrolled directly in a master's, doctoral or professional degree course. Awardees may name up to three preferred Japanese universities and are placed by MEXT. Applications are free of charge, and a letter of provisional acceptance from a Japanese university is a strong factor in the final selection. The Nepal round recorded here closed on 31 May 2026, with the next call expected around April 2027.",
     "tags": [
       "Japan",
       "phd",
@@ -1913,6 +2260,16 @@
     "last_updated": "2026-10-07",
     "status": "closed",
     "source_url": "https://www.studyinjapan.go.jp/en/_mt/2026/04/01-2027_Research_Guidelines_E.pdf",
+    "nationality_scope": {
+      "mode": "listed",
+      "countries": [
+        "Nepal"
+      ],
+      "note": "This record is the Embassy of Japan in Nepal's call, which is limited to Nepali nationals. Most other countries run their own embassy calls, with their own deadlines and academic bars — this record does not cover them. MEXT also requires the applicant to hold the nationality of a country that has diplomatic relations with Japan."
+    },
+    "country_notes": {
+      "Nepal": "Nepal's 2027 embassy call set the academic bar at 70% or CGPA 3.1 for Natural Sciences and 60% or CGPA 2.5 for Humanities, with the age rule that applicants be born on or after 2 April 1992."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -1940,7 +2297,7 @@
     "duration": "Master's: 3 years — one year of Korean language training plus two years of degree study. Doctoral: 4 years — one year of Korean language training plus three years of degree study. Research programme: 6 months or 1 year. Global Network programme: a master's degree within 2 years. Scholars who already hold TOPIK level 5 or 6, and others granted an exemption, proceed straight to the degree programme.",
     "eligibility": {
       "nationality": [
-        "Nationals of the NIIED-designated countries invited to take part in GKS — Nepal is one, with a quota of 4 places on the Embassy Track and 6 on the University Track, so 10 places in total for the 2026 round",
+        "Nationals of the NIIED-designated countries invited to take part in GKS — quotas are set per country each year, so check the current country list and your country's allocation",
         "Applicants and their parents (or legal guardians) must hold citizenship of a country other than Korea; dual nationals holding Korean citizenship are not eligible to apply",
         "Applicants or parents who previously held Korean citizenship must submit documentation issued by the Korean government proving renunciation"
       ],
@@ -1950,7 +2307,7 @@
         "english": "The guidelines state no English test requirement; only Korean language ability (TOPIK) is addressed. Applicants must be able to study in the language of instruction of the programme they choose"
       },
       "age_limit": "Under 40 — applicants must have been born after 1 September 1986. Current academic professors at institutions in an ODA-recipient country may be up to 45, that is born after 1 September 1981.",
-      "other": "Applicants must have obtained the required degree by 31 July of the entry year — a bachelor's degree for a master's, a master's for a doctorate, a doctorate for a post-doctoral place — or be expected to graduate by then, in which case the official graduation certificate and final transcript must reach the GKS Center by 31 July. Anyone who has graduated from, or is expected to graduate from, a Korean high school or a Korean university is not eligible, including a student in their final year at a Korean university; an online curriculum from a Korean high school or university does not qualify either. Applicants must choose one track and one track only: the Embassy Track, applied for through the Korean Embassy in the applicant's country of citizenship, or the University Track, applied for directly to a designated university. For Nepal the first round is run by the Embassy of the Republic of Korea in Kathmandu. For 2026 the Embassy Track was submitted through an online application system. Scholarship status is conditional: a scholar who withdraws within the first three months of enrolment must repay everything received — entry airfare, settlement allowance, monthly allowance and tuition — and tuition and Korean language training fees are not provided to Research programme scholars. Fields of study are open across the disciplines the participating universities offer."
+      "other": "Applicants must have obtained the required degree by 31 July of the entry year — a bachelor's degree for a master's, a master's for a doctorate, a doctorate for a post-doctoral place — or be expected to graduate by then, in which case the official graduation certificate and final transcript must reach the GKS Center by 31 July. Anyone who has graduated from, or is expected to graduate from, a Korean high school or a Korean university is not eligible, including a student in their final year at a Korean university; an online curriculum from a Korean high school or university does not qualify either. Applicants must choose one track and one track only: the Embassy Track, applied for through the Korean Embassy in the applicant's country of citizenship, or the University Track, applied for directly to a designated university. For 2026 the Embassy Track was submitted through an online application system. Scholarship status is conditional: a scholar who withdraws within the first three months of enrolment must repay everything received — entry airfare, settlement allowance, monthly allowance and tuition — and tuition and Korean language training fees are not provided to Research programme scholars. Fields of study are open across the disciplines the participating universities offer."
     },
     "benefits": [
       "Monthly allowance (printed by the guidelines as an annual figure) of 16,560,000 KRW per year for degree-programme scholars, 14,400,000 KRW per year during the Korean language programme, and 20,880,000 KRW per year for the Research programme",
@@ -1962,7 +2319,7 @@
       "A year of Korean language training before the degree programme, where required"
     ],
     "official_url": "https://www.studyinkorea.go.kr/en/plan/gksNoticeRead.do?bbsId=BBSMSTR_000000000461&nttId=4420",
-    "description": "The Korean government's flagship scholarship for international graduate students, run by NIIED and inviting 2,000 students a year. It funds a master's (one year of Korean language training plus two years of degree study) or a doctorate (one year plus three), with the option of a shorter non-degree Research placement. Applicants choose between two routes: the Embassy Track, run through the Korean Embassy in their own country, which for Nepal means the Embassy of the Republic of Korea in Kathmandu, and the University Track, applied for directly to a designated university. Nepal's quota for the 2026 round was 4 places on the Embassy Track and 6 on the University Track — 10 in total. The 2026 Embassy Track window closed on 25 February 2026 and the cycle finished with results in July; the 2027 graduate guidelines had not been published at the time of checking, and are expected around February 2027.",
+    "description": "The Korean government's flagship scholarship for international graduate students, run by NIIED and inviting 2,000 students a year. It funds a master's (one year of Korean language training plus two years of degree study) or a doctorate (one year plus three), with the option of a shorter non-degree Research placement. Applicants choose between two routes: the Embassy Track, run through the Korean Embassy in their own country, and the University Track, applied for directly to a designated university. Quotas are set per country; Nepal's 2026 allocation is in the country note. The 2026 Embassy Track window closed on 25 February 2026 and the cycle finished with results in July; the 2027 graduate guidelines had not been published at the time of checking, and are expected around February 2027.",
     "tags": [
       "South Korea",
       "phd",
@@ -1980,6 +2337,14 @@
     "last_updated": "2026-10-07",
     "status": "closed",
     "source_url": "https://www.studyinkorea.go.kr/en/plan/gksNoticeRead.do?bbsId=BBSMSTR_000000000461&nttId=4420",
+    "nationality_scope": {
+      "mode": "listed_elsewhere",
+      "list_url": "https://www.studyinkorea.go.kr/en/main.do",
+      "note": "Restricted to nationals of the countries NIIED designates for each round, and each designated country carries its own quota. This record does not reproduce the full designation list, so check it against your own country."
+    },
+    "country_notes": {
+      "Nepal": "Nepal's 2026 quota was 4 places on the Embassy Track and 6 on the University Track — 10 in total."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -2042,6 +2407,16 @@
     "last_updated": "2026-10-07",
     "status": "closed",
     "source_url": "https://www.cgibirgunj.gov.in/docs/1772693562ICCR-Advertisement.pdf",
+    "nationality_scope": {
+      "mode": "listed",
+      "countries": [
+        "Nepal"
+      ],
+      "note": "Offered for Nepal only. Applicants must not hold Indian citizenship."
+    },
+    "country_notes": {
+      "Nepal": "Nepal has 64 places reserved: 60 postgraduate and 4 doctoral. The age caps set for Nepal are 35 for postgraduate and 40 for doctoral courses, measured as on 1 July 2026."
+    },
     "last_verified": "2026-10-07"
   },
   {
@@ -2070,7 +2445,7 @@
     "duration": "Master of Science: 1.5 years, or 2 years on the thesis track — a 36-credit programme expected to be completed in three semesters and one summer session. PhD: 4 years, typically eight semesters and four summer sessions.",
     "eligibility": {
       "nationality": [
-        "Open to applicants of any nationality — KAUST reports more than 120 nationalities on campus and publishes no country quota or Nepal-specific allocation"
+        "Open to applicants of any nationality — KAUST reports more than 120 nationalities on campus and publishes no country quota or country-specific allocation"
       ],
       "gpa_minimum": "3.0 on a 4-point scale (or equivalent) is the minimum permitted GPA. KAUST adds context for applicants: typically 90% of admitted applicants have a GPA above 3.3, and 75% have a GPA above 3.5 on a 4-point scale (or equivalent).",
       "language_requirements": {
@@ -2108,6 +2483,11 @@
     "last_updated": "2026-10-07",
     "status": "open",
     "source_url": "https://admissions.kaust.edu.sa/how-to-apply/admission-timelines",
+    "nationality_scope": {
+      "mode": "all",
+      "note": "Open to applicants of any nationality; KAUST publishes no country quota."
+    },
+    "country_notes": {},
     "last_verified": "2026-10-07"
   },
   {
@@ -2137,8 +2517,8 @@
     "duration": "Doutorado Pleno: up to 48 months. Doutorado Sanduíche: 6 to 10 months. Mestrado Pleno: up to 24 months.",
     "eligibility": {
       "nationality": [
-        "Restricted to nationals of the programme's participating countries — 74 countries were listed in Edital nº 12/2025: 29 in Africa, 28 in Latin America and the Caribbean, 10 in Asia and 7 in Europe. Nepal is not among them. The ten Asian countries are Bangladesh, China, South Korea, India, Iran, Lebanon, Pakistan, Syria, Thailand and Timor-Leste.",
-        "The governing rule, in the MRE's words, is that countries holding an educational, cultural or scientific and technological cooperation agreement with Brazil may participate. The MRE's current page lists 76 countries for the undergraduate PEC-G programme — the same four regions, with Cambodia, Jordan and Mongolia added to Asia — and Nepal is absent from that list too, so the exclusion is not an artefact of the postgraduate Edital alone.",
+        "Restricted to nationals of the programme's participating countries — 74 countries were listed in Edital nº 12/2025: 29 in Africa, 28 in Latin America and the Caribbean, 10 in Asia and 7 in Europe. The ten Asian countries are Bangladesh, China, South Korea, India, Iran, Lebanon, Pakistan, Syria, Thailand and Timor-Leste.",
+        "The governing rule, in the MRE's words, is that countries holding an educational, cultural or scientific and technological cooperation agreement with Brazil may participate. The MRE's current page lists 76 countries for the undergraduate PEC-G programme — the same four regions, with Cambodia, Jordan and Mongolia added to Asia — which is a second, independent list to check your own nationality against.",
         "Applicants must not hold Brazilian nationality, dual Brazilian nationality, or an entitlement to Brazilian nationality at the time of application, and must not hold permanent residence authorisation for Brazil."
       ],
       "gpa_minimum": "No minimum GPA is stated in the Edital. Academic admission requirements are set by the individual postgraduate programme the candidate applies to, and the Edital states that CAPES's requirements and the programme's requirements are cumulative.",
@@ -2158,7 +2538,7 @@
       "650 scholarships in the 2025 call — 350 Doutorado Sanduíche, 200 Mestrado Pleno and 100 Doutorado Pleno"
     ],
     "official_url": "https://www.gov.br/capes/pt-br/acesso-a-informacao/acoes-e-programas/bolsas/bolsas-e-auxilios-internacionais/encontre-aqui/paises/multinacional/programa-de-estudantes-convenio-de-pos-graduacao-pec-pg",
-    "description": "Brazil's government scholarship for postgraduate study in Brazil, run jointly by CAPES, the Ministry of Foreign Affairs and CNPq, and the route that opens Brazil as a destination in this catalog. It funds a full master's of up to 24 months or doctorate of up to 48 months at a Brazilian institution, and also a shorter 'sandwich' doctorate of 6 to 10 months for candidates already enrolled in a doctorate at home — the modality that takes the largest share of places. The 2025 call offered 650 scholarships, of which 350 were sandwich doctorates, 200 master's and 100 full doctorates, on a budget of up to BRL 41,050,000, paying BRL 3,100 a month for a doctorate and BRL 2,100 for a master's plus a BRL 400 monthly health-insurance allowance and a return airfare. The restriction that matters most sits at the front of the eligibility rules: PEC-PG is limited to nationals of a named list of participating countries — 74 of them in the 2025 Edital — and Nepal is not on it. India, Bangladesh, China, Thailand and Timor-Leste are, because the governing rule is that a country must hold an educational, cultural or scientific and technological cooperation agreement with Brazil. Brazil's current list for the undergraduate PEC-G programme runs to 76 countries and Nepal is absent from that one too. The 2025 windows closed on 8 October 2025 for the full modalities and 16 January 2026 for the sandwich doctorate.",
+    "description": "Brazil's government scholarship for postgraduate study in Brazil, run jointly by CAPES, the Ministry of Foreign Affairs and CNPq, and the route that opens Brazil as a destination in this catalog. It funds a full master's of up to 24 months or doctorate of up to 48 months at a Brazilian institution, and also a shorter 'sandwich' doctorate of 6 to 10 months for candidates already enrolled in a doctorate at home — the modality that takes the largest share of places. The 2025 call offered 650 scholarships, of which 350 were sandwich doctorates, 200 master's and 100 full doctorates, on a budget of up to BRL 41,050,000, paying BRL 3,100 a month for a doctorate and BRL 2,100 for a master's plus a BRL 400 monthly health-insurance allowance and a return airfare. The restriction that matters most sits at the front of the eligibility rules: PEC-PG is limited to nationals of a named list of participating countries — 74 of them in the 2025 Edital, listed in full in the eligibility data. India, Bangladesh, China, Thailand and Timor-Leste are on it, because the governing rule is that a country must hold an educational, cultural or scientific and technological cooperation agreement with Brazil. The undergraduate PEC-G programme runs a separate list of 76 countries, so check both against your own nationality. The 2025 windows closed on 8 October 2025 for the full modalities and 16 January 2026 for the sandwich doctorate.",
     "tags": [
       "Brazil",
       "phd",
@@ -2175,6 +2555,89 @@
     "last_updated": "2026-10-07",
     "status": "closed",
     "source_url": "https://www.gov.br/capes/pt-br/centrais-de-conteudo/editais/04072025_Edital_2630513_SEI_2630221_Edital_n__12_2025.pdf/@@display-file/file",
+    "nationality_scope": {
+      "mode": "listed",
+      "countries": [
+        "South Africa",
+        "Angola",
+        "Algeria",
+        "Benin",
+        "Botswana",
+        "Burkina Faso",
+        "Cabo Verde",
+        "Cameroon",
+        "Côte d'Ivoire",
+        "Egypt",
+        "Ethiopia",
+        "Gabon",
+        "Ghana",
+        "Guinea-Bissau",
+        "Equatorial Guinea",
+        "Mali",
+        "Morocco",
+        "Mozambique",
+        "Namibia",
+        "Nigeria",
+        "Kenya",
+        "Congo (Democratic Republic)",
+        "Congo",
+        "Sao Tome and Principe",
+        "Senegal",
+        "Tanzania",
+        "Togo",
+        "Tunisia",
+        "Zambia",
+        "Antigua and Barbuda",
+        "Argentina",
+        "Barbados",
+        "Belize",
+        "Bolivia",
+        "Chile",
+        "Colombia",
+        "Costa Rica",
+        "Cuba",
+        "El Salvador",
+        "Ecuador",
+        "Guatemala",
+        "Guyana",
+        "Haiti",
+        "Honduras",
+        "Jamaica",
+        "Mexico",
+        "Nicaragua",
+        "Panama",
+        "Paraguay",
+        "Peru",
+        "Dominican Republic",
+        "Saint Lucia",
+        "Saint Vincent and the Grenadines",
+        "Suriname",
+        "Trinidad and Tobago",
+        "Uruguay",
+        "Venezuela",
+        "Bangladesh",
+        "China",
+        "South Korea",
+        "India",
+        "Iran",
+        "Lebanon",
+        "Pakistan",
+        "Syria",
+        "Thailand",
+        "Timor-Leste",
+        "Armenia",
+        "Bulgaria",
+        "France",
+        "Hungary",
+        "North Macedonia",
+        "Poland",
+        "Turkey"
+      ],
+      "note": "Restricted to the 74 participating countries listed in Edital nº 12/2025 — 29 in Africa, 28 in Latin America and the Caribbean, 10 in Asia and 7 in Europe. The governing rule is that a country must hold an educational, cultural or scientific and technological cooperation agreement with Brazil, and the Edital states the list may change as countries join before the application period closes."
+    },
+    "country_notes": {
+      "Nepal": "Nepal is not among the 74 participating countries, so a Nepali applicant cannot use this route. The Edital states the list may change as countries join before the application period closes, so re-check the MRE page each cycle."
+    },
     "last_verified": "2026-10-07"
   }
 ]

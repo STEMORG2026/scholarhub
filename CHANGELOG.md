@@ -1,5 +1,54 @@
 # Changelog
 
+## [0.21.0] - 2026-10-07
+
+### Changed — the catalog is no longer written from one country's point of view
+
+ScholarHub is public, and its readers are everywhere. Until this release the records were phrased from a single country's perspective, and the only way to learn whether a programme was open to you was to read the eligibility prose and work it out. This release makes country a first-class input: **choose your country, and the catalog answers for it.**
+
+**Ask the question the data can answer, and refuse to answer the ones it cannot.**
+
+- All 49 records now carry a structured `nationality_scope` whose `mode` is one of six deliberately distinct values: `all`, `listed`, `listed_elsewhere`, `regional`, `agreement`, `unstated`. **Two of those are answerable from the data; four are not.**
+- **`unstated` is never rendered as "open to everyone."** A programme restricted to a region, decided by bilateral agreement, or silent on nationality is reported as **check** — naming what the reader has to look up — rather than guessed at. A silent default here would tell every visitor they are eligible, which is the one thing this must not do.
+- `mode: "all"` requires a `note`, so the claim is attributable to something a contributor actually read.
+
+### The retrofit: 34 rewrites, no facts deleted
+
+The migration was **additions-only first** — the country-specific facts were moved into a new `country_notes` field, **463 insertions and 0 deletions** — so nothing was lost before anything was rewritten. A second pass then generalised the prose in the records that apply broadly but were written country-first.
+
+- **34 prose rewrites across 16 records.** A record that said "Nepal is in the Partner Country group" now says "Partner Country applicants fall under separate scholarship quotas", and Nepal's group membership lives in `country_notes`, where the app surfaces it only when Nepal is the selected country.
+- **The records that genuinely *are* country-specific kept their country names**, because there the country is the finding rather than the framing: the MEXT embassy call, the Nepal-only ICCR scheme, and the Canada-focused CGRS. PEC-PG keeps its 74-country restriction in the prose too — it applies to 74 countries, and the list is the point.
+- **17 records** now carry `country_notes`. The facts they hold — quotas, age caps, national deadlines, exclusions — are no longer buried in a general field where they were told to every reader.
+
+### Added — a country picker, a verdict on every card
+
+- **`data/countries.json`** is the single source of truth for both name spaces: **202 real countries and territories**, each with an ISO 3166-1 alpha-2 code, plus the two destinations that name a grouping rather than a country (`Europe`, `Multiple countries`). A grouping may be a destination but is never a valid nationality, and the validator rejects it in a list.
+- **A verdict badge on every card** — *Open to you*, *Not open to you*, *Check eligibility*, or *Choose your country*.
+- **An "Open to my country" filter**, live only once a country is chosen, with the disabled state explained rather than silently inert.
+- **The detail dialog** explains the verdict and surfaces the note for your country specifically.
+- **The profile field became a picker** over the 202 country list instead of a free-text box, so a typo can no longer silently produce the wrong answer.
+- **The assistant answers with your country in hand** — it reports how many opportunities are open to you and how many are not.
+
+### Removed — the hand-written flag table
+
+`src/main.jsx` carried a `FLAG` map keyed by country, and a new country missing from it rendered a generic globe **with nothing to warn anyone** — a defect that recurred in four consecutive passes.
+
+- **Flags are now derived** from each country's ISO code as a pair of regional indicator symbols (`src/countries.js`). Adding a country is a one-place change, and the "missing flag" failure is now impossible rather than merely detectable.
+- The old test read the component's source to check that table. It is replaced by three tests that check the data the derivation reads, plus the boundary that a grouping is a destination but never a nationality.
+- A side-finding: the old map gave `Europe` an EU flag that the component never used, because Europe was already special-cased to a globe icon. Europe is a regional grouping, not the EU, so it stays a globe.
+
+### Verification
+
+- **The eligibility logic moved into `src/eligibility.js`** so the six modes can be unit-tested — 16 tests in total, including that **only `all` and `listed` can ever answer yes or no**.
+- **12 negative controls** for the new validator gate, each proving an assertion fires and names the right record, and **5 mutations** of the eligibility module, all caught.
+- **Verified in the browser.** The 8 `listed` records split differently by country: for **Nepal**, PEC-PG, CGRS, NSF, SI and NZ Vocational read *Not open to you* while NZ Scholarships, MEXT and ICCR read *Open to you*; for **India**, PEC-PG flips to *Open to you* and SI flips to *Not open to you*; for **Brazil**, NZ Scholarships and MEXT close while SI opens. Same records, same code path — the answer is a property of the country.
+- The default state, with no country chosen, puts the 27 `all` records at *Open to you*, the 8 `listed` records at *Choose your country*, and all 14 unanswerable records at *Check eligibility* — including the three `unstated` ones, which is the invariant this release exists to protect.
+
+### Notes
+
+- **`regional` is not resolved to a country list, deliberately.** A provider's "Indo-Pacific" is not a continent, and inventing a country→region mapping from general knowledge would put unverified data into a provenance-first catalog. Those records report **check** and name the regions; resolving them needs each provider's own regional list, which is the next step rather than a shortcut.
+- The three `regional` records, the seven `listed_elsewhere` records and the one `agreement` record are the ones that still send a reader to the provider. That is the honest outcome, not an unfinished one.
+
 ## [0.20.0] - 2026-10-07
 
 ### Added

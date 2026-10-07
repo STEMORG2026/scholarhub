@@ -21,6 +21,31 @@ const VALID_STATUSES = new Set(['open', 'closed', 'upcoming', 'verify']);
 // `Non-degree` exists so that funded short courses, fellowships and training
 // placements can be recorded without falsely filing them as a degree.
 const VALID_DEGREE_LEVELS = new Set(['Bachelor', 'Master', 'PhD', 'PostDoc', 'Non-degree']);
+// How a record answers "may someone from my country apply?". The modes are
+// deliberately distinct, because two of them are answerable from the data and
+// four are not — and the app must say "check" rather than guess for those four.
+//   all               open to any nationality (host-country exclusions go in `note`)
+//   listed            an enumerable list of eligible countries, carried in `countries`
+//   listed_elsewhere  a list exists but is published by the provider, not reproduced
+//   regional          restricted to a region or bloc, named in `regions`
+//   agreement         decided country by country through bilateral arrangements
+//   unstated          the source does not state nationality rules
+const VALID_SCOPE_MODES = new Set(['all', 'listed', 'listed_elsewhere', 'regional', 'agreement', 'unstated']);
+const countriesPath = join(__dirname, '..', 'data', 'countries.json');
+// data/countries.json holds two distinct name spaces: the countries a person
+// may hold as a nationality, and the groupings the catalog may use as a
+// destination (e.g. "Europe"). A nationality list may only ever name the
+// former, so the two are kept apart here rather than merged into one set.
+let COUNTRIES;
+let DESTINATIONS;
+try {
+  const raw = JSON.parse(readFileSync(countriesPath, 'utf-8'));
+  COUNTRIES = new Set(raw.countries.map((c) => c.name));
+  DESTINATIONS = new Set([...COUNTRIES, ...raw.groupings.map((g) => g.name)]);
+} catch (err) {
+  console.error('Failed to read data/countries.json: ' + err.message);
+  process.exit(1);
+}
 const ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const URL_PATTERN = /^https:\/\//;
@@ -87,6 +112,13 @@ for (const entry of scholarships) {
     }
   }
 
+  // Every destination must be a name the app can render. A country missing
+  // from data/countries.json used to fall back to a generic globe with nothing
+  // to warn anyone, so it is an error here rather than a silent fallback.
+  if (entry.country && !DESTINATIONS.has(entry.country)) {
+    error(id, 'country is not in data/countries.json (countries or groupings): ' + entry.country);
+  }
+
   if (!Array.isArray(entry.program_field)) error(id, 'program_field must be an array');
   if (!Array.isArray(entry.degree_level)) error(id, 'degree_level must be an array');
   if (Array.isArray(entry.degree_level)) {
@@ -98,6 +130,61 @@ for (const entry of scholarships) {
   }
   if (entry.benefits && !Array.isArray(entry.benefits)) error(id, 'benefits must be an array');
   if (entry.tags && !Array.isArray(entry.tags)) error(id, 'tags must be an array');
+
+  // --- nationality scope ---------------------------------------------------
+  // Every record must answer "may someone from my country apply?" explicitly.
+  // A missing answer is an error rather than a silent default, because the UI
+  // renders a per-country badge from this field — and a default would tell
+  // every visitor they are eligible.
+  const scope = entry.nationality_scope;
+  if (!scope || typeof scope !== 'object' || Array.isArray(scope)) {
+    error(id, 'nationality_scope is required and must be an object');
+  } else {
+    if (!VALID_SCOPE_MODES.has(scope.mode)) {
+      error(id, 'nationality_scope.mode must be one of ' + Array.from(VALID_SCOPE_MODES).join(', ') + ' — got ' + scope.mode);
+    }
+    if (scope.mode === 'all' && !scope.note) {
+      error(id, 'nationality_scope mode "all" claims the scheme is open to every nationality; it needs a note recording what the claim rests on');
+    }
+    if (scope.mode === 'listed') {
+      if (!Array.isArray(scope.countries) || scope.countries.length === 0) {
+        error(id, 'nationality_scope mode "listed" needs a non-empty countries array');
+      } else {
+        const seenCountries = new Set();
+        for (const name of scope.countries) {
+          if (!COUNTRIES.has(name)) {
+            error(id, 'nationality_scope lists a country that is not in data/countries.json: ' + name);
+          }
+          if (seenCountries.has(name)) {
+            error(id, 'nationality_scope lists the same country twice: ' + name);
+          }
+          seenCountries.add(name);
+        }
+      }
+    }
+    if (scope.mode === 'regional' && (!Array.isArray(scope.regions) || scope.regions.length === 0)) {
+      error(id, 'nationality_scope mode "regional" needs a non-empty regions array');
+    }
+    if (scope.mode === 'listed_elsewhere' && !(scope.list_url && URL_PATTERN.test(scope.list_url))) {
+      error(id, 'nationality_scope mode "listed_elsewhere" needs an https list_url so the reader can reach the list');
+    }
+  }
+
+  if (entry.country_notes !== undefined) {
+    const notes = entry.country_notes;
+    if (!notes || typeof notes !== 'object' || Array.isArray(notes)) {
+      error(id, 'country_notes must be an object mapping a country to a note');
+    } else {
+      for (const [name, note] of Object.entries(notes)) {
+        if (!COUNTRIES.has(name)) {
+          error(id, 'country_notes key is not a country in data/countries.json: ' + name);
+        }
+        if (typeof note !== 'string' || note.trim() === '') {
+          error(id, 'country_notes["' + name + '"] must be a non-empty string');
+        }
+      }
+    }
+  }
 
   if (!VALID_STATUSES.has(entry.status)) {
     error(id, 'Invalid status: ' + entry.status);

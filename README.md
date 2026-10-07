@@ -4,12 +4,23 @@ A small, open-source scholarship discovery companion for engineering students. S
 
 > **Data coverage is intentionally a starter set, not the requested complete directory.** This release contains 49 discovery records covering 18 destinations. Many details (especially annual deadlines, award values, and country-specific eligibility) change. Unknown values are intentionally omitted; every entry links to its official source and records the date a contributor last checked it. Verify all information before applying.
 
+## Built for every country, not one
+
+ScholarHub is written to be read from **any** country. Choose your country of origin once and every card tells you where you stand:
+
+- **A verdict on every card** — *Open to you*, *Not open to you*, *Check eligibility*, or *Choose your country* — computed from each record's structured nationality rules rather than from prose.
+- **A country-aware filter** — "Open to my country" narrows the board to what you can actually apply for.
+- **Country notes in the detail view** — quotas, age caps and national deadlines that apply only to your country, kept out of the general description so readers they don't apply to aren't told about them.
+- **A picker over 202 countries** — real countries and territories only, each carrying its ISO 3166-1 alpha-2 code.
+
+The distinction the catalog refuses to blur: **some schemes are answerable and some are not.** A programme open to any nationality says so. A programme with a published country list is checked against yours. But a programme restricted to a region, decided by bilateral agreement, or silent on nationality is reported as **check** — with what you need to look up — rather than guessed at. "The source does not say" is never rendered as "open to everyone."
+
 ## Features
 
-- Responsive scholarship discovery cards with keyword, destination, field, and degree filters.
+- Responsive scholarship discovery cards with keyword, destination, field, degree, and **country-eligibility** filters.
 - Keyboard accessible: visible focus rings on every control, a detail dialog that traps focus and closes on Escape, and a search shortcut (Ctrl/⌘ K).
 - Locally saved shortlist and profile; optional dark appearance.
-- Simple transparent profile-fit heuristic (not an eligibility determination).
+- Simple transparent profile-fit heuristic (not an eligibility determination). A programme you are not eligible for is scored down rather than recommended.
 - Scholarship detail view with official links and explicit verification reminders.
 - Provenance-aware deadlines: a closing date is shown only when the catalog carries one, next to the date the official source was last checked.
 - Offline assistant guide for search planning; it does not call a model or claim to verify eligibility.
@@ -23,6 +34,12 @@ The discover view, in both themes (captured 2026-10-07):
 ![ScholarHub discover view in the light theme — hero, filters and the start of the opportunity board](docs/screenshots/discover-light.png)
 
 ![ScholarHub discover view in the dark theme](docs/screenshots/discover-dark.png)
+
+Choosing a country changes what every card says. Both captures below are the same 49 records with the country of origin set to Nepal:
+
+![Per-country eligibility verdicts on each card in the light theme — an "Open to my country" filter and badges reading Check eligibility and Not open to you](docs/screenshots/eligibility-light.png)
+
+![The same board in the dark theme](docs/screenshots/eligibility-dark.png)
 
 Run the development server (`npm run dev`) to try it locally.
 
