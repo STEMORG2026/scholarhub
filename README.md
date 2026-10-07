@@ -1,6 +1,6 @@
 # ScholarHub
 
-A small, open-source scholarship discovery companion for engineering students. Search a curated starter catalog, keep a private shortlist, and save study preferences locally—no account or backend required.
+A small, open-source scholarship discovery companion for engineering students. Search a curated starter catalog, keep a private shortlist, track the programmes you decide to go for against their deadlines, and keep a checklist of the documents you still need—no account or backend required.
 
 > **Data coverage is intentionally a starter set, not the requested complete directory.** This release contains 50 discovery records covering 18 destinations. Many details (especially annual deadlines, award values, and country-specific eligibility) change. Unknown values are intentionally omitted; every entry links to its official source and records the date a contributor last checked it. Verify all information before applying.
 
@@ -23,6 +23,10 @@ The distinction the catalog refuses to blur: **some schemes are answerable and s
 - Simple transparent profile-fit heuristic (not an eligibility determination). A programme you are not eligible for is scored down rather than recommended.
 - Scholarship detail view with official links and explicit verification reminders.
 - Provenance-aware deadlines: a closing date is shown only when the catalog carries one, next to the date the official source was last checked.
+- **Application tracker** — mark the programmes you are actually going for, give each one a status (*Planning to apply* → *Preparing documents* → *Submitted* → *Awarded* → *Not selected*), and see a live countdown to its closing date. Sorted by urgency, with an alert for anything near or past its date.
+- **Document checklist** on the profile page — tick off the documents you already have and see exactly which are still missing. It is degree-aware: a research proposal is required of a PhD goal and shown as optional for a Master's.
+- Honest about the gaps: 13 of the 50 records carry a single verified closing date. The rest say *"No single closing date"* and keep their note — the tracker never invents one, and never drops a programme just because its window is unstated.
+- Reminders stay on the device. Countdowns are computed from the catalog and your own clock; there is no notification permission, no service worker, and nothing runs while the tab is closed.
 - Offline assistant guide for search planning; it does not call a model or claim to verify eligibility.
 - AI settings placeholder. No API key is stored or transmitted; provider adapters and model testing are not implemented yet.
 - JSON catalog and schema documentation designed for community contributions.
@@ -40,6 +44,18 @@ Choosing a country changes what every card says. Both captures below were taken 
 ![Per-country eligibility verdicts on each card in the light theme — an "Open to my country" filter and badges reading Check eligibility and Not open to you](docs/screenshots/eligibility-light.png)
 
 ![The same board in the dark theme](docs/screenshots/eligibility-dark.png)
+
+The application tracker — status pipeline, live countdowns, and an alert for anything near or past its date:
+
+![ScholarHub application tracker in the light theme, showing five tracked programmes with countdown chips, an alert banner, and per-application status selects](docs/screenshots/tracker-light.png)
+
+![The same tracker in the dark theme](docs/screenshots/tracker-dark.png)
+
+The document checklist on the profile page — what is present, what is not, and what the reader's degree goal actually requires:
+
+![The application documents checklist in the light theme, showing 7 of 10 documents ready with three flagged as not present](docs/screenshots/documents-light.png)
+
+![The same checklist in the dark theme](docs/screenshots/documents-dark.png)
 
 Run the development server (`npm run dev`) to try it locally.
 
@@ -94,6 +110,7 @@ There is no login. Profile and shortlist data are stored in localStorage in the 
 - [x] Initial sourced scholarship discovery leads and data contribution schema.
 - [x] Source provenance and link liveness: every record carries a dated `source_url`, and `npm run check:links` fails on a dead official link.
 - [x] Deadline display with provenance, plus `deadline_notes` for cycles that have no single date.
+- [x] Application tracker with a status pipeline and live deadline countdowns, and a degree-aware document checklist on the profile page — both local-only, both refusing to invent a date (2026-10-07).
 - [ ] Expand to 15–25 **individually verified** active/relevant entries per requested country or region.
 - [ ] Add verified program/field coverage and regular human review of dates and terms.
 - [x] Accessibility tested and screenshots added: WCAG AA contrast measured in both themes, visible keyboard focus, a focus-trapped dialog that closes on Escape, labelled controls and live regions (2026-10-07).

@@ -156,3 +156,172 @@
 .elig-note.elig-closed{border-left-color:#c2564f}
 .elig-note.elig-check{border-left-color:#c98a2e}
 .elig-note.country-note{border-left-color:#6b7fd7}
+
+/* --- application tracker and document checklist (v0.24.0) ------------------
+   Two new surfaces, and the same rule as everywhere else in this file: a colour
+   that carries meaning is measured rather than eyeballed. Every foreground /
+   background pair below was computed against its own surface and clears 4.5:1
+   in both themes. The ratios are written next to the light rules; the dark
+   rules are the same hues re-lit for the dark surfaces and were measured the
+   same way.
+
+   Urgency is carried by colour, but never by colour alone — each chip also
+   spells out "Due in 5 days" or "Passed 3 days ago", so the state survives a
+   reader who cannot distinguish the tints. */
+
+/* Countdown chips: overdue > today > urgent > soon > later, plus "no date". */
+.countdown-overdue{background:#fbe9e7;color:#a4402f}   /* 5.34:1 */
+.countdown-today{background:#fbf1de;color:#8a5a12}     /* 5.28:1 */
+.countdown-urgent{background:#fbf1de;color:#8a5a12}    /* 5.28:1 */
+.countdown-soon{background:#fdf3e3;color:#8a6a2f}      /* 4.57:1 */
+.countdown-later{background:#f3f5f0;color:#686f66}     /* 4.68:1 */
+.countdown-nodate{background:#edf1f8;color:#586e8c}    /* 4.61:1 */
+.dark .countdown-overdue{background:#3b2523;color:#efa79a}  /* 7.23:1 */
+.dark .countdown-today,.dark .countdown-urgent{background:#3a3320;color:#e8c07a} /* 7.32:1 */
+.dark .countdown-soon{background:#3a3320;color:#e0c483}     /* 7.40:1 */
+.dark .countdown-later{background:#2c3630;color:#a9b6ab}    /* 5.94:1 */
+.dark .countdown-nodate{background:#26313f;color:#a3bcdb}   /* 6.76:1 */
+
+/* The countdown under the Deadline row in the detail dialog. Two classes so it
+   beats the .deadline-note colour it shares an element with, without setting a
+   colour itself — the level class above still decides that. */
+.deadline-note.countdown-text{display:inline-block;margin-top:6px;padding:3px 8px;border-radius:5px;font-weight:700}
+
+/* --- track controls -------------------------------------------------------- */
+.card-actions{display:flex;align-items:center;gap:10px}
+.track-btn{display:inline-flex;align-items:center;gap:5px;border:1px solid #e0e5dc;background:var(--paper);color:#5b6a5b;border-radius:6px;padding:5px 8px;font-size:9px;font-weight:700}
+.track-btn:hover{border-color:#91ad91;color:#426c4c}
+.track-btn.tracking{background:var(--sage);border-color:transparent;color:#357353}
+.dark .track-btn{background:#29332c;border-color:#3a453c;color:#a9b6ab}
+.dark .track-btn:hover{border-color:#4d6353;color:#c1dfbf}
+.dark .track-btn.tracking{background:#2e4534;border-color:transparent;color:#9ecfa9}
+
+/* The alert badge, on the nav item and the top-bar bell. The base .nav-count is
+   a light pill with no dark counterpart, so beside the new dark alert badge the
+   shortlist count read as a bright blob; give it the same dark surface as an
+   active nav item. */
+.dark .nav-count{background:#314335;color:#c1dfbf}   /* 7.34:1 */
+.nav-count.alert{background:#f7ddd4;color:#8d3a28}   /* 5.87:1 */
+.dark .nav-count.alert{background:#4a2b26;color:#f0b3a5}
+.bell-btn{position:relative}
+.bell-dot{position:absolute;top:-3px;right:-4px;min-width:15px;height:15px;padding:0 3px;border-radius:8px;background:#a83c28;color:#fff;font-size:9px;font-weight:700;display:grid;place-items:center}
+
+/* --- the alert banner ------------------------------------------------------ */
+.alert-banner{display:flex;gap:11px;align-items:flex-start;background:#fbf1de;border:1px solid #f0dfbb;border-left:3px solid #c98a2e;border-radius:10px;padding:14px 15px;margin-top:24px;color:#6b4f16}
+.alert-banner svg{flex-shrink:0;color:#b8801f}
+.alert-banner strong{display:block;font-size:12px;margin-bottom:6px}
+.alert-banner ul{margin:0;padding-left:17px;display:grid;gap:6px}
+.alert-banner li{font-size:10.5px;line-height:1.55}
+.link-btn{border:0;background:none;color:#7a4d10;font-size:10.5px;font-weight:700;padding:0;text-decoration:underline}
+.dark .alert-banner{background:#3a3320;border-color:#4a4028;border-left-color:#c98a2e;color:#e6d4ab}
+.dark .alert-banner svg{color:#e8c07a}
+.dark .link-btn{color:#e8c07a}
+
+/* --- tracker summary ------------------------------------------------------- */
+.summary-strip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:24px 0 12px}
+.summary-item{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:13px 14px;display:grid;gap:3px}
+.summary-item strong{font:700 20px Manrope;letter-spacing:-.6px;color:var(--ink)}
+.summary-item span{font-size:9px;color:#686f66}
+.summary-item.warn{background:#fdf3e3;border-color:#f0dfbb}
+.summary-item.warn strong{color:#8a5a12}
+.summary-item.danger{background:#fbe9e7;border-color:#f2d3cd}
+.summary-item.danger strong{color:#a4402f}
+.summary-item.ok strong{color:#357353}
+.dark .summary-item span{color:#a4afa4}
+.dark .summary-item.warn{background:#3a3320;border-color:#4a4028}
+.dark .summary-item.warn strong{color:#e8c07a}
+.dark .summary-item.danger{background:#3b2523;border-color:#4d302c}
+.dark .summary-item.danger strong{color:#efa79a}
+.dark .summary-item.ok strong{color:#9ecfa9}
+
+.status-breakdown{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:17px}
+.status-pill{border:1px solid var(--line);background:var(--wash);color:#686f66;border-radius:999px;padding:4px 10px;font-size:9.5px;font-weight:600}
+.status-pill b{color:var(--ink)}
+.dark .status-pill{color:#a4afa4}
+
+/* --- the tracker rows ------------------------------------------------------ */
+.tracker-list{display:grid;gap:11px}
+.track-row{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:11px;padding:15px}
+.track-row.level-overdue{border-left-color:#c2564f}
+.track-row.level-today,.track-row.level-urgent{border-left-color:#c98a2e}
+.track-row.level-soon{border-left-color:#dcc07a}
+.track-row.level-later{border-left-color:#9ab79a}
+.track-row.level-nodate{border-left-color:#b9c4d6}
+.track-flag{width:34px;height:34px;border-radius:9px;background:#f1f4ed;display:grid;place-items:center;font-size:19px}
+.dark .track-flag{background:#2b342e}
+.track-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.track-head h3{font:700 13.5px Manrope;letter-spacing:-.2px;margin:0;color:#333c32}
+.track-chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 9px;font-size:9.5px;font-weight:700}
+.track-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:9px;color:#686f66;margin-top:7px}
+.track-note{margin:8px 0 0;font-size:9.5px;line-height:1.55;color:#686f66}
+.track-docs{display:inline-flex;align-items:center;gap:6px;margin:9px 0 0;font-size:9.5px;font-weight:600;color:#7a4d10;background:#fdf3e3;border-radius:6px;padding:4px 8px}
+.track-docs.ready{color:#357353;background:var(--sage)}
+.dark .track-head h3{color:var(--ink)}
+.dark .track-meta,.dark .track-note{color:#a4afa4}
+.dark .track-docs{background:#3a3320;color:#e0c483}
+.dark .track-docs.ready{background:#2e4534;color:#9ecfa9}
+.track-controls{display:grid;gap:8px;justify-items:end}
+.track-status{height:34px;border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:0 9px;font-size:10px;color:var(--ink);max-width:180px}
+.track-buttons{display:flex;gap:4px}
+.icon-btn.danger{color:#a4402f}
+.dark .icon-btn.danger{color:#efa79a}
+
+/* "On your shortlist, not tracked yet" — the bridge between the two views. */
+.shortlist-foot{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:20px;padding:14px;background:var(--wash);border:1px dashed var(--line);border-radius:10px;font-size:10px;color:#686f66}
+.chip-add{display:inline-flex;align-items:center;gap:5px;border:1px solid #d8e2d5;background:var(--paper);color:#357353;border-radius:999px;padding:5px 10px;font-size:9.5px;font-weight:700;max-width:270px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip-add:hover{border-color:#91ad91}
+.dark .shortlist-foot{color:#a4afa4}
+.dark .chip-add{background:#29332c;border-color:#3a453c;color:#9ecfa9}
+.tracker-empty{min-height:265px}
+.empty-actions{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+
+/* --- the document checklist ------------------------------------------------ */
+.docs-card{margin-top:20px}
+.docs-progress{display:grid;gap:8px;margin-bottom:18px}
+.progress-track{height:7px;background:var(--wash);border-radius:99px;overflow:hidden}
+.progress-track i{display:block;height:100%;background:#5f9367;border-radius:99px}
+.docs-progress span{font-size:10px;color:#686f66}
+.docs-progress b{color:var(--ink)}
+.docs-alert{display:flex;gap:10px;align-items:flex-start;border-radius:9px;padding:12px;font-size:10.5px;line-height:1.55;margin-bottom:18px}
+.docs-alert svg{flex-shrink:0}
+.docs-alert.missing{background:#fdf3e3;border:1px solid #f0dfbb;color:#6b4f16}
+.docs-alert.missing svg{color:#b8801f}
+.docs-alert.ready{background:#f2f6ee;border:1px solid #e8efe3;color:#4b6f4e}
+.docs-alert.ready svg{color:#357353}
+.dark .docs-progress span{color:#a4afa4}
+.dark .docs-alert.missing{background:#3a3320;border-color:#4a4028;color:#e6d4ab}
+.dark .docs-alert.missing svg{color:#e8c07a}
+.dark .docs-alert.ready{background:#2b3a2e;border-color:#35483a;color:#a9c9a9}
+.dark .docs-alert.ready svg{color:#9ecfa9}
+.docs-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.doc-item{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:9px;padding:11px;background:var(--paper);cursor:pointer;transition:border .2s,background .2s}
+.doc-item input{width:15px;height:15px;accent-color:#51815f;margin:2px 0 0;flex-shrink:0}
+.doc-item:hover{border-color:#cbd9c7}
+.doc-item.ready{background:#f6f9f3;border-color:#dbe6d6}
+.doc-item.missing{border-color:#eeddbb;background:#fffdf8}
+.doc-item.optional{opacity:.85}
+.doc-text{display:grid;gap:3px;flex:1}
+.doc-text b{font-size:11px;font-weight:600;color:var(--ink)}
+.doc-text em{font-style:normal;font-size:9.5px;line-height:1.5;color:#686f66}
+.doc-tag{margin-left:auto;align-self:flex-start;font-size:8px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#586e8c;background:#edf1f8;border-radius:4px;padding:3px 6px;white-space:nowrap}
+.dark .doc-item.ready{background:#25332a;border-color:#31443a}
+.dark .doc-item.missing{border-color:#4a4028;background:#2c2a22}
+.dark .doc-text em{color:#a4afa4}
+.dark .doc-tag{background:#26313f;color:#a3bcdb}
+
+/* The dialog now carries three actions rather than two. */
+.modal-action-group{display:flex;flex-wrap:wrap;gap:8px}
+
+@media(max-width:850px){
+  .summary-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .track-row{grid-template-columns:auto 1fr}
+  .track-controls{grid-column:1/-1;justify-items:start}
+  .track-status{max-width:none;width:100%}
+  .docs-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .summary-strip{grid-template-columns:1fr 1fr}
+  .track-row{padding:13px;gap:11px}
+  .alert-banner{padding:12px}
+  .doc-tag{display:none}
+}
