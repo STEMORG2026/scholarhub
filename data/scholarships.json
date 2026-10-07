@@ -2109,5 +2109,72 @@
     "status": "open",
     "source_url": "https://admissions.kaust.edu.sa/how-to-apply/admission-timelines",
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "pec-pg-brazil",
+    "name": "Programa de Estudantes-Convênio de Pós-Graduação (PEC-PG)",
+    "provider": "Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES), Brazil's Ministry of Foreign Affairs (MRE) and CNPq",
+    "country": "Brazil",
+    "region": "Nationwide",
+    "city": "Varies by the allotted institution",
+    "university": "Brazilian higher-education institutions, federal institutes and research institutes recognised by CAPES, public or non-profit private; the applicant applies to a specific postgraduate programme",
+    "program_field": [
+      "Engineering",
+      "Materials Science",
+      "Energy",
+      "Environmental Engineering",
+      "Natural Sciences"
+    ],
+    "degree_level": [
+      "Master",
+      "PhD"
+    ],
+    "funding_type": "Full scholarship — monthly stipend, health-insurance allowance and return airfare",
+    "amount": "The figures are in the Edital, not on the CAPES programme page. The monthly stipend (mensalidade) is BRL 3,100 for Doutorado and BRL 2,100 for Mestrado. A separate health-insurance allowance (auxílio seguro-saúde) of BRL 400 per month is paid as a single first instalment covering the whole scholarship period, for the recipient to buy a health plan valid in Brazil from their first day in the country. A return airfare home at the end of the course (auxílio-retorno) is funded by the Ministry of Foreign Affairs under Portaria MRE/MEC/MCTI nº 936 of 24 November 2024 and Portaria MRE nº 572 of 19 December 2024, subject to MRE availability. Tuition is not listed as a benefit because Brazilian public postgraduate programmes do not charge it. The Edital states that total financing for the 650 approved scholarships will be up to BRL 41,050,000.00 from the CAPES budget, released according to CAPES's budget availability. The FAQ adds a practical warning: the first payment arrives up to 30 days after the scholarship is implemented, and the selected candidate must arrive in Brazil with enough of their own funds to cover at least 60 days of expenses.",
+    "currency": "BRL",
+    "deadline": "2025-10-08",
+    "deadline_notes": "PEC-PG runs two separate windows in one annual call, and they do not close together. For Doutorado Pleno and Mestrado Pleno the application window was 14 August to 8 October 2025, closing at 17:00 Brasília time; the final result was published on 19 December 2025 and amended on 23 December 2025, with studies beginning in the first semester of 2026. For Doutorado Sanduíche — the modality that takes the largest share of places — the window ran 1 October 2025 to 16 January 2026, with the result published on 15 May 2026 and studies beginning in August 2026. Both windows have closed, and the 8 October 2025 date recorded here is the Pleno deadline. As of 7 October 2026 the CAPES PEC-PG page still listed Edital nº 12/2025 as the current call and showed no 2026 edital, although the last cycles opened in July or August and closed in early October, so the next call would be expected around then — check the CAPES page rather than assuming. One thing to know before relying on the country list: the Edital points readers to the MRE for it at a URL that returns 404, because the path uses 'temaseducacionais' where the live path is 'temas-educacionais'. The correct page is https://www.gov.br/mre/pt-br/assuntos/cultura-e-educacao/temas-educacionais/programas-de-estudo-para-estrangeiros/pec-g/sobre, and the Edital's own list remains the operative text for the 2025 call. The Edital also states the list may change as countries join, up to the end of the application period.",
+    "duration": "Doutorado Pleno: up to 48 months. Doutorado Sanduíche: 6 to 10 months. Mestrado Pleno: up to 24 months.",
+    "eligibility": {
+      "nationality": [
+        "Restricted to nationals of the programme's participating countries — 74 countries were listed in Edital nº 12/2025: 29 in Africa, 28 in Latin America and the Caribbean, 10 in Asia and 7 in Europe. Nepal is not among them. The ten Asian countries are Bangladesh, China, South Korea, India, Iran, Lebanon, Pakistan, Syria, Thailand and Timor-Leste.",
+        "The governing rule, in the MRE's words, is that countries holding an educational, cultural or scientific and technological cooperation agreement with Brazil may participate. The MRE's current page lists 76 countries for the undergraduate PEC-G programme — the same four regions, with Cambodia, Jordan and Mongolia added to Asia — and Nepal is absent from that list too, so the exclusion is not an artefact of the postgraduate Edital alone.",
+        "Applicants must not hold Brazilian nationality, dual Brazilian nationality, or an entitlement to Brazilian nationality at the time of application, and must not hold permanent residence authorisation for Brazil."
+      ],
+      "gpa_minimum": "No minimum GPA is stated in the Edital. Academic admission requirements are set by the individual postgraduate programme the candidate applies to, and the Edital states that CAPES's requirements and the programme's requirements are cumulative.",
+      "language_requirements": {
+        "english": "No fixed English test score is required, and neither is a Portuguese one. The candidate declares their linguistic proficiency in the application form, and the receiving postgraduate programme examines that declaration against the language option it has communicated and the places it has available — so the language requirement is set programme by programme rather than centrally by CAPES. Supporting documents may be written in Portuguese, Spanish or English. One document is an exception: the Lattes curriculum must be in Portuguese."
+      },
+      "age_limit": "No age limit is stated in the Edital.",
+      "other": "Applications are made online at inscricao.capes.gov.br and require a research project in Portuguese, Spanish or English; a full and updated Lattes curriculum in Portuguese (Lattes is a Brazilian national CV platform, so a foreign applicant has to create one); a 'Memorial' of up to 600 words written by the candidate covering their skills and motivation, professional formation and any special circumstances; a declaration of employment where applicable; and a passport or identity document, with a simple translation into one of those three languages if it is not already in one. Applicants choose a specific postgraduate programme and apply to it, and the institutions select in up to three rounds before CAPES reviews the documents. Two selection preferences favour applicants from outside Brazil: for doctorate selections PEC-PG prioritises, wherever possible, candidates who took both their undergraduate and master's degrees outside Brazil, and for master's selections candidates who took their undergraduate degree outside Brazil. The programme is also open to candidates already enrolled in a doctorate abroad, through the Doutorado Sanduíche modality, which is where most of the places sit."
+    },
+    "benefits": [
+      "A monthly stipend of BRL 3,100 for Doutorado and BRL 2,100 for Mestrado",
+      "A health-insurance allowance of BRL 400 per month, paid as a single first instalment covering the whole scholarship period",
+      "A return airfare to the country of origin at the end of the course, funded by the Ministry of Foreign Affairs",
+      "No tuition to pay — the host programmes are at Brazilian public or non-profit institutions",
+      "Doutorado Sanduíche: 6 to 10 months of research in Brazil for candidates already enrolled in a doctorate abroad",
+      "Doutorado Pleno: up to 48 months; Mestrado Pleno: up to 24 months",
+      "650 scholarships in the 2025 call — 350 Doutorado Sanduíche, 200 Mestrado Pleno and 100 Doutorado Pleno"
+    ],
+    "official_url": "https://www.gov.br/capes/pt-br/acesso-a-informacao/acoes-e-programas/bolsas/bolsas-e-auxilios-internacionais/encontre-aqui/paises/multinacional/programa-de-estudantes-convenio-de-pos-graduacao-pec-pg",
+    "description": "Brazil's government scholarship for postgraduate study in Brazil, run jointly by CAPES, the Ministry of Foreign Affairs and CNPq, and the route that opens Brazil as a destination in this catalog. It funds a full master's of up to 24 months or doctorate of up to 48 months at a Brazilian institution, and also a shorter 'sandwich' doctorate of 6 to 10 months for candidates already enrolled in a doctorate at home — the modality that takes the largest share of places. The 2025 call offered 650 scholarships, of which 350 were sandwich doctorates, 200 master's and 100 full doctorates, on a budget of up to BRL 41,050,000, paying BRL 3,100 a month for a doctorate and BRL 2,100 for a master's plus a BRL 400 monthly health-insurance allowance and a return airfare. The restriction that matters most sits at the front of the eligibility rules: PEC-PG is limited to nationals of a named list of participating countries — 74 of them in the 2025 Edital — and Nepal is not on it. India, Bangladesh, China, Thailand and Timor-Leste are, because the governing rule is that a country must hold an educational, cultural or scientific and technological cooperation agreement with Brazil. Brazil's current list for the undergraduate PEC-G programme runs to 76 countries and Nepal is absent from that one too. The 2025 windows closed on 8 October 2025 for the full modalities and 16 January 2026 for the sandwich doctorate.",
+    "tags": [
+      "Brazil",
+      "phd",
+      "master",
+      "government",
+      "fully-funded",
+      "international",
+      "partner-country-quota",
+      "verified-deadline",
+      "engineering",
+      "materials-science",
+      "research"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "closed",
+    "source_url": "https://www.gov.br/capes/pt-br/centrais-de-conteudo/editais/04072025_Edital_2630513_SEI_2630221_Edital_n__12_2025.pdf/@@display-file/file",
+    "last_verified": "2026-10-07"
   }
 ]

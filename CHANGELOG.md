@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.20.0] - 2026-10-07
+
+### Added
+
+Phase 2 continues, into Latin America. Catalog 48 → **49 records** and 17 → **18 destinations**, opening **Brazil** — and this one arrives with its restriction at the front rather than buried at the back.
+
+- **PEC-PG (Programa de Estudantes-Convênio de Pós-Graduação)** — Brazil's government scholarship for postgraduate study in Brazil, run jointly by CAPES, the Ministry of Foreign Affairs and CNPq. It funds a full master's of up to 24 months or a doctorate of up to 48 months at a Brazilian institution, and a shorter **"sandwich" doctorate** of 6 to 10 months for candidates already enrolled in a doctorate at home. The 2025 call offered **650 scholarships** — 350 sandwich doctorates, 200 master's and 100 full doctorates — on a budget of up to **BRL 41,050,000**. It pays **BRL 3,100 a month for a doctorate** and **BRL 2,100 for a master's**, plus a **BRL 400 monthly health-insurance allowance** paid as a single first instalment, and a return airfare funded by the MRE. The 2025 windows closed on 8 October 2025 for the full modalities and 16 January 2026 for the sandwich doctorate.
+
+### The finding: Nepal is not on the list
+
+- **PEC-PG is restricted to nationals of a named list of participating countries, and Nepal is not on it.** Edital nº 12/2025 lists **74 countries** — 29 in Africa, 28 in Latin America and the Caribbean, 10 in Asia and 7 in Europe. The ten Asian countries are Bangladesh, China, South Korea, India, Iran, Lebanon, Pakistan, Syria, Thailand and Timor-Leste. **India and Bangladesh are eligible; Nepal is not.**
+- **The rule behind the list is a cooperation agreement, and it was confirmed against a second, independent source.** The MRE states that countries holding an "educational, cultural or scientific and technological cooperation agreement with Brazil" may participate. Its current page lists **76 countries** for the *undergraduate* PEC-G programme — the same four regions, with Cambodia, Jordan and Mongolia added to Asia — and **Nepal is absent from that list too**. Two different lists, two different programmes, same exclusion, so it is not an artefact of a single document.
+- **The Edital cites a country-list URL that 404s.** It sends readers to `…/temaseducacionais/…`; the live path is `…/temas-educacionais/…`. Both were probed directly — **404 and 200 respectively**. The record cites the working page and the Edital's own list, which is the operative text for the 2025 call, and notes that the Edital says the list may change as countries join before the application period ends.
+
+### Notes
+
+- **Two selection preferences actively favour applicants from outside Brazil**, which is worth stating because the headline restriction makes the programme look uniformly closed: for doctorate selections PEC-PG prioritises, wherever possible, candidates who took **both** their undergraduate and master's degrees outside Brazil, and for master's selections candidates who took their undergraduate degree outside Brazil.
+- **There is no language test requirement, in either language.** The candidate declares their proficiency in the application form and the receiving postgraduate programme assesses the declaration against the language it has offered. Supporting documents may be in Portuguese, Spanish or English — with one exception: the **Lattes curriculum must be in Portuguese**, and Lattes is a Brazilian national CV platform, so a foreign applicant has to create one.
+- **The amounts are in the Edital, not on the programme page.** CAPES's PEC-PG page lists the benefits as "mensalidade", "auxílio seguro-saúde" and "passagem Brasil – exterior" with no figures at all, and links out to a separate values page. The figures recorded here come from the Edital and the FAQ PDF, not from a summary. The FAQ also carries a practical warning the Edital does not: the first payment arrives up to 30 days after implementation, so the selected candidate must arrive with enough of their own money for **at least 60 days**.
+- **No age limit and no minimum GPA are stated.** Rather than leaving those fields blank, the record says so and points at where the real bar lives — the individual postgraduate programme, whose requirements are cumulative with CAPES's.
+- **The flag gate from v0.18.0 was exercised on live new data for the second pass running.** Adding Brazil to the catalog without touching `src/main.jsx` failed the suite, naming Brazil, before the flag was added and the suite re-run green.
+- `npm test` stays at **0 errors, 0 warnings** across **3 tests**. The link probe covers **80 links: 0 dead, 7 unreachable** — and as this project's own notes keep insisting, the unreachable count is network weather rather than a property of the catalog — with **9 warnings, all pre-existing**, and both new URLs returning `OK [200]`.
+
 ## [0.19.0] - 2026-10-07
 
 ### Added
