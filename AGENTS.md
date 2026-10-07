@@ -59,9 +59,23 @@ There is no TypeScript, no linting config, and no framework-specific test runner
 
 Do not create new top-level directories without documenting the reason. Country subdirectories under `data/scholarships/` are reserved for a future split-loader; the current app reads only the flat JSON file.
 
+## Branch and merge policy
+
+**`main` is protected. Every change goes through a pull request — no exceptions, including for a one-line data edit or a state-only commit.**
+
+1. Branch off `main`: `git checkout -b <type>/<slug>` (e.g. `data/add-kenya-record`, `fix/deadline-parsing`).
+2. Commit on the branch using Conventional Commits.
+3. Push the **branch**: `git push -u origin <branch>`.
+4. Open a PR, then merge it.
+5. Delete the branch after merge.
+
+Direct pushes to `main` are rejected by branch protection (`GH006: Changes must be made through a pull request`), with `enforce_admins` enabled — so the rule applies to administrators too, and cannot be bypassed by accident.
+
+Never force-push or rewrite history on `main`. Never delete or bypass the protection to land a change; if a change genuinely cannot go through a PR, that is a signal the change needs rethinking, not that the rule needs an exception.
+
 ## Commit conventions
 
-Use Conventional Commits: `feat:`, `fix:`, `data:`, `docs:`, `test:`, `chore:`. One logical change per commit. Never force-push or rewrite history on `main`.
+Use Conventional Commits: `feat:`, `fix:`, `data:`, `docs:`, `test:`, `chore:`. One logical change per commit.
 
 ## AI assistant policy
 
