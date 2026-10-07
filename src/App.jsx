@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Search, SlidersHorizontal, Bookmark, ArrowUpRight, GraduationCap, CalendarDays, Sparkles, Sun, Moon, X, Compass, BookOpen, Settings2, Check, Globe2, Bell, UserRound, ExternalLink, Send, ShieldCheck, FileText, CalendarClock, ClipboardList, Trash2, Plus, AlertTriangle, CircleCheck } from 'lucide-react';
 import scholarships from '../data/scholarships.json';
 import { flagFor, COUNTRY_NAMES } from './countries.js';
@@ -18,6 +18,11 @@ import './styles.css';
 // scripts/render-smoke.mjs) so that moving it off the main bundle does not move
 // it out of reach of the one check that catches a view-level runtime error.
 const AiSettings = lazy(() => import('./AiSettings.jsx'));
+// The document-reading surface is loaded on demand for the same reason: a
+// reader who never attaches a transcript should not download it, and the profile
+// view is the largest page in the app. The panel keeps the "nothing is uploaded"
+// boundary in one auditable file — see src/IngestPanel.jsx.
+const IngestPanel = lazy(() => import('./IngestPanel.jsx'));
 
 // Flags are derived from each country's ISO 3166-1 alpha-2 code in
 // data/countries.json — see src/countries.js. There is deliberately no
@@ -26,6 +31,13 @@ const AiSettings = lazy(() => import('./AiSettings.jsx'));
 // country to the data is now the only step needed.
 // Country-aware eligibility lives in src/eligibility.js so it can be unit-tested.
 const stored = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
+// The three GPA verdicts as a reader reads them. Kept here, not imported from
+// compare.js, so that module stays in the lazy document-panel chunk — the
+// strings are the only part the dialog needs, and duplicating three words is
+// cheaper than putting the comparison engine on the first-load path. The
+// authoritative labels live in src/compare.js VERDICT_LABEL; a test asserts the
+// two agree.
+const GPA_VERDICT_LABEL = { meets: 'Requirement met', fails: 'Requirement not met', unknown: 'Not checkable' };
 const fmtDate = (iso) => { if (!iso) return null; const d = new Date(iso + 'T00:00:00'); return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }); };
 // `initialView` exists so the render smoke test can mount every view without a
 // browser. It defaults to the real entry view, and nothing in the app passes it
@@ -88,6 +100,67 @@ function App({ initialView = 'discover' }) {
  const trackAll=(records)=>{setTracker(prev=>{const next={...prev};records.forEach(r=>{if(!next[r.id])next[r.id]={status:DEFAULT_TRACK_STATUS,addedAt:todayIso()}});return next});flash('Tracking '+records.length+(records.length===1?' opportunity':' opportunities'))};
  const setTrackStatus=(id,status)=>{setTracker(prev=>({...prev,[id]:{status,addedAt:(prev[id]&&prev[id].addedAt)||todayIso()}}))};
  const toggleDoc=(id)=>{setDocs(prev=>prev.includes(id)?prev.filter(x=>x!==id):[...prev,id])};
+ // --- reading the reader's documents ----------------------------------------
+ // Design: docs/DOCUMENT-INGESTION.md §4–§6. Everything here is local: the file
+ // is read with File.arrayBuffer, parsed in this tab, and never sent anywhere.
+ // There is deliberately no upload path, because there is no server to upload
+ // to (AGENTS.md, scope discipline).
+ //
+ // The extracted proposals are **transient React state, never persisted**. They
+ // are a reading of a document that could be re-read at any time, so storing
+ // them would put a stale transcript summary in localStorage for no gain. What
+ // persists is the *confirmed* value, in `sh-profile` alongside the hand-typed
+ // fields — the reader's confirmation, not ScholarHub's guess.
+ // A confirmed GPA plus the text it was read from, or null. `sh-profile.gpa`
+ // stays the reader's hand-typed string for display; the structured value is
+ // what a comparison needs, and the two are kept from drifting by writing both
+ // when a proposal is confirmed.
+ const confirmedGpa=profile.gpaValue&&typeof profile.gpaValue.value==='number'?profile.gpaValue:null;
+ // The comparison itself is computed inside the lazily-loaded document panel,
+ // which is where `compare.js` travels. `App` holds only the answer, so the
+ // detail dialog can show a per-record sentence without putting the comparison
+ // module (and its patterns) on the first-load path.
+ const [gpaComparison,setGpaComparison]=useState(null);
+ const onComparison=useCallback((next)=>setGpaComparison((prev)=>prev===next?prev:next),[]);
+ // Confirming a proposal is the only thing that puts a value into the profile.
+ // An unconfirmed proposal is never used in a comparison — that rule is what
+ // stops a mis-read transcript becoming a confident wrong answer about
+ // eligibility. The panel calls back with the proposal and its source file.
+ const confirmProposal=(proposal,from)=>{
+   setProfile(prev=>{
+     const next={...prev};
+     if(proposal.field==='gpa'){
+       next.gpaValue={value:proposal.value,scale:proposal.scale,from};
+       next.gpa=proposal.scale!=null?`${proposal.value} / ${proposal.scale}`:String(proposal.value);
+     }else if(proposal.field==='english'){
+       next.languageValue={instrument:proposal.instrument,value:proposal.value,subs:proposal.subs||[],from};
+       next.language=proposal.label;
+     }else if(proposal.field==='classification'){
+       next.classification={value:proposal.value,label:proposal.label,from};
+     }
+     // Written through immediately, not behind the Save button. Confirming a
+     // value is a deliberate act and the whole point of it is that the reader
+     // can then close the tab — a confirmation lost to a reload would be a bug
+     // the reader could not distinguish from the app ignoring them.
+     persist('sh-profile',next);
+     return next;
+   });
+   flash('Saved to your profile — you can edit it above');
+ };
+ // Discarding a confirmed value is the same rule in reverse: the reader is the
+ // one who decides what the profile holds, so a value read off a document must
+ // be removable without needing to re-open the document.
+ const clearConfirmed=(field)=>{
+   setProfile(prev=>{
+     const next={...prev};
+     if(field==='gpa'){delete next.gpaValue;next.gpa=''}
+     else if(field==='english'){delete next.languageValue;next.language=''}
+     else if(field==='classification'){delete next.classification}
+     persist('sh-profile',next);
+     return next;
+   });
+   flash('Removed from your profile');
+ };
  // Recomputed per render so a tab left open overnight shows the new day.
  const TODAY=todayIso();
  const tracked=useMemo(()=>sortTracked(scholarships.filter(s=>tracker[s.id]).map(s=>({record:s,status:tracker[s.id].status})),TODAY),[tracker,TODAY]);
@@ -178,7 +251,19 @@ function App({ initialView = 'discover' }) {
    </>}
    <p className="disclaimer">Countdowns are computed in your browser from the dates recorded in the catalog and the day each source was last checked. They are a planning aid, not a notification service — no reminder leaves this device, and you should confirm every closing date with the provider.</p>
   </section>}
-  {view==='profile'&&<section className="page-section"><div className="eyebrow muted">A LITTLE ABOUT YOU</div><h1 className="page-title">Make it <em>personal.</em></h1><p className="page-lede">A few details help us bring relevant opportunities closer. Everything stays in this browser.</p><div className="form-card"><div className="form-heading"><div className="form-icon"><UserRound size={19}/></div><div><h3>Your study goals</h3><p>Update anytime. Nothing is sent to a server.</p></div></div><div className="form-grid"><label>Field of interest<select value={profile.field||fields[0]} onChange={e=>setProfile({...profile,field:e.target.value})}>{fields.map(f=><option key={f}>{f}</option>)}</select></label><label>Degree you're aiming for<select value={profile.degree||'Master'} onChange={e=>setProfile({...profile,degree:e.target.value})}>{DEGREE_LEVELS.map(x=><option key={x}>{x}</option>)}</select></label><label>Country of origin<input list="country-options" value={profile.nationality||''} onChange={e=>setProfile({...profile,nationality:e.target.value})} placeholder="Start typing, e.g. Nepal"/><datalist id="country-options">{COUNTRY_NAMES.map(c=><option key={c} value={c}/>)}</datalist></label><label>Current GPA (optional)<input value={profile.gpa||''} onChange={e=>setProfile({...profile,gpa:e.target.value})} placeholder="e.g. 3.7 / 4.0"/></label><label>Preferred destination<input value={profile.preferred||''} onChange={e=>setProfile({...profile,preferred:e.target.value})} placeholder="e.g. Germany, Australia"/></label><label>Language test scores<input value={profile.language||''} onChange={e=>setProfile({...profile,language:e.target.value})} placeholder="IELTS, TOEFL, etc."/></label></div><div className="privacy-note"><ShieldCheck size={17}/><span><strong>Private by design.</strong> Your profile is saved in local storage on this device. Clearing browser data removes it.</span></div><button className="primary-btn" onClick={saveProfile}><Check size={16}/> Save my profile</button></div>
+  {view==='profile'&&<section className="page-section"><div className="eyebrow muted">A LITTLE ABOUT YOU</div><h1 className="page-title">Make it <em>personal.</em></h1><p className="page-lede">A few details help us bring relevant opportunities closer. Everything stays in this browser.</p><div className="form-card"><div className="form-heading"><div className="form-icon"><UserRound size={19}/></div><div><h3>Your study goals</h3><p>Update anytime. Nothing is sent to a server.</p></div></div><div className="form-grid"><label>Field of interest<select value={profile.field||fields[0]} onChange={e=>setProfile({...profile,field:e.target.value})}>{fields.map(f=><option key={f}>{f}</option>)}</select></label><label>Degree you're aiming for<select value={profile.degree||'Master'} onChange={e=>setProfile({...profile,degree:e.target.value})}>{DEGREE_LEVELS.map(x=><option key={x}>{x}</option>)}</select></label><label>Country of origin<input list="country-options" value={profile.nationality||''} onChange={e=>setProfile({...profile,nationality:e.target.value})} placeholder="Start typing, e.g. Nepal"/><datalist id="country-options">{COUNTRY_NAMES.map(c=><option key={c} value={c}/>)}</datalist></label><label>Current GPA (optional)<input value={profile.gpa||''} onChange={e=>setProfile({...profile,gpa:e.target.value})} placeholder="e.g. 3.7 / 4.0"/></label><label>Preferred destination<input value={profile.preferred||''} onChange={e=>setProfile({...profile,preferred:e.target.value})} placeholder="e.g. Germany, Australia"/></label><label>Language test scores<input value={profile.language||''} onChange={e=>setProfile({...profile,language:e.target.value})} placeholder="IELTS, TOEFL, etc."/></label></div>
+<div className="privacy-note"><ShieldCheck size={17}/><span><strong>Private by design.</strong> Your profile is saved in local storage on this device. Clearing browser data removes it.</span></div><button className="primary-btn" onClick={saveProfile}><Check size={16}/> Save my profile</button></div>
+  <Suspense fallback={<div className="form-card ingest-card"><div className="ingest-status">Loading the document reader…</div></div>}>
+   <IngestPanel
+    onConfirm={confirmProposal}
+    currentGpa={profile.gpaValue}
+    currentLanguage={profile.languageValue}
+    currentClassification={profile.classification}
+    onClear={clearConfirmed}
+    records={scholarships}
+    onComparison={onComparison}
+   />
+  </Suspense>
   <div className="form-card docs-card"><div className="form-heading"><div className="form-icon"><FileText size={19}/></div><div><h3>Application documents</h3><p>Tell ScholarHub what you already have, and it will flag what is still missing.</p></div></div>
    <div className="docs-progress"><div className="progress-track" role="img" aria-label={docState.presentCount+' of '+docState.total+' documents ready'}><i style={{width:(docState.total?Math.round(docState.presentCount/docState.total*100):0)+'%'}}/></div><span><b>{docState.presentCount}</b> of {docState.total} ready for your {profile.degree||'chosen'} goal</span></div>
    {docState.complete?<div className="docs-alert ready"><CircleCheck size={17}/><span><strong>Nothing missing.</strong> Every document this checklist expects for a {profile.degree||'your'} application is marked ready. Requirements differ between programmes — confirm against each provider.</span></div>:<div className="docs-alert missing" role="status"><AlertTriangle size={17}/><span><strong>Not present ({docState.missing.length}):</strong> {docState.missing.map(d=>d.label).join(', ')}.</span></div>}
@@ -193,7 +278,11 @@ function App({ initialView = 'discover' }) {
   </div></section>}
   {view==='assistant'&&<section className="page-section assistant-page"><div className="eyebrow muted"><Sparkles size={13}/> YOUR THOUGHTFUL SCHOLARSHIP COMPANION</div><h1 className="page-title">A little help, <em>on your terms.</em></h1><p className="page-lede">Get started with a local guide—or connect an AI model you trust in settings.</p><div className="chat-card"><div className="chat-top"><div className="assistant-orb"><Sparkles size={19}/></div><div><b>Scholarship guide</b><span><i/> {ai.connected?ai.provider.label+' · '+((ai.availableModels.find(m=>m.id===ai.ai.model)||{}).label||ai.ai.model):'Offline · No model connected'}</span></div><button className="icon-btn" aria-label="Open AI settings" onClick={()=>go('settings')}><Settings2 size={18}/></button></div><div className="chat-body" role="log" aria-live="polite" aria-label="Conversation">{messages.length===0?<div className="chat-welcome"><div className="welcome-spark">✦</div><h3>Where would you like to begin?</h3><p>I can help you think through your search. For current eligibility and calls, official program pages are always the source of truth.</p><div className="suggestions">{['What should I check before applying?','Help me plan a scholarship search','Which opportunities fit my study goals?'].map(x=><button key={x} onClick={()=>answer(x)}>{x}<ArrowUpRight size={14}/></button>)}</div></div>:messages.map((m,i)=><div className={`chat-message ${m.from}`} key={i}><div className="message-avatar">{m.from==='you'?'S':<Sparkles size={14}/>}</div><div>{m.text}{m.streaming&&!m.text&&<span className="msg-typing" aria-hidden="true"><i/><i/><i/></span>}{m.notes&&<em className="msg-source">{m.notes} — a model answer, not catalog data</em>}</div></div>)}</div><form className="chat-input" onSubmit={e=>{e.preventDefault();answer()}}><input value={chat} onChange={e=>setChat(e.target.value)} placeholder="Ask a question or explore an idea…" aria-label="Ask the scholarship assistant"/><button aria-label="Send question"><Send size={17}/></button></form><p className="chat-disclaimer">AI suggestions are informational, can be incomplete, and aren't a substitute for official scholarship requirements.</p></div></section>}
   {view==='settings'&&<section className="page-section"><Suspense fallback={<div className="ai-loading" role="status">Loading AI settings…</div>}><AiSettings ai={ai}/></Suspense></section>}
-  {selected&&<div className="modal-backdrop" onClick={()=>setSelected(null)}><section ref={dialogRef} tabIndex={-1} className="detail-modal" role="dialog" aria-modal="true" aria-label={selected.name} onClick={e=>e.stopPropagation()}><button className="modal-close" onClick={()=>setSelected(null)} aria-label="Close details"><X size={20}/></button><div className="eyebrow muted">{flagFor(selected.country)||'🌐'} &nbsp;{selected.country.toUpperCase()}</div><h2>{selected.name}</h2><p className="detail-provider">{selected.provider} · {selected.university}</p><p className="detail-desc">{selected.description}</p><div className="detail-grid"><div><span>Degree levels</span><b>{selected.degree_level.join(', ')}</b></div><div><span>Funding</span><b>{selected.funding_type}</b></div><div><span>Deadline</span><b>{selected.deadline?fmtDate(selected.deadline):(selected.deadline_notes?'No single date — see the note below':'Not maintained — check official source')}</b>{selected.deadline&&<em className={'deadline-note countdown-text countdown-'+deadlineInfo(selected,TODAY).level}>{deadlineInfo(selected,TODAY).label}</em>}{selected.deadline_notes&&<em className="deadline-note">{selected.deadline_notes}</em>}</div><div><span>Amount</span><b>{selected.amount}</b></div><div><span>Location</span><b>{selected.city}, {selected.region}</b></div><div><span>Eligibility</span><b>{selected.eligibility.nationality.join('; ')}</b><em className={'elig-note elig-'+elig[selected.id].verdict}>{VERDICT[elig[selected.id].verdict]} — {elig[selected.id].reason}</em>{profile.nationality&&selected.country_notes&&selected.country_notes[profile.nationality]&&<em className="elig-note country-note">For {profile.nationality}: {selected.country_notes[profile.nationality]}</em>}</div><div><span>Source last checked</span><b>{selected.last_verified?fmtDate(selected.last_verified):'Not recorded'}</b></div></div><div className="detail-note"><ShieldCheck size={17}/><span>Deadlines and amounts appear only where a contributor recorded them from the official source, together with the date they checked it. Confirm dates, eligibility, and terms directly with the provider.</span></div><div className="modal-actions"><div className="modal-action-group"><button className="outline-btn" onClick={()=>updateSaved(selected.id)}><Bookmark size={15}/>{saved.includes(selected.id)?'Saved':'Save opportunity'}</button><button className={'outline-btn '+(tracker[selected.id]?'tracking':'')} aria-pressed={!!tracker[selected.id]} onClick={()=>toggleTrack(selected)}><CalendarClock size={15}/>{tracker[selected.id]?'Tracking deadline':'Track deadline'}</button></div><a className="primary-btn" href={selected.official_url} target="_blank" rel="noreferrer">Official scholarship page <ExternalLink size={15}/></a></div></section></div>}
+  {selected&&<div className="modal-backdrop" onClick={()=>setSelected(null)}><section ref={dialogRef} tabIndex={-1} className="detail-modal" role="dialog" aria-modal="true" aria-label={selected.name} onClick={e=>e.stopPropagation()}><button className="modal-close" onClick={()=>setSelected(null)} aria-label="Close details"><X size={20}/></button><div className="eyebrow muted">{flagFor(selected.country)||'🌐'} &nbsp;{selected.country.toUpperCase()}</div><h2>{selected.name}</h2><p className="detail-provider">{selected.provider} · {selected.university}</p><p className="detail-desc">{selected.description}</p><div className="detail-grid"><div><span>Degree levels</span><b>{selected.degree_level.join(', ')}</b></div><div><span>Funding</span><b>{selected.funding_type}</b></div><div><span>Deadline</span><b>{selected.deadline?fmtDate(selected.deadline):(selected.deadline_notes?'No single date — see the note below':'Not maintained — check official source')}</b>{selected.deadline&&<em className={'deadline-note countdown-text countdown-'+deadlineInfo(selected,TODAY).level}>{deadlineInfo(selected,TODAY).label}</em>}{selected.deadline_notes&&<em className="deadline-note">{selected.deadline_notes}</em>}</div><div><span>Amount</span><b>{selected.amount}</b></div><div><span>Location</span><b>{selected.city}, {selected.region}</b></div><div><span>Eligibility</span><b>{selected.eligibility.nationality.join('; ')}</b><em className={'elig-note elig-'+elig[selected.id].verdict}>{VERDICT[elig[selected.id].verdict]} — {elig[selected.id].reason}</em>{profile.nationality&&selected.country_notes&&selected.country_notes[profile.nationality]&&<em className="elig-note country-note">For {profile.nationality}: {selected.country_notes[profile.nationality]}</em>}</div>
+   {/* Shown only when the reader has a confirmed GPA — otherwise the row would
+       be a per-record "unknown" that says nothing the profile summary has not
+       already said. The sentence always names which of the five cases applies. */}
+   {confirmedGpa&&gpaComparison&&gpaComparison[selected.id]&&<div><span>Your GPA</span><b className={'gpa-verdict gpa-'+gpaComparison[selected.id].verdict}>{GPA_VERDICT_LABEL[gpaComparison[selected.id].verdict]}</b><em className="elig-note">{gpaComparison[selected.id].sentence}</em>{gpaComparison[selected.id].quote&&<em className="elig-note gpa-quote">The provider writes: “{gpaComparison[selected.id].quote}”</em>}</div>}<div><span>Source last checked</span><b>{selected.last_verified?fmtDate(selected.last_verified):'Not recorded'}</b></div></div><div className="detail-note"><ShieldCheck size={17}/><span>Deadlines and amounts appear only where a contributor recorded them from the official source, together with the date they checked it. Confirm dates, eligibility, and terms directly with the provider.</span></div><div className="modal-actions"><div className="modal-action-group"><button className="outline-btn" onClick={()=>updateSaved(selected.id)}><Bookmark size={15}/>{saved.includes(selected.id)?'Saved':'Save opportunity'}</button><button className={'outline-btn '+(tracker[selected.id]?'tracking':'')} aria-pressed={!!tracker[selected.id]} onClick={()=>toggleTrack(selected)}><CalendarClock size={15}/>{tracker[selected.id]?'Tracking deadline':'Track deadline'}</button></div><a className="primary-btn" href={selected.official_url} target="_blank" rel="noreferrer">Official scholarship page <ExternalLink size={15}/></a></div></section></div>}
   {notice&&<div className="toast" role="status" aria-live="polite"><Check size={16}/>{notice}</div>}<footer className="footer">Made for curious minds. <span>ScholarHub is an independent discovery tool · Always verify with official sources.</span></footer></main></div>
 }
 

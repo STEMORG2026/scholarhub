@@ -1,5 +1,91 @@
 # Changelog
 
+## [0.28.0] - 2026-10-08
+
+### Added — reading the reader's own documents (Phase 1 of the ingestion design)
+
+`docs/DOCUMENT-INGESTION.md` was a proposal, not code; its §11 named what to build first and
+this is that part. Phase 1 is the half that was **unblocked**: local extraction feeding the
+profile, with the PDF reader deferred and the model path off.
+
+**A `.docx` is read with zero new dependencies.** A DOCX is a ZIP of XML, so `src/ingest.js`
+carries a minimal central-directory reader plus `DecompressionStream` for the inflate — both
+baseline in browsers and present in Node 24. Plain text (`.txt`, `.md`, `.csv`, `.json`) needs
+nothing at all. The PDF reader is ~1.4 MB, about three times the current bundle, and is
+**refused with that reason on screen** rather than guessed at.
+
+**The deterministic extractor proposes; it does not decide.** GPA/CGPA **with its scale**, IELTS
+(with sub-scores), TOEFL iBT, PTE, Duolingo, and UK/Commonwealth degree classifications. Every
+proposal carries the **span it was read from**, is editable, and is not used until the reader
+confirms it — the same rule the catalog applies to its own records.
+
+- **A GPA without a scale is not a GPA.** A bare `CGPA 3.1` is reported as *incomplete* with the
+  reason, never assumed to be `/4.0`: the catalog's own GKS record states its threshold four
+  different ways depending on the transcript's scale, which is exactly why assuming one would
+  invent a comparison.
+- **A value outside its instrument's range is quoted but not proposed.** The catalog records
+  KAUST printing "TOEFL iBT 5 overall" — inside the arithmetic envelope of 0–120 and impossible
+  for a real total, because the four sections each score at least 1. The instrument's own
+  **floor** catches it; ScholarHub does not repeat an impossible value as if it had read one, and
+  does not silently "fix" it.
+- **An unreadable document is a refusal, not an empty result.** A scanned PDF, a JPEG renamed
+  `.txt`, a corrupt `.docx`, an empty file and an out-of-range score each produce an explicit
+  refusal with a reason. A blank profile would read as "this person has no GPA", which is a
+  different and false claim.
+
+**`src/compare.js` — three-valued, and `unknown` is the default.** `meets` / `fails` / `unknown`,
+with five distinct sentences for the five different facts, kept deliberately apart:
+
+- the requirement is met; the requirement is not met;
+- **the provider states there is no threshold** (PEC-PG's Edital);
+- the requirement is recorded as prose with no single scalar form (GKS's four scales, MEXT's
+  field split);
+- **the catalog does not record a requirement at all.**
+
+The last three all report `unknown`, but must never share a sentence — *"this provider has no GPA
+threshold"* and *"we do not know this provider's GPA threshold"* are opposite claims. Collapsing
+them would be a lie in one direction or the other. A comparison engine whose default is `meets`
+would tell an applicant they qualify when the catalog simply never said.
+
+**The measurement reproduced live, not restated.** With a confirmed `3.62 / 4`, the profile page
+reads **0 met · 0 not met · 50 not checkable** and names the number: 45 of 50 records do not
+record a GPA requirement. That is the design document's finding, now rendered from the real
+catalog by the real code.
+
+**Bundle discipline held.** The reader and the extractor are a lazy chunk (`ingest.js`, 7 kB);
+the panel is a second (`IngestPanel.jsx`, 8.9 kB); `compare.js` travels with the panel and the
+per-record result is handed back to `App` rather than recomputed there. Main is 497 kB, under the
+500 kB ceiling — **the limit was not raised.**
+
+**Verified in a real browser, against a real `.docx`.** The transcript was generated as a genuine
+Word file (ZIP + WordprocessingML, a table with each label and value in its own cell). All four
+values extracted, each confirmed, three chips rendered with their source file, the state survived
+a reload, and contrast was measured in both themes (dark 5.66:1 worst, light 4.79:1 worst, all
+above WCAG AA).
+
+**Two defects found by reading the live output, not the code:**
+
+- **Every pattern required a label and its value on one line, and every fixture was written that
+  way** — so the tests passed while a real Word table extracted nothing. A table puts each cell's
+  paragraph on its own line, so a transcript reads `CGPA\n\t3.62 / 4.0`. The label gap now
+  spans at most one line, with a regression test on both sides: the table shape must extract, and
+  a label must not reach across a blank line to an unrelated number.
+- **The confirming click did not pass the file name and the value was not persisted.** The chip
+  rendered "from " with nothing after it, and a confirmed value was lost on reload — a bug the
+  reader could not distinguish from the app ignoring them. Both fixed, both now asserted.
+
+`npm test` 118 → **163 tests**; the render smoke test 19 → **27 renders** (a third scenario for
+the confirmed-value state, plus two document-panel cases).
+
+### Still not built, and said on screen
+
+The comparison says `unknown` for **45 of 50 records**, because the catalog does not carry
+requirements as data. Phase 2 — a sourcing pass across the catalog, giving each record a
+requirement shape that can hold what providers actually publish, with `source` and `last_verified`
+per requirement — is **a data decision for the owner, not a coding task**, and the engine is
+written so it turns on without a rewrite when that data lands. OCR for scans remains deferred:
+largest dependency, least reliable output.
+
 ## [0.27.0] - 2026-10-07
 
 ### Added — the three things v0.26.0 said were missing
