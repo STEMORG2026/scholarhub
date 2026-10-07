@@ -2,6 +2,41 @@
 
 Detailed log of development work on ScholarHub. For the high-level roadmap with checkboxes, see [ROADMAP.md](ROADMAP.md).
 
+## 2026-10-07 — AI providers, models and auth (v0.26.0)
+
+The AI settings page had been a placeholder since the first release: a provider dropdown nothing read, a key field nothing used, and a "Test connection" button whose only job was to print a notice saying adapters were not connected. This pass builds the seam AGENTS.md had reserved and connects it end to end.
+
+### Added
+- **`src/providers.js` — the registry.** **21 providers in four categories**, each declaring a transport, an **auth kind**, a default base URL, a key page, and a model-list endpoint: **7 frontier labs** (OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Cohere), **7 inference providers** (OpenRouter, Groq, Together, Fireworks, DeepInfra, Cerebras, plus any OpenAI-compatible endpoint the reader names), **6 local runtimes** (Ollama, LM Studio, llama.cpp, vLLM, Jan, LocalAI) and **1 CLI-session provider** (Antigravity).
+- **`src/chat.js` — the adapter.** Four transports with their own URL shapes, headers, bodies and reply parsers; model discovery per provider; and error mapping that distinguishes a bad credential from a bad address from a provider fault. Anthropic's `anthropic-dangerous-direct-browser-access` opt-in is sent, because without it that API refuses a browser-origin call.
+- **`src/useAi.js` + `src/AiSettings.jsx`** — connection state and the view. A **real** connection test, model discovery with a refresh, a base-URL override, and a per-provider line stating **where the request goes**.
+- **A connected assistant.** With a provider configured, replies come from the reader's own model, grounded in the catalog rows for their profile, with a prompt that forbids inventing a deadline, an amount or an eligibility rule. Model answers are labelled as such. With no provider it stays on the offline guide.
+
+### The Antigravity decision
+`agy` authenticates through **its own Google sign-in on the reader's machine**. A web page cannot start a process, read that session, or hold Google credentials — so a login form would be theatre. `agyRefusal()` returns the honest explanation plus the two routes that do work from a page: the **Gemini API** (where Google publishes `antigravity-preview-09-2026`) and a **local OpenAI-compatible gateway** in front of the CLI. A test pins both route texts so the explanation cannot quietly rot.
+
+### Model names are discovered, not asserted
+A roster is stale in weeks. Every provider with a list endpoint is queried at runtime and that answer wins. `FRONTIER_SEED` only prevents an empty picker before a key is entered: **13 models across four labs, each with the URL it came from and the date it was read**, and `null` wherever the source published nothing (Google's index gives ids but not limits). A search for current frontier models returned only aggregator blogs contradicting each other on names — discarded in favour of the providers' own docs, which is what the scholarship catalog's source rules require.
+
+### Verified against a real model
+- **Live end-to-end.** A local Ollama was already running: discovery reported **10 real models**; `qwen2.5-coder:1.5b` + *Test connection* returned **"Connected. Ollama answered using qwen2.5-coder:1.5b. ready — 36 tokens in, 2 out"**; the assistant then answered a real question through it, and the transcript carried the *"from Ollama — a model answer, not catalog data"* label.
+- **Failure paths, also live.** No key → *"This provider needs an API key. Get one at …"*. A missing model on a reachable server → *"Ollama returned 404 …"* with the provider's own message. Unreachable hosts are described as one of three possibilities, because **a browser deliberately will not say whether it was DNS, a refused connection, or CORS**.
+
+### Fixed
+- **`.privacy-note` had no dark-mode counterpart** — the surface the earlier dark pass missed. It kept `#f2f6ee` in dark mode, reading as a bright panel on a dark card, and **its text measured 4.01:1, under WCAG AA**. It is on the profile page too. Now 6.65:1 on a dark surface.
+- **A local runtime with nothing pulled could not be configured.** The model field was a `<select>` with no options and no way to type an id, so a custom endpoint was unusable until discovery happened to succeed. It falls back to free text now.
+- **Eight dead icon imports**, two of them orphaned by the old settings view.
+- **The main bundle crossed the 500 kB warning at 500.04 kB.** Rather than raise the limit, the settings view became a lazily-loaded chunk: main bundle **490.22 kB**, AI settings an **11.57 kB** chunk fetched on open. The assistant still works without it because its default is the offline guide — and a reader can only reach a *connected* assistant by having opened settings, which is what loads the chunk.
+
+### Verification
+- `npm test` **99 tests, 0 errors, 0 warnings** (was 40). New suites: `providers.test.js` and `chat.test.js`.
+- Properties pinned, not assumed: **a key never appears in a request body**; an unpublished model number is `null` and never a guess; every seeded model carries a source URL and a verified date; the egress line contains **no word like "secure" or "private"** (it names a host and stops); only a local provider may default to localhost, so a hosted provider can never silently point a key at the reader's own machine; masking never reveals a whole key.
+- **The render smoke test went 12 → 18 renders**, adding one case per auth kind and a check that **a remembered key never reaches visible text or any attribute other than the password field it belongs to**. The AI settings view is rendered directly with the real `useAi` hook, so moving it off the main bundle did not move it out of the gate's reach.
+- Browser-verified: all 21 providers listed, each auth panel correct for its kind, discovery against live Ollama, a real chat round-trip, and the assistant reverting to the offline guide when the connection is cleared.
+
+### Known gaps, stated rather than implied
+Streaming replies, per-request cost accounting, and model fallback are **not** implemented, and the settings page says so on screen. There is still no server, no telemetry, and no proxy: every request goes from the reader's browser to the provider they chose.
+
 ## 2026-10-07 — Verification gate: CI and a render smoke test (v0.25.0)
 
 The previous pass shipped a live crash — the shortlist view still read a `FLAG` table deleted in v0.21.0 — with **every check in the repository green**. This pass closes the hole rather than the symptom.
