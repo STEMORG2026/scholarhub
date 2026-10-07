@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.16.0] - 2026-10-07
+
+### Fixed
+
+**The validator's warning count reached zero — 5 → 0 — by answering the questions the warnings pointed at rather than suppressing them.**
+
+Five records carried neither a `deadline` nor `deadline_notes`, so the validator warned on each. All five were investigated against their own sources, and every one turned out to have a real, statable answer:
+
+- **Manaaki New Zealand Scholarships** — the biggest find of the pass. The record said only "Citizens of eligible partner countries". The eligible-countries page **names Nepal** in its Asian list (Cambodia, Indonesia, Lao PDR, Malaysia, Nepal, Philippines, Thailand, Timor-Leste, Viet Nam). Nepali applicants can use the postgraduate levels — Postgraduate Certificate, Postgraduate Diploma, Master's and PhD — but **not** undergraduate, which is offered to Timor-Leste only. The windows are country-specific rather than global: the page stated on 2026-10-07 that tertiary applications "have now closed", and the one window published that day was Samoa Foundation's, 4 August to 4 September 2026.
+- **Fulbright Foreign Student Program** — the absence of a deadline is the design, not a gap. Applications are administered by binational commissions and U.S. embassies, and candidates submit "to their respective Fulbright office per established country/award deadlines". The record also gained the citizenship bar (**dual citizens are not eligible**), the language thresholds (TOEFL 550 paper / iBT 79-80 / IELTS 6.5), the ~4,000 grants a year, the four award benefits, and the clinical-programme exclusion — dentistry, medicine, pharmacy and nursing are out, public health and nursing administration are in.
+- **University of Canterbury International First Year Scholarship** — real dates recovered, and only by rendering the page: it is JavaScript-rendered and returns nothing to a plain fetch (and HTTP 406 to a scripted request). "Applications for students who plan to enrol in their first year of an undergraduate degree at UC in 2027 opened 11 June and closed 6 August 2026"; the route for applicants qualifying overseas closes 15 April or 31 October. The provenance note is written into the record itself.
+- **Tsinghua University Scholarships** — the page is a directory of routes, not a call; each route runs its own cycle, and the 2026 and 2024 editions listed are now recorded as such.
+- **Chinese Government Scholarship (CSC)** — this one could not be closed, and the record now says why instead of leaving a blank. campuschina.org returned **HTTP 412** to every request over HTTP and HTTPS *and* rendered an empty page in a real browser; csc.edu.cn returned 412 as well; the host resolves only an IPv6 address; and the Chinese Embassy in Nepal's Study in China section carries no dated notice. The block is on this network, not on the portal, so the record is kept and the gap is stated rather than guessed.
+
+### Added
+
+- **The EESIC record gained the eligibility detail it was missing, from a document the site links but never surfaces inline.** Its FAQ links the previous 2026-2028 call as a PDF, and that PDF sets out the credit areas a bachelor's degree of at least 180 ECTS must cover — and they are a civil engineer's core: **Civil-Environmental Engineering minimum 30 ECTS**, Mathematics 24 ECTS, Physics and Chemistry (including Materials Science and Technology) 18 ECTS, Structural Engineering 12 ECTS. The record previously said the accepted fields "were not listed on the pages checked". They were, in the reference document.
+- The same PDF gave the previous cycle's real closing date — **10 February 2026 at 12:00 CET** — now recorded in `deadline_notes` as a *reference*, explicitly not as the 2027-2029 date, because the page states the old call "is only a reference". `deadline` stays `null`.
+- EESIC's empty `language_requirements` is filled: **B2 of the CEFR**, with the explicit list of accepted certificates and the rule that the certificate must still be valid at the deadline.
+
+### Notes
+
+- **A reference document is a legitimate source for structure and a bad source for dates.** The 2026-2028 call is the right place to learn what documents EESIC wants and which credit areas it scores; it is the wrong place to learn when the 2027-2029 call closes. That distinction let this pass add a dozen real facts without inventing a single date.
+- **A JavaScript-rendered page is not an empty page.** The UC scholarship page yielded nothing to `curl` and nothing to `WebFetch`, which reads exactly like "the page has no dates". Rendering it in a browser produced the full award list with closing dates. Before recording "the source does not state it", render it.
+- **HTTP 412 is a block, not a death.** campuschina.org answers 412 to everything, including a browser, and resolves only over IPv6. The link gate classifies 412 as a warning rather than DEAD, which is correct: the portal is alive, it just will not talk to this network.
+- `npm test` now reports **0 errors, 0 warnings**, down from 5. Those 5 warnings had been stable and unexamined since the provenance pass, and every one of them was a real question with a real answer.
+
 ## [0.15.0] - 2026-10-07
 
 ### Added
