@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.23.0] - 2026-10-07
+
+### Changed — three of the four `regional` records now give a real answer
+
+`regional` was the loose end v0.21.0 left: it reported **check** for every reader, including readers the programme plainly was open to. Where a provider publishes its country list, that is a gap in our data rather than a property of the scheme — so the lists were transcribed from each provider's own page and those records became `listed`.
+
+- **Australia Awards Scholarships** — 59 countries transcribed from DFAT's participating-countries page: **25 in Africa, 17 in Asia, 17 in the Pacific**. A reader from Nepal or Kenya now sees *Open to you*; Brazil, which is not on the list, sees *Not open to you*.
+- **Manaaki New Zealand Thematic Short Term Training** — 68 countries transcribed from the scheme's eligible-country list across the Pacific, ASEAN, Africa and Latin America and the Caribbean.
+- **NL Scholarship (formerly Holland Scholarship)** — the scheme states the criterion as **"Your nationality is non-EEA"**, so the record carries the **30 EEA members as an exclusion** rather than expanding the rule into a 172-country complement. A reader in the Netherlands sees *Not open to you*; everyone else sees *Open to you*.
+- **`nationality_scope` gained `excluded_countries`** for rules published in the negative. Use the shape the source uses: expanding "non-EEA" into a list of eligible countries would bury the rule and make it unreviewable. The validator rejects both-shapes and neither-shape.
+
+### Two source contradictions, recorded rather than smoothed over
+
+- **The NZ page names Singapore under ASEAN *and* in its exclusion list.** It says applicants must not be citizens or permanent residents of a separate list of 20 countries — Singapore among them. The exclusion is an explicit "must not", so it governs: **Singapore is omitted from the eligible list** and the contradiction is stated in the record's note.
+- **The Australia Awards prose says "particularly those countries located in the Indo-Pacific" while the list spans Africa as well.** The transcribed list is what governs; the note records where it came from and that DFAT republishes it per cycle.
+
+### One record stays `regional`, on purpose
+
+**Pan African University** remains `regional` / `["Africa"]`. Its eligibility is "African countries **and the African Diaspora**" — the Diaspora is not a country list, so enumerating AU member states would tell a member of the Diaspora *Not open to you*, which the source never said. It reports **check for every reader, including readers in Africa**, and the note names what has to be checked. This is the honest outcome for this record, not an unfinished one.
+
+### Verification
+
+- **18 tests**, up from 16, including two that pin the exclusion shape: a country outside the exclusion is eligible, and — the dangerous inversion — **an exclusion list is never read as a list of eligible countries**.
+- **Browser-verified across three countries.** Nepal: Australia Awards *Open to you*, NL Scholarship *Open to you*, Manaaki Thematic *Not open to you*. Kenya: all three *Open to you*. Brazil: Australia Awards *Not open to you*, the other two *Open to you*. The check-eligibility count fell from **15 to 12**.
+- The whole-catalog diff is **169 insertions / 18 deletions** — the first attempt at this change re-serialised the file and inflated the diff to 696 / 114, which was reverted and redone as a per-record splice.
+
 ## [0.22.0] - 2026-10-07
 
 ### Added — Africa, the last Phase 2 region

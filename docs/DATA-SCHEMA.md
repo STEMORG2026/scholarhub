@@ -36,13 +36,26 @@ Every record declares `nationality_scope`, so a reader can be told where they st
 | `mode` | Meaning | Answerable? | Required fields |
 |---|---|---|---|
 | `all` | Open to any nationality. Host-country exclusions belong in `note`. | yes — open | `note` |
-| `listed` | An enumerable list of eligible countries. | yes | `countries` |
+| `listed` | An enumerable list of eligible countries — or, when the rule is published as an exclusion, `excluded_countries`. | yes | one of `countries` or `excluded_countries` |
 | `listed_elsewhere` | A list exists, but the provider publishes it. | no — **check** | `list_url` |
 | `regional` | Restricted to a region or bloc. | no — **check** | `regions` |
 | `agreement` | Decided country by country by bilateral arrangement. | no — **check** | — |
 | `unstated` | The source does not state nationality rules. | no — **check** | — |
 
 `unstated` is deliberately **not** rendered as "open to everyone". A silent default here would tell every visitor they are eligible, which is the one thing a tool like this must not do — so the four unanswerable modes render as **check**, naming what the reader has to look up. `all` requires a `note` so the claim is attributable to something a contributor actually read.
+
+### Two shapes of list
+
+A published list is either `countries` — who may apply — or `excluded_countries` — who may not. **Use the shape the source actually publishes.** A rule like "your nationality is non-EEA" is written as an exclusion, and expanding it into a 172-country complement would bury the rule and make it unreviewable. Use one or the other, never both, and never neither:
+
+```json
+// exclusion form — "nationality is non-EEA"
+"nationality_scope": {
+  "mode": "listed",
+  "excluded_countries": ["Austria", "Belgium", "...30 in all"],
+  "note": "The scheme states the criterion as 'Your nationality is non-EEA'."
+}
+```
 
 `country_notes` exists so that a country-specific rule is not told to readers it does not apply to. A quota, an age cap or a national deadline belongs there rather than in `description`, `eligibility.nationality` or `benefits`; the general prose should read correctly for a reader from any country, and the app surfaces a country note only when that country is selected.
 
@@ -82,7 +95,7 @@ npm run check:links       # also fetches every official_url/application_url/sour
 
 `npm test` validates shape only: it cannot tell whether an official link still resolves. `npm run check:links` adds a liveness probe and fails the run on a `404`/`410`. It is opt-in because it needs the network. Responses of `401`/`403`/`405`/`429` are reported as **blocked** rather than dead, because many government and university sites refuse automated requests — a blocked link is unverified, not broken.
 
-The nationality-scope gate is checked against the data, not against a claim: `mode` must be one of the six; `listed` needs a non-empty `countries` array whose every member exists in `countries.json` and appears once; `regional` needs `regions`; `listed_elsewhere` needs an `https` `list_url`; `all` needs a `note`; and every `country_notes` key must be a real country with a non-empty note. Each of those assertions has been shown to fail.
+The nationality-scope gate is checked against the data, not against a claim: `mode` must be one of the six; `listed` needs a non-empty `countries` array **or** a non-empty `excluded_countries` array, and not both; every member of either list must exist in `countries.json` and appear once; `regional` needs `regions`; `listed_elsewhere` needs an `https` `list_url`; `all` needs a `note`; and every `country_notes` key must be a real country with a non-empty note. Each of those assertions has been shown to fail.
 
 ## Data quality
 

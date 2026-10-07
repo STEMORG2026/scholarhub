@@ -147,16 +147,27 @@ for (const entry of scholarships) {
       error(id, 'nationality_scope mode "all" claims the scheme is open to every nationality; it needs a note recording what the claim rests on');
     }
     if (scope.mode === 'listed') {
-      if (!Array.isArray(scope.countries) || scope.countries.length === 0) {
-        error(id, 'nationality_scope mode "listed" needs a non-empty countries array');
-      } else {
+      // A published list is either `countries` (who may apply) or
+      // `excluded_countries` (who may not) — a rule like "nationality must be
+      // non-EEA" is published in the second shape. One or the other, never
+      // both, and never neither.
+      const hasCountries = Array.isArray(scope.countries) && scope.countries.length > 0;
+      const hasExcluded = Array.isArray(scope.excluded_countries) && scope.excluded_countries.length > 0;
+      if (!hasCountries && !hasExcluded) {
+        error(id, 'nationality_scope mode "listed" needs either a non-empty countries array or a non-empty excluded_countries array');
+      }
+      if (hasCountries && hasExcluded) {
+        error(id, 'nationality_scope mode "listed" carries both countries and excluded_countries — use the shape the source publishes, not both');
+      }
+      for (const [field, list] of [['countries', scope.countries], ['excluded_countries', scope.excluded_countries]]) {
+        if (!Array.isArray(list)) continue;
         const seenCountries = new Set();
-        for (const name of scope.countries) {
+        for (const name of list) {
           if (!COUNTRIES.has(name)) {
-            error(id, 'nationality_scope lists a country that is not in data/countries.json: ' + name);
+            error(id, 'nationality_scope.' + field + ' names something that is not in data/countries.json: ' + name);
           }
           if (seenCountries.has(name)) {
-            error(id, 'nationality_scope lists the same country twice: ' + name);
+            error(id, 'nationality_scope.' + field + ' lists the same country twice: ' + name);
           }
           seenCountries.add(name);
         }

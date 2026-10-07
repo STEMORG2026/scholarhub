@@ -48,6 +48,29 @@ test('mode "listed" answers from membership, and only when a country is chosen',
   assert.ok(unset.reason.includes('3'), 'the reason names how many countries are on the list');
 });
 
+test('an exclusion list is honoured in the shape the source publishes it', () => {
+  // "Your nationality is non-EEA" is published as an exclusion. Carrying the
+  // excluded set — rather than expanding it into a 172-country complement —
+  // keeps the rule reviewable, so the verdict logic has to read it directly.
+  const scope = { mode: 'listed', excluded_countries: ['Netherlands', 'Norway', 'Iceland'] };
+
+  assert.equal(eligibilityFor(scope, 'Nepal').verdict, 'open', 'a country outside the exclusion is eligible');
+  assert.equal(eligibilityFor(scope, 'India').verdict, 'open');
+  assert.equal(eligibilityFor(scope, 'Netherlands').verdict, 'closed', 'an excluded country is not');
+
+  const unset = eligibilityFor(scope, '');
+  assert.equal(unset.verdict, 'unknown', 'no country chosen still says "choose one", never "open"');
+  assert.ok(unset.reason.includes('3'), 'the reason names how many countries are excluded');
+});
+
+test('an exclusion list is never read as a list of eligible countries', () => {
+  // The dangerous inversion: treating excluded_countries as if it named who
+  // may apply would tell an excluded reader they are eligible.
+  const scope = { mode: 'listed', excluded_countries: ['Nepal'] };
+  assert.equal(eligibilityFor(scope, 'Nepal').verdict, 'closed');
+  assert.equal(eligibilityFor(scope, 'Brazil').verdict, 'open');
+});
+
 test('an empty or missing list is never treated as open to everyone', () => {
   for (const scope of [{ mode: 'listed', countries: [] }, { mode: 'listed' }]) {
     assert.equal(eligibilityFor(scope, 'Nepal').verdict, 'closed');

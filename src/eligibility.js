@@ -44,12 +44,29 @@ export function eligibilityFor(scope, country) {
 
   if (scope.mode === 'listed') {
     const list = scope.countries || [];
+    const excluded = scope.excluded_countries || [];
+
+    // A published list comes in two shapes, and the record should carry the one
+    // the source actually uses. `countries` names who may apply.
+    // `excluded_countries` names who may not — which is how a rule like
+    // "your nationality is non-EEA" is written. Expanding that into a
+    // 172-country complement would bury the rule and make it unreviewable, so
+    // the exclusion is kept in the form the provider published it.
     if (!country) {
       return {
         verdict: 'unknown',
-        reason: 'Choose your country of origin to see whether it is on the list of ' + list.length + ' eligible countries.',
+        reason: list.length
+          ? 'Choose your country of origin to see whether it is on the list of ' + list.length + ' eligible countries.'
+          : 'Choose your country of origin to check it against the ' + excluded.length + ' countries this programme excludes.',
       };
     }
+
+    if (!list.length && excluded.length) {
+      return excluded.includes(country)
+        ? { verdict: 'closed', reason: 'Your country is one of the ' + excluded.length + ' this programme excludes.' }
+        : { verdict: 'open', reason: 'Your country is not among the ' + excluded.length + ' this programme excludes, so the nationality rule is met.' };
+    }
+
     return list.includes(country)
       ? { verdict: 'open', reason: 'Your country is named in the list of ' + list.length + ' eligible countries this programme publishes.' }
       : { verdict: 'closed', reason: 'Your country is not among the ' + list.length + ' countries this programme names as eligible.' };
