@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.19.0] - 2026-10-07
+
+### Added
+
+Phase 2 continues, into the Middle East. Catalog 47 → **48 records** and 16 → **17 destinations**, opening **Saudi Arabia** — and with it the first record in this catalog that carries no country quota at all.
+
+- **KAUST Fellowship — King Abdullah University of Science and Technology** — a fully funded graduate fellowship at Saudi Arabia's research university on the Red Sea, and the first record here **open to applicants of any nationality with no country quota or Nepal-specific allocation**. The Fall 2027 deadline of **3 January 2027** is open to MS, MS/PhD and PhD applicants; the Spring 2027 round was **PhD-only** and closed on 27 September 2026. The Fellowship covers tuition and bench fees worth up to USD $35,000 a year, a stipend of USD $20,000 a year for MS students and USD $25,000 to $30,000 for PhD students, accommodation, health insurance and relocation, for a stated total of **USD $70,000 to $80,000 per year**. The MS takes 1.5 years (2 on the thesis track) over 36 credits and the PhD takes 4 years; the minimum GPA is **3.0 on a 4-point scale**, with KAUST noting that 90% of admitted applicants exceed 3.3. The record carries the full entry requirements — three referees and the seven-day submission window, the 750-word statement of purpose, the optional GRE/PGAT, the master's-degree requirement for PhD entry together with KAUST's refusal to treat professional master's degrees as equivalent, and the English-test rules including the exemptions that do *not* apply. It also names the research areas relevant to an energy, materials or environmental direction, from Materials Science and Engineering & Applied Physics to Earth System Science and Engineering.
+
+### Fixed
+
+- **A `city` and `region` pair that duplicated each other once the dialog joined them.** The record was written with `city: "Thuwal, on the Red Sea coast near Jeddah"` and `region: "Thuwal"`, and the detail dialog renders `{city}, {region}` — producing **"Thuwal, on the Red Sea coast near Jeddah, Thuwal"**. Corrected to `city: "Thuwal"` with `region: "On the Red Sea coast, near Jeddah"`. Found by reading the rendered dialog rather than the JSON — the same way the equivalent defect was found in the Canada and Japan pass.
+- **A blank line splitting the ROADMAP progress table in two.** The row added in the previous release was separated from the one above it by an empty line, which ends a Markdown table — so the South Korea and India row was rendering outside the table it belonged to. The three rows are now contiguous.
+
+### Added (test coverage)
+
+- **The flag gate from the previous release was exercised against live new data, not a synthetic edit.** Saudi Arabia is a new `country` value, so adding it to the catalog without touching `src/main.jsx` should fail — and it did, on the first run and *before* the flag was added: `these catalog countries have no FLAG entry in src/main.jsx and would render a generic globe instead of a flag: Saudi Arabia`. Only then was `'Saudi Arabia':'🇸🇦'` added to the map and the suite re-run green. The gate built in 0.18.0 to catch this class of bug was therefore shown to fire on the real defect it was written for, not only on a hand-made one.
+
+### Notes
+
+- **KAUST describes its stipend as monthly and then prints only annual figures — GKS's mislabelled column in a different shape.** The page reads "a monthly stipend (worth USD $20,000 per year for M.S. students, and USD $25,000 to $30,000 for Ph.D. students…)". The word is *monthly*; the only numbers given are *per year*. The record quotes the annual figures verbatim, states the disagreement, and records **no monthly rate**, because dividing USD $20,000 by twelve would produce a number KAUST never printed.
+- **An official English-requirements table prints a TOEFL score the test cannot produce.** KAUST lists "TOEFL iBT (Internet-based Test) **5 overall**, with at least 4.5 in all individual sections", and repeats the same scale in its conditional-admission table as "TOEFL score of **4.5** overall". TOEFL iBT is reported out of 120, so neither figure is a possible score. The other three tests are printed in their own native scales (IELTS 7.0, PTE 71, Cambridge 185), which makes the TOEFL row look like a normalised 0–6 scale left in the table by mistake. The record quotes both figures, states that they are unusable, and records **no TOEFL target** — the honest output is the gap, not a guess at 100.
+- **A page can contradict itself about whether a window is open.** On 7 October 2026 the timeline page still carried the banner "Applications for Spring 2027 entry are now open" while its own table showed the only Spring deadline, 27 September 2026, already passed. The record says to trust the date table over the banner, and `status` is set from the Fall round's real date.
+- **Third-party listings can quote a real date that is no longer actionable.** The aggregator pages that top a search for "KAUST scholarship 2027" all quote 27 September — which is genuinely on KAUST's own timeline, and is the **already-closed, PhD-only Spring round**, not the open Fall round. A date being correct is not the same as a date being current. None of those aggregators was used as a source; every figure in the record comes from `kaust.edu.sa` or `admissions.kaust.edu.sa`.
+- `npm test` stays at **0 errors, 0 warnings**, and the link probe covers **78 links: 0 dead, 6 unreachable, and 3 non-200 responses from hosts that block automated requests** (two campuschina URLs returning HTTP 412, the University of Melbourne graduate-research page returning 403). Both new URLs return `OK [200]`, and all nine probe warnings are pre-existing — none involves a KAUST URL.
+
 ## [0.18.0] - 2026-10-07
 
 ### Added

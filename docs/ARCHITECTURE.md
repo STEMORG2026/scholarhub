@@ -25,7 +25,7 @@ index.html → src/main.jsx → static data/scholarships.json
 
 ## Known limitations
 
-- Starter catalog is incomplete (47 records) and does not meet the requested 15–25 verified records per country/region. Broader Europe is the only region at the target, and only at its lower bound (15); China holds 5, New Zealand and the United States 4 each, and Canada, Japan, South Korea and India were opened with one record each. Most records are discovery leads, not confirmed open awards.
+- Starter catalog is incomplete (48 records) and does not meet the requested 15–25 verified records per country/region. Broader Europe is the only region at the target, and only at its lower bound (15); China holds 5, New Zealand and the United States 4 each, and Canada, Japan, South Korea, India and Saudi Arabia were opened with one record each. Most records are discovery leads, not confirmed open awards.
 - Deadlines are recorded only where an official page publishes a single closing date (currently seven records). Cycles that are a window, field-split, or country-specific carry `deadline_notes` instead. Comparable award amounts, acceptance rates, and applicant counts are not maintained. No popularity counter, geolocation ranking, reminders, roadmap export, or eligibility calculation is implemented.
 - Link liveness is not part of `npm test`. Run `npm run check:links` (needs the network). It can only prove that a URL resolves — never that the page still says what the record claims.
 - Below 850px the sidebar collapses to an icon-only rail. There is no slide-out drawer.

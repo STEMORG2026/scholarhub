@@ -2043,5 +2043,71 @@
     "status": "closed",
     "source_url": "https://www.cgibirgunj.gov.in/docs/1772693562ICCR-Advertisement.pdf",
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "kaust-fellowship",
+    "name": "KAUST Fellowship — King Abdullah University of Science and Technology",
+    "provider": "King Abdullah University of Science and Technology (KAUST)",
+    "country": "Saudi Arabia",
+    "region": "On the Red Sea coast, near Jeddah",
+    "city": "Thuwal",
+    "university": "King Abdullah University of Science and Technology (KAUST)",
+    "program_field": [
+      "Materials Science",
+      "Energy",
+      "Environmental Engineering",
+      "Engineering"
+    ],
+    "degree_level": [
+      "Master",
+      "PhD"
+    ],
+    "funding_type": "Full fellowship — tuition and bench fees, stipend, accommodation, health insurance and relocation",
+    "amount": "The KAUST Fellowship is stated by KAUST to be worth USD $70,000 to $80,000 per year, depending on the student's situation. KAUST lists its components as: full tuition and bench fee coverage worth up to USD $35,000 per year; 'a monthly stipend (worth USD $20,000 per year for M.S. students, and USD $25,000 to $30,000 for Ph.D. students depending on qualifications and academic progress)'; base accommodation, which is shared accommodation for single students and 2-bed accommodation for married students, with an optional upgrade available for an additional fee; health insurance for the student and eligible dependents living on campus; and relocation support covering visa, relocation and travel costs. KAUST describes the stipend as monthly but publishes only annual figures, so no monthly rate is recorded here — dividing USD $20,000 by twelve would produce a number KAUST never printed. The Fellowship is not automatic for every admit: KAUST states that 'some students with external sponsorship or funding may not be eligible for the KAUST Fellowship', and its admissions home page puts the figure at 'over 90% of admitted students receive full tuition support' rather than all of them.",
+    "currency": "USD",
+    "deadline": "2027-01-03",
+    "deadline_notes": "KAUST runs a two-track annual cycle, and the two tracks are not open to the same applicants. Fall 2027 is open to MS, MS/PhD and PhD applicants, with a Round 2 deadline of 3 January 2027; decisions are scheduled for 14 February 2027 and the fall semester starts 29 August 2027. Spring 2027 is open to PhD applicants only, and its single Round 1 deadline of 27 September 2026 has already passed; decisions are scheduled for 8 November 2026 and the spring semester starts 17 January 2027. The Fall round opens on 28 September 2026, the day after the Spring deadline closes, so there is almost always an open window — but which track you may use depends on your degree level. KAUST warns that the dates are tentative and may change based on application volume, and that referees must submit within seven calendar days of the deadline or the application may be delayed. One inconsistency on the page is worth knowing about: on 7 October 2026 it still carried the banner 'Applications for Spring 2027 entry are now open' even though the only Spring deadline in its own table, 27 September 2026, had already passed. Trust the date table over the banner. Note also that the widely shared third-party listings which quote 27 September as the current KAUST deadline are quoting the already-closed PhD-only Spring round, not the open Fall round.",
+    "duration": "Master of Science: 1.5 years, or 2 years on the thesis track — a 36-credit programme expected to be completed in three semesters and one summer session. PhD: 4 years, typically eight semesters and four summer sessions.",
+    "eligibility": {
+      "nationality": [
+        "Open to applicants of any nationality — KAUST reports more than 120 nationalities on campus and publishes no country quota or Nepal-specific allocation"
+      ],
+      "gpa_minimum": "3.0 on a 4-point scale (or equivalent) is the minimum permitted GPA. KAUST adds context for applicants: typically 90% of admitted applicants have a GPA above 3.3, and 75% have a GPA above 3.5 on a 4-point scale (or equivalent).",
+      "language_requirements": {
+        "english": "Evidence of English proficiency is required. KAUST accepts IELTS Academic at 7.0 overall with at least 6.5 in every section (IELTS Online is accepted), PTE Academic at 71 overall with at least 67 in every section, or Cambridge C1 Advanced / C2 Proficiency at 185 overall with at least 176 in every section. The TOEFL row is the one to read carefully: KAUST prints it as 'TOEFL iBT (Internet-based Test) 5 overall, with at least 4.5 in all individual sections', and repeats the same scale in its conditional-admission table as 'TOEFL score of 4.5 overall, with at least 4 in all individual sections'. A TOEFL iBT score cannot be 5 or 4.5 — the test is reported out of 120 — so the figure as published is unusable and no TOEFL target is recorded here. The other three tests are printed in their own native scales, which makes the TOEFL row look like a normalised 0-6 scale left in the table by mistake. If you intend to apply on TOEFL, take the target from KAUST Admissions directly rather than from the page. KAUST does not accept medium-of-instruction certificates, the Duolingo English Test (except for visiting student applicants), TOEFL MyBest superscores, or IELTS One Skill Retake results. Scores are valid for two years from the test date. An exemption applies only to degrees completed by in-person study in the United States, Canada, the United Kingdom, Ireland, Australia or New Zealand — degrees by distance learning, or at satellite campuses, joint programmes or branch institutions outside those countries, do not qualify. You may submit an application without a score, but if admitted you must meet the minimum before enrolling, and KAUST says a valid score at application strengthens the profile. Saudi nationals and PhD applicants with lower scores (IELTS 6.5, PTE 64 or Cambridge 176) may still be admitted on condition of taking the Academic English Language Communication Course in their first semester."
+      },
+      "age_limit": "At least 18 years of age on entry. No upper age limit is stated.",
+      "other": "Entry to the MS requires a bachelor's degree in a subject relevant to the programme applied for; entry to the PhD requires a master's degree in a relevant subject, and KAUST states that it does not regard professional master's degrees as directly equivalent, so holders of one must declare that in the application. The application requires official transcripts from every higher education institution attended, showing the grading scale used, a CV, a statement of purpose of approximately 750 words, the contact details of three referees with academic or professional email addresses — personal addresses are not accepted — and a clear, unobscured copy of the passport page, or a national ID card for Saudi applicants. All supporting documents must be in English; transcripts in another language need a certified English translation uploaded alongside the original. Referees are normally academic, but an applicant whose most recent qualification was completed more than three years before applying may nominate professional referees. Reference requests are sent automatically as soon as referee details are entered into the form, not held until submission. GRE or PGAT scores are optional — KAUST says they are 'not a compulsory requirement' but that a strong score may enhance the application — and both are valid for five years. No application fee is stated on either the How to Apply page or the Entry Requirements page. Research areas relevant to an energy, materials or environmental direction include the Physical Science and Engineering division's Materials Science and Engineering & Applied Physics, Chemical Engineering, Mechanical Engineering and Earth System Science and Engineering programmes, and the Biological and Environmental Science and Engineering division's Environmental Science and Engineering programme."
+    },
+    "benefits": [
+      "Full tuition and bench fee coverage, worth up to USD $35,000 per year",
+      "A stipend of USD $20,000 per year for MS students, and USD $25,000 to $30,000 per year for PhD students depending on qualifications and academic progress",
+      "Base accommodation included — shared accommodation for single students and 2-bed accommodation for married students, with an optional upgrade subject to an additional fee",
+      "Health insurance for the student and eligible dependents living on campus",
+      "Relocation support covering visa, relocation and travel costs, for the initial move to KAUST and the return home on graduation",
+      "A stated total Fellowship value of USD $70,000 to $80,000 per year, depending on the student's situation",
+      "A Master's/PhD pathway that admits to both degrees at once, so the PhD can begin immediately after the MS"
+    ],
+    "official_url": "https://admissions.kaust.edu.sa/",
+    "description": "KAUST's fully funded graduate fellowship — the university's own route rather than a separate scheme applied for alongside admission: all admitted master's and PhD students receive it, with the exception KAUST itself flags for students holding external sponsorship. It is the first record in this catalog for Saudi Arabia, and it is unusual among the catalog's routes in being open to applicants of any nationality with no country quota. The Master's degree takes 1.5 years, or 2 years on the thesis track, across 36 credits; the PhD takes 4 years. The Fall 2027 deadline of 3 January 2027 is open to MS, MS/PhD and PhD applicants, while the Spring 2027 round was PhD-only and closed on 27 September 2026. The Fellowship covers tuition and bench fees up to USD $35,000 per year, a stipend of USD $20,000 a year for MS students and USD $25,000 to $30,000 for PhD students, accommodation, health insurance and relocation, for a stated total of USD $70,000 to $80,000 per year. The minimum GPA is 3.0 on a 4-point scale. Two things on KAUST's own pages need care: the stipend is described as monthly but only ever printed as an annual figure, and the TOEFL iBT requirement is printed as '5 overall', which is not a score the test can produce.",
+    "tags": [
+      "Saudi Arabia",
+      "phd",
+      "master",
+      "fully-funded",
+      "international",
+      "any-nationality",
+      "verified-deadline",
+      "engineering",
+      "materials-science",
+      "sustainability",
+      "stem",
+      "research",
+      "university"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "open",
+    "source_url": "https://admissions.kaust.edu.sa/how-to-apply/admission-timelines",
+    "last_verified": "2026-10-07"
   }
 ]
