@@ -66,6 +66,9 @@ workflow file. Keep it simple.
 | `src/chat.js` | The provider adapter: request shapes, replies, model discovery, errors (pure, unit-tested) |
 | `src/useAi.js` | AI connection state and the network calls (the only AI module that touches `fetch`) |
 | `src/AiSettings.jsx` | The AI settings view. Lazily loaded; the smoke test renders it directly. |
+| `src/ingest.js` | Reading the reader's documents: a zero-dependency DOCX/ZIP reader, the deterministic extractor, and the refusal paths (pure, unit-tested). Lazily loaded. |
+| `src/compare.js` | The three-valued requirement comparison — `meets` / `fails` / `unknown`, with `unknown` as the default (pure, unit-tested). |
+| `src/IngestPanel.jsx` | The document-reading surface on the profile page. Lazily loaded; the smoke test renders it directly. |
 | `data/scholarships.json` | Canonical scholarship catalog |
 | `data/scholarships.test.js` | Catalog validation tests |
 | `scripts/validate-catalog.mjs` | Standalone validation script |
@@ -73,7 +76,9 @@ workflow file. Keep it simple.
 | `docs/` | Architecture, schema, API notes, roadmap |
 | `.github/` | Issue templates, PR template, and `workflows/ci.yml` |
 
-**Keep decision logic in the pure modules, not in the component.** `eligibility.js` and `tracker.js` exist so that the two parts most likely to be subtly wrong — nationality rules and date arithmetic — can be unit-tested offline. Anything a test could pin down belongs there.
+**Keep decision logic in the pure modules, not in the component.** `eligibility.js`, `tracker.js`, `ingest.js` and `compare.js` exist so that the parts most likely to be subtly wrong — nationality rules, date arithmetic, and whether a document actually yielded a value — can be unit-tested offline. Anything a test could pin down belongs there.
+
+**Document reading: a refusal is a result.** `readDocument` never returns a blank document. An unreadable file, a scanned PDF, a binary named `.txt` and an empty extraction each produce an explicit outcome with a reason, because a blank profile reads as "this applicant has no GPA" — a different and false claim. Likewise `compareGpa` never defaults to `meets`: its default is `unknown`, and *"the provider states there is no threshold"* must never share a sentence with *"the catalog does not record one"*. Both rules are enforced by negative-control tests, and a test that only asserts a value is *absent* is not enough — it can pass with the guard removed.
 
 **Never add mount-time DOM access to `src/App.jsx`.** A module-level `createRoot(document.getElementById('root'))` is what made the component unloadable anywhere but a browser, and that is exactly why a `ReferenceError` in one view shipped undetected for six versions. `scripts/render-smoke.mjs` renders all six views against both an empty and a populated browser; `npm test` runs it. Note that `node --test` still reads only the catalog and the pure modules, and a successful build still proves only that an identifier is *referenced* — the render smoke test is the only thing that executes a view's branches.
 

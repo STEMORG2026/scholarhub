@@ -1,10 +1,12 @@
 # Reading the applicant's documents, and comparing them to requirements
 
-**Status:** design proposal, not implemented. Written 2026-10-07 after measuring what the catalog can actually support.
+**Status:** §1–§5 and the comparison engine in §6 are **implemented as of v0.28.0** — Phase 1, the part that was unblocked. §7's recommendations and Phase 2's catalog sourcing are not. Written 2026-10-07 after measuring what the catalog can actually support; Phase 1 built 2026-10-08.
 
 This answers one question: *how would ScholarHub read a reader's transcript and CV, extract the facts from them, compare those facts against what each institution requires, and then drive the tracker and the recommendations?*
 
 It is a design document rather than code because **the second half of that sentence is blocked on a data problem, not a programming one**, and building the extractor first would mean building on an unproven premise. The measurement is in §2.
+
+> **What v0.28.0 changed on the ground, and what it did not.** The extractor, the refusal paths and the three-valued comparison now exist and run in the browser — see `src/ingest.js`, `src/compare.js` and `src/IngestPanel.jsx`. The engine was written with `unknown` as the default precisely so that §6's verdicts would be **correct today and become useful later**: with a confirmed `3.62 / 4`, the live page reports **0 met · 0 not met · 50 not checkable**, and names the reason — 45 of 50 records record no GPA requirement. So §2's finding is no longer a claim in a document; it is what the product says to a reader. **§10's decision 1 — whether the catalog will carry requirements as data — is now the only thing standing between this and a comparison that can answer `meets` or `fails`.**
 
 ---
 

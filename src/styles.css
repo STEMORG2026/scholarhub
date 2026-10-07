@@ -489,3 +489,114 @@
   .ai-provider-grid{grid-template-columns:1fr}
   .ai-key-row{flex-direction:column;align-items:flex-start;gap:8px}
 }
+
+/* --- reading the reader's own documents (DOCUMENT-INGESTION.md §4) ---------
+   Everything here is a surface on the profile page. The colours follow the
+   existing system: the light values are inline, the dark values override, and
+   every pair below was checked against WCAG AA (4.5:1) in both themes — the
+   same discipline as the accessibility pass, because a "not checkable" verdict
+   that is hard to read is a verdict a reader will misread. */
+
+.ingest-drop{margin-bottom:14px}
+.ingest-drop input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.ingest-drop-label{display:flex;gap:12px;align-items:center;border:1.5px dashed #cdd7c9;border-radius:11px;padding:16px 15px;cursor:pointer;background:#f7faf6;transition:background .15s,border-color .15s}
+.ingest-drop-label:hover{background:#eef5ec;border-color:#9dba9a}
+.ingest-drop-label svg{color:#357353;flex:none}
+.ingest-drop-label b{display:block;font-size:12.5px;color:#2b322b}
+.ingest-drop-label em{display:block;font-style:normal;font-size:10.5px;color:#5f6a5f;margin-top:3px;line-height:1.5}
+.dark .ingest-drop-label{background:#26312a;border-color:#3c4a3e}
+.dark .ingest-drop-label:hover{background:#2c3a30;border-color:#4f6251}
+.dark .ingest-drop-label svg{color:#9ecfa9}
+.dark .ingest-drop-label b{color:#e9ede7}
+.dark .ingest-drop-label em{color:#a4afa4}
+
+.ingest-status{font-size:11px;color:#4d574d;background:#f2f5f0;border-radius:8px;padding:10px 12px;margin-bottom:12px}
+.ingest-status b{color:#2b322b}
+.dark .ingest-status{background:#232d26;color:#b6c1b6}
+.dark .ingest-status b{color:#e9ede7}
+
+.ingest-alert{display:flex;gap:10px;align-items:flex-start;border-radius:9px;padding:12px;font-size:10.5px;line-height:1.55;margin-bottom:14px}
+.ingest-alert.refused{background:#fdf3e3;border:1px solid #f0dfbb;color:#6b4f16}
+.ingest-alert.refused svg{color:#b4801f;flex:none;margin-top:1px}
+.ingest-alert.empty{background:#f2f5f0;border:1px solid #dfe7db;color:#42503f}
+.ingest-alert.empty svg{color:#5c7a58;flex:none;margin-top:1px}
+.dark .ingest-alert.refused{background:#3a3320;border-color:#4a4028;color:#e6d4ab}
+.dark .ingest-alert.refused svg{color:#e8c07a}
+.dark .ingest-alert.empty{background:#232d26;border-color:#334034;color:#c3cfc3}
+.dark .ingest-alert.empty svg{color:#9ecfa9}
+
+.proposal-list{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.proposal{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;border:1px solid #e2e8dd;border-radius:10px;padding:11px 13px;background:#fbfdfa}
+.proposal.invalid,.proposal.incomplete{border-color:#ecd9b4;background:#fdf8ef}
+.dark .proposal{background:#222c25;border-color:#333f35}
+.dark .proposal.invalid,.dark .proposal.incomplete{background:#332e21;border-color:#4a4028}
+.proposal-main{display:flex;flex-direction:column;gap:3px;min-width:0}
+.proposal-main b{font-size:12.5px;color:#2b322b}
+.dark .proposal-main b{color:#e9ede7}
+.proposal-kicker{font-size:9px;letter-spacing:.7px;text-transform:uppercase;color:#5f6a5f;font-weight:700}
+.dark .proposal-kicker{color:#a4afa4}
+.proposal-span{font-style:normal;font-size:10px;color:#4d574d;background:#eef3ec;border-radius:6px;padding:4px 7px;word-break:break-word}
+.dark .proposal-span{color:#c3cfc3;background:#2b382e}
+.proposal-note{font-style:normal;font-size:10px;color:#7d5314;line-height:1.5}
+.dark .proposal-note{color:#dfbd77}
+.proposal-sub{font-style:normal;font-size:10px;color:#4d574d}
+.dark .proposal-sub{color:#b6c1b6}
+.proposal-actions{flex:none;display:flex;align-items:center}
+.proposal-cannot{font-size:10px;color:#7d5314;white-space:nowrap}
+.dark .proposal-cannot{color:#dfbd77}
+.proposal-actions .outline-btn{gap:6px;white-space:nowrap}
+
+/* A confirmed value is visually separated from a typed one, because the two are
+   different kinds of claim: one the reader typed, one ScholarHub read and the
+   reader checked. */
+.confirmed-strip{border:1px solid #dbe7d7;background:#f4faf2;border-radius:10px;padding:12px 13px;margin-bottom:14px}
+.dark .confirmed-strip{background:#26332a;border-color:#37473a}
+.confirmed-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+.confirmed-head svg{color:#357353;flex:none}
+.confirmed-head b{font-size:11.5px;color:#2b322b}
+.confirmed-head span{font-size:10px;color:#5f6a5f}
+.dark .confirmed-head svg{color:#9ecfa9}
+.dark .confirmed-head b{color:#e9ede7}
+.dark .confirmed-head span{color:#a4afa4}
+.confirmed-chips{display:flex;flex-wrap:wrap;gap:8px}
+.confirmed-chip{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #d7e4d3;border-radius:20px;padding:5px 7px 5px 12px;font-size:11px;color:#33402f}
+.confirmed-chip b{font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;color:#5c7a58}
+.confirmed-chip em{font-style:normal;font-size:9px;color:#6a7568;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.confirmed-chip button{display:grid;place-items:center;width:18px;height:18px;border:0;border-radius:50%;background:#eef3ec;color:#5f6a5f;flex:none}
+.confirmed-chip button:hover{background:#e0e9dd;color:#2b322b}
+.dark .confirmed-chip{background:#202a24;border-color:#37473a;color:#dfe7de}
+.dark .confirmed-chip b{color:#9ecfa9}
+.dark .confirmed-chip em{color:#98a398}
+.dark .confirmed-chip button{background:#2c3a30;color:#b6c1b6}
+.dark .confirmed-chip button:hover{background:#37473a;color:#e9ede7}
+
+.gpa-compare{border:1px solid #e2e8dd;border-radius:10px;padding:12px 13px;margin-bottom:14px;background:#fbfdfa}
+.dark .gpa-compare{background:#222c25;border-color:#333f35}
+.gpa-compare-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.gpa-compare-head b{font-size:11.5px;color:#2b322b}
+.gpa-compare-head span{font-size:10px;color:#4d574d}
+.dark .gpa-compare-head b{color:#e9ede7}
+.dark .gpa-compare-head span{color:#b6c1b6}
+.gpa-compare-lede{margin:0;font-size:10.5px;line-height:1.6;color:#4d574d}
+.gpa-compare-lede em{font-style:normal;font-weight:700;color:#33402f}
+.dark .gpa-compare-lede{color:#b6c1b6}
+.dark .gpa-compare-lede em{color:#dfe7de}
+
+/* Three verdicts, three treatments — and `unknown` is deliberately neutral, not
+   red. A requirement ScholarHub cannot read is not a failure by the applicant,
+   and colouring it as one would be the same lie as calling it a pass. */
+.gpa-verdict{display:inline-block}
+.gpa-meets{color:#2f6b47}
+.gpa-fails{color:#a8382f}
+.gpa-unknown{color:#6a5a2e}
+.dark .gpa-meets{color:#9ecfa9}
+.dark .gpa-fails{color:#f0a99f}
+.dark .gpa-unknown{color:#dfc48a}
+.gpa-quote{color:#4d574d}
+.dark .gpa-quote{color:#a4afa4}
+
+@media(max-width:640px){
+  .proposal{flex-direction:column;align-items:stretch;gap:9px}
+  .proposal-actions{justify-content:flex-end}
+  .gpa-compare-head{flex-direction:column;align-items:flex-start;gap:3px}
+}

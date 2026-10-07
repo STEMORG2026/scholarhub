@@ -63,6 +63,12 @@ The document checklist on the profile page — what is present, what is not, and
 
 ![The same checklist in the dark theme](docs/screenshots/documents-dark.png)
 
+Reading your own documents — attach a transcript or CV and ScholarHub reads the figures out of it on this device, showing each one beside the text it came from so you can confirm or correct it. Nothing is uploaded, and a value is only used once you confirm it:
+
+![The document-reading panel in the light theme, showing three confirmed values with their source file and a comparison strip reading 0 met, 0 not met, 50 not checkable](docs/screenshots/ingest-light.png)
+
+![The same panel in the dark theme](docs/screenshots/ingest-dark.png)
+
 Connecting your own model — 21 providers grouped by how they work, each declaring how it authenticates:
 
 ![The AI settings page in the light theme, showing frontier labs, inference providers, local runtimes and a signed-in session provider](docs/screenshots/ai-settings-light.png)

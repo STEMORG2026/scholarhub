@@ -93,6 +93,39 @@ const SCENARIOS = [
       settings: ['Loading AI settings'],
     },
   },
+  {
+    // The document-ingestion branch. A profile carrying a *confirmed* GPA is
+    // the only state in which the comparison strip and the per-record GPA row
+    // render at all, so without this scenario the whole of §6 of the design
+    // document would sit outside the one check that executes a view's branches.
+    name: 'a confirmed GPA from a document',
+    storage: {
+      'sh-saved': JSON.stringify([dated.id]),
+      'sh-tracker': JSON.stringify({ [dated.id]: { status: 'preparing', addedAt: '2026-01-01' } }),
+      'sh-docs': JSON.stringify([]),
+      'sh-profile': JSON.stringify({
+        field: 'Civil Engineering',
+        degree: 'Master',
+        nationality: 'Nepal',
+        gpa: '3.62 / 4',
+        gpaValue: { value: 3.62, scale: 4, from: 'transcript.docx' },
+        languageValue: { instrument: 'ielts', value: 7, subs: [{ skill: 'L', value: 7.5 }], from: 'transcript.docx' },
+        classification: { value: 'first', label: 'First Class', from: 'transcript.docx' },
+      }),
+    },
+    expect: {
+      discover: ['Find funding for'],
+      saved: [dated.name],
+      tracker: [dated.name],
+      // The confirmed-value chips and the comparison strip both render inside
+      // the lazily-loaded document panel, so the profile view in this pass
+      // holds only the profile form and the panel's Suspense fallback. The
+      // panel's own cases below assert the rest.
+      profile: ['Your study goals', 'Application documents'],
+      assistant: ['Where would you like to begin?'],
+      settings: ['Loading AI settings'],
+    },
+  },
 ];
 
 const VIEWS = ['discover', 'saved', 'tracker', 'profile', 'assistant', 'settings'];
@@ -148,6 +181,48 @@ try {
   await server.close();
   process.exit(1);
 }
+
+// The document-ingestion panel is also lazy, so `App` on the profile view only
+// reaches its fallback. Render it directly too — `React.lazy` +
+// `renderToStaticMarkup` renders the fallback, which would silently drop this
+// surface from the one check that executes a view's branches.
+let IngestPanel;
+try {
+  ({ default: IngestPanel } = await server.ssrLoadModule('/src/IngestPanel.jsx'));
+} catch (error) {
+  console.error('\nRender smoke test could not load the document panel:\n');
+  console.error(error);
+  await server.close();
+  process.exit(1);
+}
+
+function noop() {}
+
+const INGEST_CASES = [
+  {
+    name: 'document panel — nothing attached and nothing confirmed',
+    props: {},
+    expect: ['Read a document yourself', 'Choose a document', '.docx and plain text are read here'],
+  },
+  {
+    name: 'document panel — a confirmed value from a document',
+    props: {
+      currentGpa: { value: 3.62, scale: 4, from: 'transcript.docx' },
+      currentLanguage: { instrument: 'ielts', value: 7, subs: [], from: 'transcript.docx' },
+      currentClassification: { value: 'first', label: 'First Class', from: 'transcript.docx' },
+      records: scholarships,
+    },
+    expect: [
+      'Confirmed from a document',
+      '3.62 / 4',
+      'IELTS',
+      'First Class',
+      // The three-valued comparison, which only renders with a confirmed GPA.
+      'Your confirmed GPA against the catalog',
+      'not checkable',
+    ],
+  },
+];
 
 function AiHarness() {
   const ai = useAi();
@@ -248,6 +323,23 @@ for (const scenario of AI_CASES) {
   }
 }
 
+// --- the document-ingestion panel, rendered directly ------------------------
+for (const scenario of INGEST_CASES) {
+  store.clear();
+  let html;
+  try {
+    html = renderToStaticMarkup(React.createElement(IngestPanel, { onConfirm: noop, onClear: noop, ...scenario.props }));
+  } catch (error) {
+    failures.push(`${scenario.name}: threw ${error.constructor.name}: ${error.message}`);
+    continue;
+  }
+  rendered += 1;
+  const text = decode(html);
+  for (const needle of scenario.expect) {
+    if (!text.includes(needle)) failures.push(`${scenario.name}: expected to find ${JSON.stringify(needle)}`);
+  }
+}
+
 // A stored key must reach exactly one place: the password field the reader
 // types into. That field's own `value` is not a leak — a controlled input has to
 // hold it, and it is masked on screen — but the key must never reach visible
@@ -287,5 +379,5 @@ if (failures.length) {
 }
 
 console.log(
-  `Render smoke test passed: ${rendered} renders across ${VIEWS.length} views × ${SCENARIOS.length} scenarios plus ${AI_CASES.length} AI-settings cases, 0 uncaught errors.`,
+  `Render smoke test passed: ${rendered} renders (${VIEWS.length} views × ${SCENARIOS.length} scenarios, ${AI_CASES.length} AI-settings cases, ${INGEST_CASES.length} document-panel cases, 1 key-leak check), 0 uncaught errors.`,
 );
