@@ -38,12 +38,16 @@ jobs:
     name: verify
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # v5 is the major that targets the Node 24 runtime. v4 targets Node 20,
+      # which GitHub is now force-running on 24 and warning about on every run
+      # ("Node.js 20 is deprecated … actions/checkout@v4 … being forced to run on
+      # Node.js 24"). The warning was observed in run 37584032698.
+      - uses: actions/checkout@v5
 
       # Pinned to the major version this project is developed on (local Node is
       # 24). A floating `lts/*` would let the CI runtime drift away from the
       # developer's, which quietly invalidates local predictions.
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
           cache: npm
