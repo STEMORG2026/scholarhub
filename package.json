@@ -7,7 +7,8 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "node --test && node scripts/validate-catalog.mjs",
+    "test": "node --test && node scripts/validate-catalog.mjs && node scripts/render-smoke.mjs",
+    "test:render": "node scripts/render-smoke.mjs",
     "validate": "node scripts/validate-catalog.mjs",
     "check:links": "node scripts/validate-catalog.mjs --links"
   },
