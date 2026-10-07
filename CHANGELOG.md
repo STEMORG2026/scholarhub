@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.15.0] - 2026-10-07
+
+### Added
+
+One China record, catalog 42 → **43** and China 4 → **5**: the **ANSO-CAS-TWAS/UNESCO PhD Scholarship**, which was carried as a lead in 0.14.0 and is now resolved on evidence rather than left hanging.
+
+- **ANSO-CAS-TWAS/UNESCO PhD Scholarship** — up to 40 PhD students a year from developing countries study in China for up to four years, funded jointly by ANSO, the Chinese Academy of Sciences and TWAS/UNESCO. Tuition, health insurance and the application fee are waived, the monthly stipend is CNY 6,000 or 7,000 for up to 48 months, and the award includes one return international travel allowance and a one-time visa allowance. Study is hosted at UCAS, USTC or a CAS institute. **Ten of the forty places are prioritised for climate-related research**, the closest thing in this catalog to a funding route aimed at the sustainability side of civil engineering.
+
+### Notes
+
+- **Nepal's eligibility was the blocker in 0.14.0, and it is now settled.** The scholarship page delegates eligibility to TWAS's developing-country list rather than naming countries, so the list itself was read: **Nepal is entry 088 of 138**. That is what turned the lead into a record.
+- **No deadline is recorded, and the reason is not laziness.** TWAS labels the call "The call is closed". The 2026 cycle opened 15 October 2025 and closed 31 January 2026, and that is the only cycle any page describes. The 2027 call had not been published when this record was checked on 2026-10-07. The pattern across cycles is a mid-October opening — but a pattern is not a date, and writing the expected date into `deadline` would have produced a fabrication wearing a citation. `deadline` is `null`, `status` is `closed`, and `deadline_notes` carries the cycle, the pattern and a re-check prompt.
+- **A CAS-ANSO call page published on 22 July 2026 was checked and did not help.** It still reproduces the 15 October 2025 – 31 January 2026 window, so it is not evidence of a new cycle either. A page can be freshly published and still describe a closed call.
+- **The record does not claim civil engineering, because the source does not.** The scheme names ten umbrella fields and "06-Engineering Sciences" is the only engineering one; civil engineering, environmental engineering and materials science are not named as separate disciplines, and the host route is UCAS/USTC/CAS institutes rather than a named civil-engineering faculty. `program_field` therefore carries `["Engineering Sciences"]` — the exact named field — and `eligibility.other` tells the applicant to confirm the intended field with a specific host supervisor. "Civil Engineering" would have matched the four existing China records, and would have been invented.
+- **The CAS-TWAS President's Fellowship was excluded again, on the same evidence as before plus one new fact.** Its only primary page found is the **2017** cycle — "maximum age of 35 years on 31 December 2017", deadline "31 MARCH 2017" — sitting on an official UCAS domain, which is precisely what makes it dangerous: an authoritative-looking page describing a nine-year-old call. Both plausible TWAS URLs for it now return **404**, and it does not appear on TWAS's current PhD fellowship index at all. Third-party aggregators claim a 2027 call is open; they are not citable and the claim could not be traced to a primary source.
+- **README carried an internal contradiction and it is fixed.** The same paragraph said "six records carry a single verified closing date" in one sentence and "Seven records carry a single verified closing date" in the next. The catalog was counted: **seven** is correct.
+- Link probe: **71 checked, 0 dead**; the new TWAS URL returns `OK [200]`. The unreachable count was 7 this run, inside the 6–7 range recorded in 0.13.0 — unchanged, and still not worth quoting as a fixed number.
+
 ## [0.14.0] - 2026-10-07
 
 ### Added

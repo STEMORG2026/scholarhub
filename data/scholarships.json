@@ -1611,5 +1611,61 @@
     "status": "closed",
     "source_url": "https://usefnepal.org/fulbright/humphrey/program-description/",
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "anso-cas-twas-unesco-phd",
+    "name": "ANSO-CAS-TWAS/UNESCO PhD Scholarship",
+    "provider": "Alliance of International Science Organizations (ANSO), Chinese Academy of Sciences (CAS) and TWAS/UNESCO",
+    "country": "China",
+    "region": "Multiple cities",
+    "city": "Beijing (UCAS), Hefei (USTC) and institutes of the Chinese Academy of Sciences across China",
+    "university": "University of Chinese Academy of Sciences (UCAS), University of Science and Technology of China (USTC) and institutes of the Chinese Academy of Sciences (CAS)",
+    "program_field": [
+      "Engineering Sciences"
+    ],
+    "degree_level": [
+      "PhD"
+    ],
+    "funding_type": "Full funding — tuition waiver, monthly stipend, health insurance, plus travel and visa allowances",
+    "amount": "Monthly stipend of CNY 6,000 or 7,000, paid for up to 48 months; the higher rate applies once the awardee passes the qualification test set by the host university. Tuition is waived, health insurance and the application fee are covered, and the award includes one return international travel allowance and a one-time visa/residence permit allowance. CAS funds the tuition, stipend, insurance and application fee; TWAS/UNESCO funds the travel and visa allowances.",
+    "currency": "CNY",
+    "deadline": null,
+    "deadline_notes": "TWAS labels this call \"The call is closed\". The 2026 cycle opened on 15 October 2025 and closed on 31 January 2026 (Beijing time), and that is the only cycle the pages describe. The 2027 call had not been published when this record was checked on 7 October 2026, so no deadline is recorded here: the pattern across cycles is a mid-October opening, but a pattern is not a date, and inventing the date would be worse than leaving it empty. A CAS-ANSO Scholarship (Degree Program) call page published on 22 July 2026 was also checked and still describes the same 15 October 2025 to 31 January 2026 window, so it is not evidence of a new cycle either. Worth re-checking in mid-October.",
+    "duration": "Up to 4 years; the stipend is paid for up to 48 months",
+    "eligibility": {
+      "nationality": [
+        "Nationals of developing countries in the South — Nepal appears on TWAS's developing-countries list (entry 088 of 138), so Nepali applicants are eligible",
+        "Applicants must NOT hold Chinese citizenship"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {
+        "chinese": "Not required, but proof of knowledge of Chinese is accepted",
+        "english": "Proof of proficiency in English or Chinese is required; the call names no specific test or score"
+      },
+      "age_limit": "35 — PhD applicants must be born on or after 1 January 1991 (inclusive)",
+      "other": "The scheme names ten umbrella fields and \"06-Engineering Sciences\" is the only engineering one; civil engineering, environmental engineering and materials science are not named as separate disciplines, and the host route is UCAS, USTC and CAS institutes rather than a named civil-engineering faculty — so an applicant should confirm the intended field with a specific host supervisor rather than rely on this record alone. Applicants must not already be pursuing a doctoral degree at any institution in China, must hold an MSc, and may not apply to USTC and UCAS at the same time. The call states that special, non-exclusive consideration is given to applicants from Least Developed Countries and to women, and that 10 of the 40 places are prioritised for climate-related research. Awardees may not take up other assignments during the scholarship."
+    },
+    "benefits": [
+      "Tuition fee waiver",
+      "Monthly stipend of CNY 6,000 or 7,000 for up to 48 months",
+      "Health insurance",
+      "Application fee waiver",
+      "One return international travel allowance from the home country to China",
+      "One-time visa/residence permit allowance",
+      "10 of the 40 places each year are prioritised for climate-related research"
+    ],
+    "official_url": "https://twas.org/opportunity/anso-cas-twasunesco-phd-scholarship",
+    "description": "A doctoral scholarship that places up to 40 students a year from developing countries into a Chinese PhD, funded jointly by ANSO, the Chinese Academy of Sciences and TWAS/UNESCO. It is a sub-category of the CAS-ANSO Scholarship (Degree Program) and was launched in 2022. Study is hosted at the University of Chinese Academy of Sciences (UCAS), the University of Science and Technology of China (USTC) or an institute of the Chinese Academy of Sciences, for up to four years. Nepal is on TWAS's developing-country list, so Nepali applicants qualify, and 10 of the 40 places are set aside for climate-related research.",
+    "tags": [
+      "China",
+      "phd",
+      "developing-countries",
+      "full-funding",
+      "climate"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "closed",
+    "source_url": "https://twas.org/opportunity/anso-cas-twasunesco-phd-scholarship",
+    "last_verified": "2026-10-07"
   }
 ]
