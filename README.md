@@ -27,8 +27,11 @@ The distinction the catalog refuses to blur: **some schemes are answerable and s
 - **Document checklist** on the profile page — tick off the documents you already have and see exactly which are still missing. It is degree-aware: a research proposal is required of a PhD goal and shown as optional for a Master's.
 - Honest about the gaps: 13 of the 50 records carry a single verified closing date. The rest say *"No single closing date"* and keep their note — the tracker never invents one, and never drops a programme just because its window is unstated.
 - Reminders stay on the device. Countdowns are computed from the catalog and your own clock; there is no notification permission, no service worker, and nothing runs while the tab is closed.
-- Offline assistant guide for search planning; it does not call a model or claim to verify eligibility.
-- AI settings placeholder. No API key is stored or transmitted; provider adapters and model testing are not implemented yet.
+- **Connect your own AI model** — 21 providers across frontier labs (OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Cohere), inference providers (OpenRouter, Groq, Together, Fireworks, DeepInfra, Cerebras, or any OpenAI-compatible endpoint), and local runtimes (Ollama, LM Studio, llama.cpp, vLLM, Jan, LocalAI). Requests go from your browser straight to the provider you chose; there is no ScholarHub server and no proxy.
+- **Your key stays yours.** It is held in memory for the tab by default, and only written to this device if you tick a box that says so. It is never put in a request body, a log line, or an error message.
+- **Model lists are read from the provider, not hard-coded** — a roster is stale within weeks. The small seeded list carries the URL each entry came from and the date it was read, and shows a dash wherever the source published nothing.
+- **Antigravity (AGY) is explained, not faked.** It signs in through the local `agy` CLI, which a web page cannot reach, so the settings page says that and gives you the two routes that do work — the Gemini API, or a local OpenAI-compatible gateway in front of the CLI.
+- **Offline assistant guide** by default: search planning from the catalog with no model involved. Connect a provider and it answers through your own model, grounded in the catalog and labelled as a model answer rather than catalog data.
 - JSON catalog and schema documentation designed for community contributions.
 
 ## Demo / screenshots
@@ -56,6 +59,22 @@ The document checklist on the profile page — what is present, what is not, and
 ![The application documents checklist in the light theme, showing 7 of 10 documents ready with three flagged as not present](docs/screenshots/documents-light.png)
 
 ![The same checklist in the dark theme](docs/screenshots/documents-dark.png)
+
+Connecting your own model — 21 providers grouped by how they work, each declaring how it authenticates:
+
+![The AI settings page in the light theme, showing frontier labs, inference providers, local runtimes and a signed-in session provider](docs/screenshots/ai-settings-light.png)
+
+![The same provider list in the dark theme](docs/screenshots/ai-settings-dark.png)
+
+A selected provider, with the model list, the limits and prices it publishes, and a real connection test:
+
+![The OpenAI provider panel in the light theme, showing the API key field, a seeded model with its context window and price, and a Test connection button](docs/screenshots/ai-provider-light.png)
+
+![The same provider panel in the dark theme](docs/screenshots/ai-provider-dark.png)
+
+Antigravity signs in through a local CLI, which a browser cannot reach — so the page explains that and gives the routes that work, rather than a login form that could never succeed:
+
+![The Antigravity connect panel explaining that it authenticates through the agy CLI, with two alternative routes: the Gemini API, or a local OpenAI-compatible gateway](docs/screenshots/ai-antigravity-light.png)
 
 Run the development server (`npm run dev`) to try it locally.
 
@@ -116,6 +135,7 @@ There is no login. Profile and shortlist data are stored in localStorage in the 
 - [ ] Expand to 15–25 **individually verified** active/relevant entries per requested country or region.
 - [ ] Add verified program/field coverage and regular human review of dates and terms.
 - [x] Accessibility tested and screenshots added: WCAG AA contrast measured in both themes, visible keyboard focus, a focus-trapped dialog that closes on Escape, labelled controls and live regions (2026-10-07).
+- [x] Bring your own AI model: 21 providers across frontier labs, inference providers, local runtimes and one CLI-session provider, with runtime model discovery, a real connection test and declared auth kinds (2026-10-07).
 
 ### Phase 2 — planned
 - [x] Add Canada and Japan — Canada Graduate Research Scholarship – Doctoral, and the Japanese Government (MEXT) Research Student scholarship (2026-10-07).
@@ -125,6 +145,7 @@ There is no login. Profile and shortlist data are stored in localStorage in the 
 
 ### Phase 3 — planned
 - Community-maintained review cadence, optional update feeds, applicant experiences, and multilingual UI. Automated data collection must be reviewed by humans and respect source terms.
+- AI: streaming replies, per-request cost accounting, and a model fallback when one is unavailable. The connection, model discovery and a working assistant are done; these three are not.
 
 ## License
 

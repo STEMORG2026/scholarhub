@@ -63,7 +63,7 @@ const SCENARIOS = [
       tracker: ['Nothing tracked yet'],
       profile: ['Application documents', 'Your study goals'],
       assistant: ['Where would you like to begin?'],
-      settings: ['Choose a provider'],
+      settings: ['Loading AI settings'],
     },
   },
   {
@@ -90,7 +90,7 @@ const SCENARIOS = [
       tracker: [dated.name, undated.name],
       profile: ['Application documents', 'of 10 ready'],
       assistant: ['Where would you like to begin?'],
-      settings: ['Choose a provider'],
+      settings: ['Loading AI settings'],
     },
   },
 ];
@@ -132,6 +132,64 @@ try {
   process.exit(1);
 }
 
+// The AI settings view is lazily loaded in the browser, so rendering `App` on
+// the settings view only reaches its Suspense fallback. Render it here directly,
+// with the real `useAi` hook, so that taking it off the main bundle does not
+// also take it out of reach of this test. The hook is real rather than a stub,
+// so a change to its contract cannot drift silently past this file.
+let AiSettings;
+let useAi;
+try {
+  ({ default: AiSettings } = await server.ssrLoadModule('/src/AiSettings.jsx'));
+  ({ useAi } = await server.ssrLoadModule('/src/useAi.js'));
+} catch (error) {
+  console.error('\nRender smoke test could not load the AI settings view:\n');
+  console.error(error);
+  await server.close();
+  process.exit(1);
+}
+
+function AiHarness() {
+  const ai = useAi();
+  return React.createElement(AiSettings, { ai });
+}
+
+/**
+ * One case per auth kind, because the auth panel is the part of this view that
+ * changes shape — a key, no key, and a CLI session that a browser cannot reach.
+ * If any of those branches throws, the settings page is blank for that reader.
+ */
+const AI_CASES = [
+  {
+    name: 'AI settings — nothing configured',
+    storage: {},
+    expect: ['Choose a provider', 'Frontier labs', 'Inference providers', 'Local runtimes', 'Signed-in session'],
+  },
+  {
+    name: 'AI settings — a hosted provider (API key)',
+    storage: { 'sh-ai': JSON.stringify({ providerId: 'openai', baseUrl: '', model: 'gpt-6-astra', rememberKey: false }) },
+    expect: ['OpenAI', 'API key', 'gpt-6-astra', 'api.openai.com', 'Get a key'],
+  },
+  {
+    name: 'AI settings — a local runtime (no key)',
+    storage: { 'sh-ai': JSON.stringify({ providerId: 'ollama', baseUrl: '', model: '', rememberKey: false }) },
+    expect: ['Ollama', 'No credential needed', 'localhost:11434'],
+  },
+  {
+    name: 'AI settings — the CLI-session provider',
+    storage: { 'sh-ai': JSON.stringify({ providerId: 'antigravity', baseUrl: '', model: '', rememberKey: false }) },
+    expect: ['Antigravity', 'signs in through a CLI', 'antigravity-preview-09-2026', 'localhost:4000'],
+  },
+  {
+    name: 'AI settings — a key remembered on the device',
+    storage: {
+      'sh-ai': JSON.stringify({ providerId: 'anthropic', baseUrl: '', model: 'claude-opus-5-5', rememberKey: true }),
+      'sh-ai-key': JSON.stringify('sk-ant-not-a-real-key'),
+    },
+    expect: ['Anthropic', 'claude-opus-5-5', 'local storage'],
+  },
+];
+
 const failures = [];
 let rendered = 0;
 
@@ -163,6 +221,55 @@ for (const scenario of SCENARIOS) {
   }
 }
 
+// --- the AI settings view, rendered directly --------------------------------
+for (const scenario of AI_CASES) {
+  store.clear();
+  for (const [key, value] of Object.entries(scenario.storage)) store.set(key, value);
+
+  let html;
+  try {
+    html = renderToStaticMarkup(React.createElement(AiHarness));
+  } catch (error) {
+    failures.push(`${scenario.name}: threw ${error.constructor.name}: ${error.message}`);
+    continue;
+  }
+
+  rendered += 1;
+  const text = decode(html);
+  for (const needle of scenario.expect) {
+    if (!text.includes(needle)) failures.push(`${scenario.name}: expected to find ${JSON.stringify(needle)}`);
+  }
+}
+
+// A stored key must reach exactly one place: the password field the reader
+// types into. That field's own `value` is not a leak — a controlled input has to
+// hold it, and it is masked on screen — but the key must never reach visible
+// text, a title, an aria-label, a placeholder, or anything else a screenshot,
+// a screen reader or a copied page would expose.
+const SECRET = 'sk-ant-SECRET-DO-NOT-RENDER';
+store.clear();
+store.set('sh-ai', JSON.stringify({ providerId: 'anthropic', baseUrl: '', model: 'claude-opus-5-5', rememberKey: true }));
+store.set('sh-ai-key', JSON.stringify(SECRET));
+try {
+  const html = renderToStaticMarkup(React.createElement(AiHarness));
+  rendered += 1;
+
+  const escaped = SECRET.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const withoutFieldValue = html.replace(new RegExp(`value="${escaped}"`, 'g'), 'value="[the field itself]"');
+
+  if (withoutFieldValue.includes(SECRET)) {
+    failures.push('AI settings: the key reached an attribute or a text node other than the password field it belongs to');
+  }
+  if (withoutFieldValue.replace(/<[^>]*>/g, ' ').includes(SECRET)) {
+    failures.push('AI settings: the key was rendered as visible text');
+  }
+  if (!html.includes('type="password"')) {
+    failures.push('AI settings: the field holding a remembered key is not a password input');
+  }
+} catch (error) {
+  failures.push(`AI settings (key leak check): threw ${error.message}`);
+}
+
 await server.close();
 
 if (failures.length) {
@@ -173,5 +280,5 @@ if (failures.length) {
 }
 
 console.log(
-  `Render smoke test passed: ${rendered} renders across ${VIEWS.length} views × ${SCENARIOS.length} scenarios, 0 uncaught errors.`,
+  `Render smoke test passed: ${rendered} renders across ${VIEWS.length} views × ${SCENARIOS.length} scenarios plus ${AI_CASES.length} AI-settings cases, 0 uncaught errors.`,
 );

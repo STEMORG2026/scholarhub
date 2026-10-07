@@ -325,3 +325,149 @@
   .alert-banner{padding:12px}
   .doc-tag{display:none}
 }
+
+/* --- AI providers, models and auth (v0.26.0) --------------------------------
+   The settings page is the one view whose shape depends on data: the auth panel
+   is different for an API key, for a local server that needs none, and for a CLI
+   session that a browser cannot reach at all. Every colour pair below was
+   measured against its own surface and clears 4.5:1 in both themes. */
+
+.ai-card{max-width:720px}
+.ai-card + .ai-card{margin-top:16px}
+
+/* A pre-existing defect this view exposed. `.privacy-note` is the one surface
+   the earlier dark-mode pass missed: it kept its light background (#f2f6ee) in
+   dark mode, so it read as a bright patch on a dark card AND its text measured
+   4.01:1 — under WCAG AA. It appears on the profile page too. Measured and
+   fixed 2026-10-07. */
+.dark .privacy-note{background:#2b3a2e;border-color:#35483a;color:#a9c9a9} /* 6.65:1 */
+.dark .privacy-note strong{color:#c1dfbf}                                   /* 8.34:1 */
+
+.ai-category{margin-bottom:18px}
+.ai-category:last-child{margin-bottom:0}
+.ai-category-head{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;margin-bottom:9px;color:#686f66}
+.ai-category-head svg{flex-shrink:0;align-self:center}
+.ai-category-head b{font-size:11px;font-weight:700;color:var(--ink)}
+.ai-category-head span{font-size:9.5px;line-height:1.5}
+.dark .ai-category-head{color:#a4afa4}
+
+.ai-provider-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px}
+.ai-provider{display:grid;gap:3px;text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:9px;padding:9px 11px;cursor:pointer;transition:border .2s,background .2s}
+.ai-provider b{font-size:11px;font-weight:600;color:var(--ink)}
+.ai-provider span{font-size:9px;color:#686f66}
+.ai-provider:hover{border-color:#cbd9c7}
+.ai-provider.selected{background:var(--sage);border-color:transparent}
+.ai-provider.selected b{color:#357353}
+.ai-provider.selected span{color:#4c7653}
+.dark .ai-provider span{color:#a4afa4}
+.dark .ai-provider:hover{border-color:#4d6353}
+.dark .ai-provider.selected{background:#2e4534}
+.dark .ai-provider.selected b{color:#9ecfa9}
+.dark .ai-provider.selected span{color:#a9c9a9}
+
+.ai-empty{display:flex;gap:10px;align-items:flex-start;font-size:10.5px;line-height:1.55;color:#6b4f16;background:#fbf1de;border-color:#f0dfbb}
+.ai-empty svg{flex-shrink:0;color:#b8801f}
+.dark .ai-empty{background:#3a3320;border-color:#4a4028;color:#e6d4ab}
+.dark .ai-empty svg{color:#e8c07a}
+
+/* Where a request actually goes. Shown before anything is sent, never after. */
+.ai-egress{display:flex;gap:9px;align-items:flex-start;background:#f2f6ee;border:1px solid #e8efe3;border-radius:8px;padding:11px;font-size:10.5px;line-height:1.55;color:#4b6f4e;margin-bottom:16px}
+.ai-egress svg{flex-shrink:0;margin-top:1px}
+.dark .ai-egress{background:#2b3a2e;border-color:#35483a;color:#a9c9a9}
+
+.ai-hint{font-size:9.5px;line-height:1.55;color:#686f66;margin:7px 0 0}
+.ai-hint b{color:#8a5a12}
+.dark .ai-hint{color:#a4afa4}
+.dark .ai-hint b{color:#e8c07a}
+
+/* --- auth panels ----------------------------------------------------------- */
+.ai-auth{margin:18px 0;border:1px solid var(--line);border-radius:10px;padding:14px}
+.ai-auth p{font-size:10.5px;line-height:1.6;margin:0;color:var(--ink)}
+.ai-auth-none{display:flex;gap:10px;align-items:flex-start;background:var(--wash)}
+.ai-auth-none svg{flex-shrink:0;color:#357353}
+.ai-auth-none p{margin-top:4px;color:#686f66}
+.dark .ai-auth-none svg{color:#9ecfa9}
+.dark .ai-auth-none p{color:#a4afa4}
+
+.ai-auth-cli{background:#fbf1de;border-color:#f0dfbb;color:#6b4f16}
+.ai-auth-cli p{color:#6b4f16}
+.ai-auth-head{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.ai-auth-head svg{color:#b8801f;flex-shrink:0}
+.ai-auth-head strong{font-size:11.5px;font-weight:700}
+.ai-auth-foot{margin-top:11px!important;font-size:10px!important;opacity:.9}
+.ai-routes{display:grid;gap:8px;margin-top:11px}
+.ai-route{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px;display:grid;gap:4px}
+.ai-route b{font-size:10.5px;font-weight:700;color:var(--ink)}
+.ai-route span{font-size:10px;line-height:1.55;color:#686f66}
+.ai-route code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9.5px}
+.dark .ai-auth-cli{background:#3a3320;border-color:#4a4028;color:#e6d4ab}
+.dark .ai-auth-cli p{color:#e6d4ab}
+.dark .ai-auth-head svg{color:#e8c07a}
+.dark .ai-route{background:#1c2420;border-color:#2f3a33}
+.dark .ai-route span{color:#a4afa4}
+
+.ai-key-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px}
+.ai-check{display:inline-flex;align-items:center;gap:7px;font-size:10px;color:#686f66;cursor:pointer}
+.ai-check input{width:14px;height:14px;accent-color:#51815f}
+.ai-link{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:#357353;text-decoration:none}
+.ai-link:hover{text-decoration:underline}
+.ai-key-note{font-size:9.5px;line-height:1.55;color:#686f66;margin-top:9px}
+.dark .ai-check,.dark .ai-key-note{color:#a4afa4}
+.dark .ai-link{color:#9ecfa9}
+
+/* --- models ---------------------------------------------------------------- */
+.ai-models{border-top:1px solid var(--line);padding-top:16px;margin-top:4px}
+.ai-models-head{display:flex;align-items:flex-end;gap:12px}
+.ai-model-label{flex:1;margin:0!important}
+.ai-model-label select{max-width:none;width:100%}
+.ai-discovery{display:flex;gap:6px;align-items:flex-start;font-size:9.5px;line-height:1.55;margin:9px 0 0;color:#686f66}
+.ai-discovery svg{flex-shrink:0;margin-top:1px}
+.ai-discovery-ok{color:#357353}
+.ai-discovery-error{color:#8a5a12}
+.dark .ai-discovery{color:#a4afa4}
+.dark .ai-discovery-ok{color:#9ecfa9}
+.dark .ai-discovery-error{color:#e8c07a}
+
+.ai-model-detail{display:flex;flex-wrap:wrap;gap:14px;margin-top:11px;padding:10px 11px;background:var(--wash);border-radius:8px;font-size:9.5px;color:#686f66}
+.ai-model-detail b{color:var(--ink)}
+.dark .ai-model-detail{color:#a4afa4}
+
+/* --- the connection test --------------------------------------------------- */
+.status-indicator.live{background:#79aa70}
+.ai-test{display:flex;gap:10px;align-items:flex-start;border-radius:9px;padding:12px;margin-top:14px;font-size:10.5px;line-height:1.55}
+.ai-test svg{flex-shrink:0;margin-top:1px}
+.ai-test strong{display:block;margin-bottom:3px;font-size:11px}
+.ai-test p{margin:0}
+.ai-test.ok{background:#f2f6ee;border:1px solid #e8efe3;color:#4b6f4e}
+.ai-test.ok svg{color:#357353}
+.ai-test.fail{background:#fdf3e3;border:1px solid #f0dfbb;color:#6b4f16}
+.ai-test.fail svg{color:#b8801f}
+.ai-test-detail{margin-top:6px!important;font-size:10px;opacity:.92;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.dark .ai-test.ok{background:#2b3a2e;border-color:#35483a;color:#a9c9a9}
+.dark .ai-test.ok svg{color:#9ecfa9}
+.dark .ai-test.fail{background:#3a3320;border-color:#4a4028;color:#e6d4ab}
+.dark .ai-test.fail svg{color:#e8c07a}
+
+.ai-roadmap{margin-top:16px}
+.ai-roadmap .coming-note{margin-top:0}
+
+/* The Suspense fallback while the lazily-loaded settings chunk arrives. */
+.ai-loading{padding:52px 7%;max-width:1150px;margin:auto;font-size:11px;color:#686f66}
+.dark .ai-loading{color:#a4afa4}
+
+/* A model answer is labelled as one, under the bubble. */
+.msg-source{display:block;margin-top:6px;font-style:normal;font-size:8.5px;color:#686f66}
+.dark .msg-source{color:#a4afa4}
+
+/* The refresh icon turns while the provider is being asked. */
+@keyframes sh-spin{to{transform:rotate(360deg)}}
+.spin{animation:sh-spin 1s linear infinite}
+
+@media(max-width:850px){
+  .ai-provider-grid{grid-template-columns:1fr 1fr}
+  .ai-models-head{flex-direction:column;align-items:stretch}
+}
+@media(max-width:600px){
+  .ai-provider-grid{grid-template-columns:1fr}
+  .ai-key-row{flex-direction:column;align-items:flex-start;gap:8px}
+}

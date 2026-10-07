@@ -62,6 +62,10 @@ workflow file. Keep it simple.
 | `src/countries.js` | Flag and destination helpers, derived from `data/countries.json` |
 | `src/eligibility.js` | Per-country eligibility verdict (pure, unit-tested) |
 | `src/tracker.js` | Deadline countdowns and the document checklist (pure, unit-tested) |
+| `src/providers.js` | Provider registry + the sourced frontier model seed (pure, unit-tested) |
+| `src/chat.js` | The provider adapter: request shapes, replies, model discovery, errors (pure, unit-tested) |
+| `src/useAi.js` | AI connection state and the network calls (the only AI module that touches `fetch`) |
+| `src/AiSettings.jsx` | The AI settings view. Lazily loaded; the smoke test renders it directly. |
 | `data/scholarships.json` | Canonical scholarship catalog |
 | `data/scholarships.test.js` | Catalog validation tests |
 | `scripts/validate-catalog.mjs` | Standalone validation script |
@@ -103,12 +107,19 @@ Three layers, and only the last one is authoritative:
 
 Use Conventional Commits: `feat:`, `fix:`, `data:`, `docs:`, `test:`, `chore:`. One logical change per commit.
 
-## AI assistant policy
+## AI provider policy
 
-The AI settings UI is a placeholder. No provider integration exists yet. If adding one:
-- Keys must stay in browser memory/localStorage only, never sent to any server owned by this project.
-- Clearly disclose that prompts leave the browser.
-- Do not treat model output as authoritative scholarship data.
+The provider seam is **implemented as of v0.26.0**. `src/providers.js` is the registry, `src/chat.js` is the adapter, `src/useAi.js` is the state, and `src/AiSettings.jsx` is the UI. There is still no ScholarHub server, and there must not be one.
+
+Rules that hold for any change to this area:
+
+- **Keys never reach a server owned by this project.** There is no such server. A key is used in the page to sign a request that goes directly to the provider the reader selected. It must never be written into a request *body*, a log line, a notice, or an error message.
+- **A key is session-only unless the reader opts in.** The default is React state, forgotten on reload. The opt-in writes it to `localStorage` under `sh-ai-key`, and the UI must say plainly that anyone using that browser profile can read it.
+- **Never state that a connection works.** The only acceptable evidence is a reply that actually came back. `Test connection` makes a real call for exactly this reason.
+- **Never claim a security property.** Say where a request goes, not that it is safe. `egressSummary()` is written to name a host and nothing more, and a test enforces that it contains no word like "secure" or "private".
+- **Do not assert a model roster.** Model ids, context windows and prices change monthly. Every provider that publishes a list endpoint is queried at runtime and that answer wins. `FRONTIER_SEED` exists only so the picker is not empty before a key is entered; each entry carries its source URL and the date it was read, and anything the source did not publish is `null`. Do not fill a `null` in with a plausible number.
+- **Do not pretend a browser can do something it cannot.** Antigravity is the worked example: it authenticates through a local CLI session that no web page can reach. `agyRefusal()` returns the honest explanation plus the two routes that do work, and the UI shows it instead of a login form that could never succeed.
+- **Never treat model output as scholarship data.** The assistant's prompt carries the catalog rows and forbids inventing a deadline, amount or eligibility rule; a model answer is labelled as one in the transcript.
 
 ## Privacy
 

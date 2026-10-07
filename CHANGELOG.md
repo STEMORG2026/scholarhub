@@ -1,5 +1,53 @@
 # Changelog
 
+## [0.26.0] - 2026-10-07
+
+### Added — the AI side is real now
+
+The settings page had been a placeholder since the first release: a provider dropdown that did nothing, a key field nothing read, and a "Test connection" button that only printed a notice saying adapters were not connected. This release builds the seam AGENTS.md had reserved, and connects it end to end.
+
+- **`src/providers.js` — the registry.** **21 providers across four categories**, each declaring its transport, its **auth kind**, its default base URL, where to get a key, and the endpoint that lists its models.
+  - **Frontier labs (7):** OpenAI, Anthropic, Google (Gemini API), xAI, DeepSeek, Mistral AI, Cohere.
+  - **Inference providers (7):** OpenRouter, Groq, Together AI, Fireworks AI, DeepInfra, Cerebras, and *any* OpenAI-compatible endpoint you name yourself.
+  - **Local runtimes (6):** Ollama, LM Studio, llama.cpp server, vLLM, Jan, LocalAI.
+  - **Signed-in session (1):** Antigravity (AGY) — see below.
+- **`src/chat.js` — the adapter.** Four real transports (OpenAI-shaped, Anthropic, Google, Ollama), each with its own URL shape, headers, body and reply parser; model discovery per provider; and error handling that maps a status to the advice that actually helps. Anthropic's browser-origin opt-in header is sent, because without it the API refuses a page-originated call.
+- **`src/useAi.js` and `src/AiSettings.jsx`** — the connection state and the settings view. A **real connection test** that makes an actual call and reports what came back, model discovery with a refresh button, a base-URL override, and a per-provider line saying **where the request will go**.
+- **The assistant is connected.** With a provider configured, the assistant answers through your own model, grounded in the catalog rows for your profile — and the prompt forbids inventing a deadline, an amount or an eligibility rule. A model answer is labelled *"from <provider> — a model answer, not catalog data"*. Without a provider it stays on the offline guide, exactly as before.
+
+### Antigravity, and why "login" is not a form here
+
+`agy` (the Antigravity CLI) authenticates through **its own Google sign-in on your machine** — there is no API key to paste. A page in a browser cannot start a process, read that session, or hold your Google credentials, so a login form would be theatre. The connect panel says that plainly and offers the two routes that genuinely work from a page:
+
+1. **The Gemini API**, where Google publishes an Antigravity Agent model (`antigravity-preview-09-2026`) reachable with an ordinary API key.
+2. **A local gateway** — run an OpenAI-compatible bridge (a LiteLLM proxy is the usual choice) in front of the CLI and point *Any OpenAI-compatible endpoint* at `http://localhost:4000/v1`.
+
+Neither route gives ScholarHub your Google credentials. That is the point.
+
+### Model names are discovered, not asserted
+
+A roster is stale within weeks, so **every provider that publishes a list endpoint is queried at runtime and that answer wins.** `FRONTIER_SEED` exists only so the picker is not empty before a key is entered: 13 models across four labs, each carrying the **URL it came from and the date it was read**. Anything the source did not publish is `null` and renders as an em dash — the same rule the scholarship catalog applies to deadlines. Google's models index, for instance, publishes ids but not limits, so its seeded entries have no context window rather than a guessed one.
+
+Sources read 2026-10-07: OpenAI (GPT-6 Astra / 6.1 Sol / 6 Luna), Anthropic (Claude Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 4.5), Google (Gemini 3.8/3.7/3.6 Flash, 3.1 Pro preview), xAI (Grok 4.7). A search for "frontier models 2026" returned only aggregator blogs contradicting each other on the names — those were discarded and the providers' own docs fetched instead.
+
+### Verified against a real model, not a mock
+
+- **A live end-to-end call.** With a local Ollama running, discovery reported **10 real models**; selecting `qwen2.5-coder:1.5b` and pressing *Test connection* returned **"Connected. Ollama answered using qwen2.5-coder:1.5b. ready — 36 tokens in, 2 out"**, and the assistant then answered a real question through it.
+- **The failure paths are honest too.** No key → *"This provider needs an API key. Get one at …"*. A missing model on a reachable server → *"Ollama returned 404. The base URL or the model id is usually the cause"* plus the provider's own message. An unreachable host is described as one of three things, because **a browser will not say whether it was DNS, a refused connection or CORS**.
+
+### Fixed
+
+- **`.privacy-note` had no dark-mode counterpart** — the one surface the earlier dark pass missed. It kept its light background (`#f2f6ee`) in dark mode, so it read as a bright panel on a dark card **and its text measured 4.01:1, under WCAG AA**. It appears on the profile page too. Now 6.65:1 on a dark surface.
+- **A local runtime with nothing pulled was unusable.** The model field was a `<select>` with no options and no way to type one, so a custom endpoint could not be configured until a discovery call happened to succeed. It now falls back to a free-text field.
+- **Eight icon imports were dead**, two of them left by the old settings view.
+- **The main bundle crossed the 500 kB warning threshold** at 500.04 kB. Rather than raise the limit, the settings view is now a lazily-loaded chunk: the main bundle is back to **490.22 kB** and the AI settings arrive as an 11.57 kB chunk only when opened. The assistant still works without it, because its default is the offline guide.
+
+### Verification
+
+- **99 tests, 0 errors / 0 warnings** — up from 40. The new suites are `src/providers.test.js` (registry integrity, provenance on every seeded model, an unpublished number is `null` and never a guess, no security claims in the egress line, key masking) and `src/chat.test.js` (each transport's URL, headers and body; system-turn handling for Anthropic; role mapping for Google; reply parsing for all four; model-list normalisation; error mapping; **and that a key never reaches a request body**).
+- **The render smoke test went from 12 to 18 renders**, with five new cases covering each auth kind — a key, no key, and the CLI session — plus a check that **a remembered key never reaches visible text or any attribute other than the password field it belongs to**. The AI settings view is rendered directly with the real `useAi` hook, so taking it off the main bundle did not take it out of the gate's reach.
+- Verified in a browser: all 21 providers listed, each auth panel rendering for its kind, model discovery against a live Ollama, a real chat round-trip, and the assistant falling back to the offline guide when the connection is cleared.
+
 ## [0.25.0] - 2026-10-07
 
 ### Added — the gate that was missing
