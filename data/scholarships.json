@@ -2639,5 +2639,72 @@
       "Nepal": "Nepal is not among the 74 participating countries, so a Nepali applicant cannot use this route. The Edital states the list may change as countries join before the application period closes, so re-check the MRE page each cycle."
     },
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "pan-african-university",
+    "name": "Pan African University Scholarship",
+    "provider": "African Union Commission",
+    "country": "Multiple countries",
+    "university": "Pan African University institutes (PAUSTI, PAULESI, PAUGHSS, PAUWES)",
+    "city": "Various",
+    "region": "Kenya, Nigeria, Cameroon and Algeria",
+    "program_field": [
+      "Engineering",
+      "Water Sciences",
+      "Energy Sciences",
+      "Climate Change",
+      "Geosciences",
+      "Environmental Management"
+    ],
+    "degree_level": [
+      "Master",
+      "PhD"
+    ],
+    "funding_type": "Full scholarship",
+    "amount": "The African Union Commission states the scholarship covers full tuition, living expenses and medical insurance; no stipend figure is published separately",
+    "currency": "",
+    "deadline": "2025-12-15",
+    "deadline_notes": "The call opens on 15 November and closes on 15 December each year. The 2026 call closed on 15 December 2025. Applications received after the deadline are not considered. Candidates may be required to undergo a written or oral examination after pre-selection.",
+    "duration": "Master: 2 years; PhD: 3 years",
+    "eligibility": {
+      "nationality": [
+        "Open to nationals of African countries and the African Diaspora"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {},
+      "age_limit": "Master: maximum 25 years for male and 28 years for female applicants; PhD: maximum 28 years for male and 30 years for female applicants",
+      "other": "Applicants must hold at least a second-class upper division bachelor degree (Master) or a master degree (PhD) from a recognised university. Civil servants and employees of private or public companies are not admitted, as well as students already receiving a scholarship. Awardees are expected to work in Africa after graduation."
+    },
+    "nationality_scope": {
+      "mode": "regional",
+      "regions": [
+        "Africa"
+      ],
+      "note": "Open to African countries and the African Diaspora, as stated in the official call for applications."
+    },
+    "country_notes": {},
+    "benefits": [
+      "Full tuition fees covered by the African Union Commission",
+      "Living expenses covered",
+      "Medical insurance covered",
+      "Return airfare is not explicitly stated in the official call; verify with the programme"
+    ],
+    "application_url": "https://www.au-pau.org/submission/",
+    "official_url": "https://www.au-pau.org/submission/",
+    "description": "The African Union flagship scholarship for postgraduate study at one of four Pan African University institutes across the continent. Master programmes include Water (Engineering or Policy), Energy (Engineering or Policy), Climate Change (Engineering or Policy), Geosciences, Environmental Management and others. A PhD in the Water-Energy-Climate Change Nexus is also offered. The scholarship is fully funded by the African Union Commission. Applicants must be nationals of an African country or the African Diaspora, and successful candidates are expected to work in Africa after graduation.",
+    "tags": [
+      "african union",
+      "postgraduate",
+      "fully funded",
+      "engineering",
+      "water",
+      "energy",
+      "climate change"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "closed",
+    "source_url": "https://au.int/en/announcements/20251115/pan-african-university-call-scholarships-applications-academic-year-2026-2027",
+    "last_verified": "2026-10-07"
   }
+
 ]

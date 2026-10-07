@@ -2,7 +2,7 @@
 
 A small, open-source scholarship discovery companion for engineering students. Search a curated starter catalog, keep a private shortlist, and save study preferences locally—no account or backend required.
 
-> **Data coverage is intentionally a starter set, not the requested complete directory.** This release contains 49 discovery records covering 18 destinations. Many details (especially annual deadlines, award values, and country-specific eligibility) change. Unknown values are intentionally omitted; every entry links to its official source and records the date a contributor last checked it. Verify all information before applying.
+> **Data coverage is intentionally a starter set, not the requested complete directory.** This release contains 50 discovery records covering 18 destinations. Many details (especially annual deadlines, award values, and country-specific eligibility) change. Unknown values are intentionally omitted; every entry links to its official source and records the date a contributor last checked it. Verify all information before applying.
 
 ## Built for every country, not one
 
@@ -35,7 +35,7 @@ The discover view, in both themes (captured 2026-10-07):
 
 ![ScholarHub discover view in the dark theme](docs/screenshots/discover-dark.png)
 
-Choosing a country changes what every card says. Both captures below are the same 49 records with the country of origin set to Nepal:
+Choosing a country changes what every card says. Both captures below were taken with the country of origin set to Nepal:
 
 ![Per-country eligibility verdicts on each card in the light theme — an "Open to my country" filter and badges reading Check eligibility and Not open to you](docs/screenshots/eligibility-light.png)
 

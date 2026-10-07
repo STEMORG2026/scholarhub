@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.22.0] - 2026-10-07
+
+### Added — Africa, the last Phase 2 region
+
+Catalog 49 → **50 records**. **Africa opens as a destination**, which completes the Phase 2 breadth list: Canada, Japan, South Korea, India, Saudi Arabia, Brazil and now Africa.
+
+- **Pan African University Scholarship** — the African Union's flagship postgraduate award, funded by the African Union Commission and taught across four PAU institutes: **PAUSTI** (Jomo Kenyatta University, Kenya), **PAULESI** (University of Ibadan, Nigeria), **PAUGHSS** (University of Yaoundé II and University of Buea, Cameroon) and **PAUWES** (University of Tlemcen, Algeria). Master's and PhD, with the engineering-relevant routes at PAUWES: **Water (Engineering or Policy), Energy (Engineering or Policy) and Climate Change (Engineering or Policy)**, plus a PhD in the **Water–Energy–Climate Change Nexus**.
+- **The scholarship covers full tuition, living expenses and medical insurance** — and the source publishes **no stipend figure**, so no amount is recorded and the gap is stated instead of divided out or borrowed from an aggregator.
+- **The 2026 call closed on 15 December 2025.** The call opens on 15 November and closes on 15 December each year, so the next window is 15 November 2026 — that rhythm is carried in `deadline_notes`.
+
+### The finding: Africa is a restriction, and it cannot be resolved to a list
+
+- **Eligibility is "African countries and the African Diaspora."** That is a regional rule, so the record carries `nationality_scope.mode: "regional"` with `regions: ["Africa"]` — and the app therefore reports **check**, not **open**, for every reader, including readers in Africa.
+- **This is deliberate, and it is the limitation v0.21.0 documented.** A provider's "Africa" is not a continent: it is the set the provider admits, and "the African Diaspora" is not a country list at all. Inventing a 54-country mapping from general knowledge would put unverified data into a provenance-first catalog, and would tell a reader in an AU-ambiguous territory — or a member of the Diaspora — an answer the source never gave. So the record says what the source says and names what has to be checked.
+- **The path to closing it is a country→region map sourced from each provider's own regional list**, not from a continent table. That is the next step on this specific gap, and it is recorded in `docs/ARCHITECTURE.md` rather than deferred silently.
+
+### Notes
+
+- **The destination is `Multiple countries`, not a single country.** The four institutes sit in four countries, so the record uses the existing grouping rather than pretending there is one host — consistent with how `Europe` is handled for the Erasmus Mundus records. Destinations therefore stay at **18** while records go to **50**.
+- **Two restrictions are easy to miss and both are recorded.** The age limits are **25 for male and 28 for female Master's applicants**, and **28 and 30** for PhD — unusually, and distinctly, by gender. And **civil servants, employees of public or private companies, and students already holding a scholarship are not admitted**, because the programmes are residential and full-time. Awardees are expected to work in Africa after graduation.
+- **Verified in the browser**: with no country chosen the card reads *Check eligibility*, and selecting **Nigeria** leaves it at *Check eligibility* — same record, same code path, honest answer rather than a guess.
+
 ## [0.21.0] - 2026-10-07
 
 ### Changed — the catalog is no longer written from one country's point of view
