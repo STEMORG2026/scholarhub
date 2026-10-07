@@ -1788,5 +1788,131 @@
     "status": "closed",
     "source_url": "https://twas.org/opportunity/anso-cas-twasunesco-phd-scholarship",
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "cgrs-doctoral",
+    "name": "Canada Graduate Research Scholarship – Doctoral (CGRS D)",
+    "provider": "Government of Canada — administered jointly by the Canadian Institutes of Health Research (CIHR), the Natural Sciences and Engineering Research Council of Canada (NSERC) and the Social Sciences and Humanities Research Council (SSHRC)",
+    "country": "Canada",
+    "region": "Nationwide",
+    "city": "Varies by institution",
+    "university": "Eligible Canadian universities with a doctoral award quota for the selected agency",
+    "program_field": [
+      "Engineering",
+      "Natural Sciences"
+    ],
+    "degree_level": [
+      "PhD"
+    ],
+    "funding_type": "Government research scholarship",
+    "amount": "CAD 40,000 per year for 36 months (three years). The award is a stipend for living costs and research, not a tuition waiver, so tuition is handled separately by the host institution.",
+    "currency": "CAD",
+    "deadline": null,
+    "deadline_notes": "NSERC states the direct-to-agency deadline as \"October 17\" and gives no year — not in the overview table (\"Directly to the agency: October 17\") and not in the body text (\"before 8:00 pm (ET) on October 17\"). The rule that immediately follows — if the deadline falls on a weekend, applications may be submitted the following business day — shows this is a recurring annual date rather than a one-off. The page was last modified on 8 July 2026, so the cycle it describes is the one closing on 17 October 2026, but no year is written into the deadline field here because the source withholds one and this catalog does not supply a year that a source withheld. There is also a second, usually earlier route: applicants who apply through their Canadian institution are bound by that institution's internal deadline, which the page warns is \"often significantly earlier than the agency's deadline\". The 17 October date applies only to the direct-to-agency route. Applications go to CIHR, NSERC or SSHRC according to the research subject matter, and applying to the wrong channel causes rejection.",
+    "duration": "36 months (three years)",
+    "eligibility": {
+      "nationality": [
+        "Canadian citizens, permanent residents of Canada, and protected persons under subsection 95(2) of the Immigration and Refugee Protection Act",
+        "International applicants are eligible, but up to 15% of awards only are reserved for them — and an international applicant must already be registered in a doctoral program at an eligible Canadian institution by the application deadline"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {
+        "english": "The CGRS D program states no language requirement of its own; the language requirements of the Canadian institution where the applicant is registered apply"
+      },
+      "age_limit": null,
+      "other": "This is the single most important restriction to understand before applying: CGRS D is NOT an entry route into a Canadian doctorate. An applicant who is not a Canadian citizen, permanent resident or protected person must be registered in their doctoral program of study at an eligible Canadian institution by the application deadline — so a Nepali applicant would have to be admitted to, and enrolled in, a Canadian PhD first, and would then be competing for the 15% international share of awards. Applicants must have completed no more than 36 months of full-time equivalent study in the doctoral program by December 31 of the calendar year of application; part-time terms count as half, and all doctoral study counts whether or not it was completed at the same institution or program. A maximum of three applications to CGRS D is allowed across a lifetime, and only one program in the Canada Research Training Awards Suite may be applied to per academic year. Applicants who have already received a doctoral-level scholarship from CIHR, NSERC or SSHRC — explicitly including a Vanier Canada Graduate Scholarship — are ineligible. An eligible doctoral program must be predominantly research-oriented and lead to a thesis, dissertation, major research project or comparable merit-reviewed output; clinically oriented programs, including clinical psychology, qualify only where they carry a significant autonomous research component. CIHR and NSERC award holders may not concurrently hold a tenure or tenure-track appointment. Applicants self-identifying as Black, and Indigenous applicants whose nations or communities are located in Canada, are eligible for additional designated funding. Applicants may propose to hold the award at a degree-granting institution outside Canada only if they are Canadian citizens, permanent residents or protected persons who have also completed a previous undergraduate or graduate degree at a Canadian institution; up to 20% of all doctoral awards may be held outside Canada. The Policy on Sensitive Technology Research and Affiliations of Concern does not apply to this suite."
+    },
+    "benefits": [
+      "CAD 40,000 per year for 36 months",
+      "Additional award offers are made for applications aligned with eight named priority research areas",
+      "Indigenous Scholars Supplement of CAD 5,000 for one year (Indigenous students applying through NSERC or SSHRC)",
+      "Up to 10 additional awards per agency reserved for Black student researchers",
+      "Supplementary funding and joint initiatives may be offered to award holders",
+      "The award may be held at any eligible Canadian institution, or outside Canada in limited circumstances"
+    ],
+    "official_url": "https://nserc-crsng.canada.ca/en/funding-opportunity/canada-graduate-research-scholarship-doctoral-program",
+    "description": "A federal doctoral scholarship worth CAD 40,000 a year for three years, administered jointly by Canada's three research funding agencies: CIHR for health, NSERC for natural sciences and engineering, and SSHRC for social sciences and humanities. It is the doctoral award in the Canada Research Training Awards Suite introduced under Budget 2024, and the Vanier Canada Graduate Scholarships that preceded it is no longer accepting applications. Applications go to whichever of the three agencies best matches the research subject, and the choice of channel is binding. The headline caveat for an international applicant is that this is a scholarship for people already in a Canadian doctorate rather than a way into one: only up to 15% of awards are available to international applicants, and they must be registered at an eligible Canadian institution by the application deadline. Applications aligned with one of eight named priority research areas — among them clean technology and resource value chains, manufacturing and advanced materials, environment and climate resilience, and food and water security — attract additional award offers.",
+    "tags": [
+      "Canada",
+      "phd",
+      "government",
+      "research",
+      "graduate",
+      "international",
+      "fully-funded",
+      "engineering",
+      "materials",
+      "sustainability",
+      "climate"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "open",
+    "source_url": "https://nserc-crsng.canada.ca/en/funding-opportunity/canada-graduate-research-scholarship-doctoral-program",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "mext-research-students",
+    "name": "Japanese Government (MEXT) Scholarship — Research Students (Embassy Recommendation)",
+    "provider": "Ministry of Education, Culture, Sports, Science and Technology (MEXT), Government of Japan",
+    "country": "Japan",
+    "region": "Nationwide",
+    "city": "Assigned by MEXT after selection",
+    "university": "Japanese graduate schools; applicants may name up to three preferred universities and may hold up to two letters of provisional acceptance",
+    "program_field": [
+      "Engineering",
+      "Natural Sciences"
+    ],
+    "degree_level": [
+      "Master",
+      "PhD"
+    ],
+    "funding_type": "Full scholarship — monthly allowance, tuition and fee waiver, and return air fare",
+    "amount": "143,000 yen per month for students receiving preparatory education and for non-regular students; 144,000 yen per month for regular students in master's or professional degree courses; 145,000 yen per month for regular students in doctoral courses. A regional supplement of 2,000 or 3,000 yen per month is added in specially designated regions. Entrance examination, matriculation and tuition fees are waived, and MEXT provides an economy-class return air ticket. Amounts may change each fiscal year with the Japanese Government budget.",
+    "currency": "JPY",
+    "deadline": "2026-05-31",
+    "deadline_notes": "MEXT sets no single global deadline: each Japanese diplomatic mission runs its own call, and the official guidelines say so explicitly (\"The deadline for submission of application documents varies according to each Japanese diplomatic mission\"). The date recorded here is the Embassy of Japan in Nepal's deadline for the 2027 cycle — 31 May 2026 at 24:00 NST — with the written examination on 18 June 2026 and interviews on 30 June 2026. All three have passed, so the Nepal route for 2027 is closed. The guidelines' own schedule shows the call opening around mid-April 2026, the first screening running from early May to late July 2026, provisional acceptance requests due from successful applicants by 1 September 2026, and results notified between January and March 2027 — which means the next Nepal call should be expected around April 2027. Note also that a completely separate University Recommendation route exists, in which a Japanese university nominates the applicant, with its own cycle and its own eligibility rules; this record covers the Embassy Recommendation route only.",
+    "duration": "Two years for non-regular students, from April 2027 to March 2029 for those arriving in the April term, or from September/October 2027 to March 2029 for those arriving in the October term. Students who advance to a regular master's, doctoral or professional course are funded for the standard period of study, and the scholarship can be extended on passing a MEXT examination.",
+    "eligibility": {
+      "nationality": [
+        "Nepali nationals (the Embassy of Japan in Nepal's own call is limited to Nepali nationals)",
+        "Applicants must hold the nationality of a country that has diplomatic relations with Japan; an applicant with Japanese nationality at the time of application is not eligible",
+        "Dual nationals who hold Japanese nationality may apply as long as they choose the other nationality and relinquish Japanese nationality by the date of arrival in Japan"
+      ],
+      "gpa_minimum": "The Embassy of Japan in Nepal requires 70% marks (CGPA 3.1) for Natural Sciences and 60% marks (CGPA 2.5) for Humanities and Social Sciences, averaged across the +2 and above degree. This is a Nepal-specific bar set by the mission, not a MEXT-wide rule.",
+      "language_requirements": {
+        "japanese": "No prior knowledge of Japanese is required — but applicants must be willing to learn Japanese, and the first six months of the scholarship are devoted to preparatory Japanese-language education where it is needed",
+        "english": "MEXT sets no test score requirement; a certificate of language proficiency is submitted only if the applicant has one. The Embassy of Japan in Nepal lists it as an optional document"
+      },
+      "age_limit": "35 — applicants must be under 35 as of 1 April 2027, that is born on or after 2 April 1992. Exceptions are limited to country-level circumstances such as military service obligations or loss of educational opportunity through war; personal circumstances such as financial or family situation are explicitly not considered.",
+      "other": "The academic background requirement is completion of at least 16 years of school education for a master's or first-phase doctoral course, and 18 years for doctoral courses in medicine, dentistry, veterinary science and certain pharmaceutical fields — the Embassy of Japan in Nepal states the same bars as 16 years (18 for doctoral). Applicants may not hold another MEXT scholarship application in the same cycle, may not be previous MEXT grantees (unless three or more years have elapsed since the previous scholarship ended), and may not already be enrolled in a Japanese institution as a privately-financed student at the time of application. A letter of provisional acceptance from a Japanese university strongly influences the final result, and applicants who have not obtained one may be rejected: successful first-round applicants may contact a maximum of two universities at the same time, may name up to three universities on the placement form, and may hold no more than two letters of provisional acceptance. First contact must go to the university's international student affairs division rather than to an individual academic supervisor, and universities generally need about one month to issue a letter. Applications are submitted by email to the diplomatic mission in the applicant's country of nationality, which for Nepal is the Embassy of Japan in Kathmandu; the Nepali call required documents under 10 MB and an email subject line in the form \"[MEXT: research] Surname_Givenname_Middlename\". Applicants must be able to arrive in Japan between 1 and 7 April 2027 for the April term, or within the window set by the accepting university for the October term. The fields of study available may be restricted by the individual diplomatic mission, and medicine, dentistry and welfare science students may not undertake clinical training without a Japanese licence. Applications are free of charge — MEXT charges no application fee."
+    },
+    "benefits": [
+      "Monthly allowance of 143,000 to 145,000 yen depending on the course enrolled in",
+      "Regional supplement of 2,000 or 3,000 yen per month in specially designated regions",
+      "Entrance examination, matriculation and tuition fees waived",
+      "Economy-class return air ticket between the home country and Japan",
+      "Six months of preparatory Japanese-language education where required",
+      "Extension of the scholarship on advancing from a non-regular to a regular course, or from a master's to a doctoral course, subject to a MEXT examination"
+    ],
+    "official_url": "https://www.studyinjapan.go.jp/en/_mt/2026/04/01-2027_Research_Guidelines_E.pdf",
+    "description": "The Japanese Government's flagship scholarship for postgraduate study in Japan, covering a monthly allowance of 143,000 to 145,000 yen, waived tuition and fees, and a return air ticket. Applications are made through the Japanese diplomatic mission in the applicant's own country — the \"Embassy Recommendation\" route — which for Nepal is the Embassy of Japan in Kathmandu, and the mission runs its own selection round with its own deadline and its own examination and interview dates. The scholarship funds \"Research Students\": either non-regular students who spend up to two years preparing and researching before sitting a graduate entrance examination, or regular students enrolled directly in a master's, doctoral or professional degree course. Awardees may name up to three preferred Japanese universities and are placed by MEXT. Applications are free of charge, and a letter of provisional acceptance from a Japanese university is a strong factor in the final selection. Nepal's 2027 round closed on 31 May 2026, with the next call expected around April 2027.",
+    "tags": [
+      "Japan",
+      "phd",
+      "master",
+      "government",
+      "fully-funded",
+      "research",
+      "graduate",
+      "international",
+      "verified-deadline",
+      "nepal-eligible",
+      "age-limit",
+      "no-cumulation"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "closed",
+    "source_url": "https://www.studyinjapan.go.jp/en/_mt/2026/04/01-2027_Research_Guidelines_E.pdf",
+    "last_verified": "2026-10-07"
   }
 ]
