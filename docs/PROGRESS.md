@@ -2,6 +2,37 @@
 
 Detailed log of development work on ScholarHub. For the high-level roadmap with checkboxes, see [ROADMAP.md](ROADMAP.md).
 
+## 2026-10-07 — Application tracker and document checklist (v0.24.0)
+
+### Added
+- **`src/tracker.js`** — a pure module for the two things a reader does after discovery: choosing which programmes to pursue, and working out what paperwork is missing. 22 unit tests, all offline. Kept out of the component for the same reason `eligibility.js` is: the hard part is dates, and dates need to be testable.
+- **Application tracker view.** Track an opportunity from the discovery card, the shortlist card, or the detail dialog. Each tracked application carries a status (Planning to apply → Preparing documents → Submitted → Awarded → Not selected) and a countdown chip. The list sorts by urgency — passed, then today, then nearest, then undated — with submitted and decided applications moved to the bottom.
+- **Deadline alerts.** An alert banner and a nav/notification badge. The badge counts *only what is still actionable*: still-open applications whose date is near or gone, plus missing documents. A submitted application whose deadline has passed is counted in the summary but deliberately excluded from the alarm, because an alert that fires on finished work is one a reader learns to ignore.
+- **Document checklist on the profile page.** Twelve documents, each markable present or not present, with a progress bar and an alert naming exactly what is missing. **Degree-aware**: a research proposal and a publication list are required for a PhD/PostDoc goal and shown as optional for a Master's — an amber "you are missing this" on a research proposal shown to a Master's applicant is precisely the false alarm that trains someone to ignore the real ones.
+- **`isOpenStatus()`** exported so the component and the tests share one definition of "still needs work"; an unrecognised stored status falls on the side of asking for attention rather than hiding a record.
+- **Screenshots** for the tracker and the checklist in both themes. The discover captures were re-taken because every card gained a Track control.
+
+### Fixed
+- **The shortlist view crashed on a live identifier.** `src/main.jsx` still read `FLAG[s.country]` on its compact card, but the hand-written flag table was removed in v0.21.0 when flags became derived from ISO codes. Opening *My shortlist* with anything saved threw `ReferenceError: FLAG is not defined` and blanked the app. It now uses `flagFor()`. **Nothing in the existing checks could have caught this**: `npm test` reads the catalog and never the component, and a successful build only proves an identifier is *referenced*, not that it exists at runtime.
+- **`Date.UTC` silently rolls an impossible date over.** `new Date(Date.UTC(2026, 1, 30))` is 2 March, so `2026-02-30` would have produced a plausible-looking countdown instead of being rejected. `toUtcDay()` now reads the parts back and refuses anything that did not survive the round trip. Found by a test asserting that an impossible date is `null`, not a number.
+- **Two state updates in one tick lost one of them.** The tracker mutators built their next value from the render-time closure, so a rapid double click (or a "track all" that re-entered) could drop an update. All three mutators now use the functional form of `setState`, and persistence moved into effects on the state itself.
+- **A first-visit alert badge of 10.** Counting every unticked document from a standing start put a "10" badge on a brand-new visit. Document alerts now begin only once the reader has engaged — by ticking something or by tracking an application. The profile page still always states the full list.
+- **The pre-existing `.nav-count` had no dark-mode counterpart**, so beside the new dark alert badge the shortlist count read as a bright white pill. It now shares the dark surface of an active nav item (7.34:1).
+
+### Verification
+- `npm test`: **40 tests, 0 errors, 0 warnings** (was 18 tests). `npm run build` clean.
+- **Dates are compared as UTC calendar days**, not by subtracting `Date` objects — a one-day gap across a daylight-saving shift would otherwise be 23 or 25 hours and could round to zero. Pinned by a test across both a spring-forward and a fall-back pair.
+- **An unusable date is `null`, never `0`**, so "could not parse" can never be read as "due today". Pinned for `undefined`, `null`, `''`, `'tomorrow'`, `'2026-1-1'`, `'2026/01/01'`, a number, an object, and `'2026-02-30'`.
+- **Against the real catalog**: every one of the 50 records produces a labelled countdown, and every tracked record lands in exactly one summary bucket.
+- **Browser-verified end to end** with `agent-browser`: tracking from the board and from the shortlist; "Track all of them"; the status pipeline moving a record out of the alarm *and* to the bottom of the list; the checklist going 0 → 7 → 12 of 12; the PhD/Master's switch changing the required set from 10 to 12; the dialog's countdown and three actions; the fixed shortlist rendering its flag.
+- **Responsive** at 700px and 480px with **no horizontal overflow**: the summary strip falls to two columns, tracker rows to two with the controls spanning, the checklist to one column, and the optional-item tag is dropped below 600px.
+- **Accessibility**: the document checkbox takes a 2px focus ring, the progress bar carries `role="img"` with an `aria-label`, the alert and checklist banners are `role="status"`, every status select and icon button is labelled with the record it belongs to, and the notification bell names the count.
+- **31 new colour pairs measured** against their own surfaces, light and dark: all ≥ 4.5:1 for text and ≥ 3:1 for the progress bar. Urgency is carried by colour but never only by colour — each chip also spells out "Due in 5 days" or "Passed 3 days ago".
+
+### Observation, not changed
+- **Two dated records carry a past-cycle date.** `pec-pg-brazil` (2025-10-08) and `pan-african-university` (2025-12-15) hold a reference closing date from a completed cycle, so the tracker reports them as passed. That is honest, but it means the tracker will show an overdue row for a programme whose *next* call may well be open. Re-verifying those two against their providers is a data pass, not a UI one.
+- **The project's own docs undercount the dated records.** ARCHITECTURE.md says "currently seven" and ROADMAP.md says "Eleven"; the catalog actually carries a single closing date on **13 of 50** records. Corrected in ARCHITECTURE.md here; the older ROADMAP prose is left as the historical record of that pass.
+
 ## 2026-10-07 — Verification pass and deadline support
 
 ### Completed

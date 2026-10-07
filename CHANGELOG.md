@@ -1,5 +1,40 @@
 # Changelog
 
+## [0.24.0] - 2026-10-07
+
+### Added — an application tracker, and a document checklist
+
+Two things a reader does *after* discovery: decide which programmes they are actually going for, and work out what paperwork is still missing. Both are new, both are local-only, and both live in a new pure module so the awkward part — dates — is testable.
+
+- **Application tracker.** Any opportunity can be tracked from the discovery board, from the shortlist, or from the detail dialog. Each tracked application carries a **status** (Planning to apply → Preparing documents → Submitted → Awarded → Not selected) and a **live countdown** to its closing date. The list sorts by urgency: passed first, then due today, then nearest, then records with no published date, with submitted and decided applications last.
+- **Deadline alerts.** A banner and a nav badge count only what is still actionable — an application whose date is near or gone **and** whose status is still open. A submitted application whose date has passed is history, not a task, so it is reported in the summary and left out of the alarm.
+- **Document checklist on the profile page.** Twelve documents an applicant is ordinarily asked for, each markable as present or not present, with a progress bar and an alert naming exactly what is missing. **The checklist is degree-aware**: a research proposal and a publication list are required of a PhD or PostDoc goal and are shown as optional, untagged-as-missing, for a Master's.
+- **`src/tracker.js`** — the pure module behind both. 22 unit tests, all offline. `npm test` now runs **40 tests** and remains **0 errors / 0 warnings**.
+
+### The honesty rules this keeps
+
+The catalog carries a single verified closing date on **13 of its 50 records**; the rest describe a window, a field split or a country rule in `deadline_notes`. The tracker therefore:
+
+- **Never invents a date.** A record without a `deadline` is reported as *"No single closing date"* and shown with its note — it is not given a countdown, and it is not dropped from the list either, because a programme whose window is unstated is exactly the one a human has to go and look up.
+- **Reports a passed deadline as passed** — *"Passed 129 days ago"*, not hidden or re-labelled. Whether the next cycle is open is the provider's statement to make.
+- **Does not cry wolf.** Ten unticked documents on a brand-new visit would put a "10" badge on a first-time reader, so document alerts only start counting once the reader has engaged — by ticking something, or by tracking an application. The profile page always states the full list; the badge is only about interrupting.
+
+### Two defects found and fixed on the way
+
+- **`FLAG[...]` on the shortlist view was a live crash.** The hand-written flag table was deleted in v0.21.0 when flags became derived from ISO codes, but the shortlist's compact card kept reading it — so opening *My shortlist* with anything saved threw a `ReferenceError` and blanked the app. It now uses `flagFor()` like every other surface. Nothing caught this: `npm test` reads the catalog and never the component, and the build only proves the identifier is referenced, not that it exists at runtime.
+- **`Date.UTC` silently rolls an impossible date over.** `new Date(Date.UTC(2026,1,30))` is 2 March, so `2026-02-30` would have become a plausible-looking countdown instead of being rejected. `toUtcDay` now reads the parts back and refuses anything that did not survive the round trip. Caught by a test asserting an impossible date is `null`, not a number.
+
+### Verification
+
+- **22 new unit tests**, including: a one-day gap across a daylight-saving shift is exactly one day (the reason dates are compared as UTC calendar days rather than by subtracting `Date` objects); an unusable date is `null` rather than `0`, so "could not parse" can never read as "due today"; the urgent and due-soon windows sit on their stated boundaries; an unrecognised stored status or document id cannot invent state; and every one of the 50 real records produces a labelled countdown.
+- **Browser-verified** end to end: tracking from the board and the shortlist, "Track all of them", the status pipeline moving a record out of the alarm and to the bottom of the list, the document checklist going 0 → 7 → 12 of 12, and the PhD/Master's switch changing the required set from 10 to 12. Responsive at 700px and 480px with no horizontal overflow.
+- **Every new colour pair measured**, light and dark, against its own surface — 31 pairs, all ≥ 4.5:1 for text (≥ 3:1 for the progress bar). Urgency is carried by colour but never *only* by colour: each chip spells out "Due in 5 days" or "Passed 3 days ago".
+- Screenshots added for the tracker and the checklist in both themes; the discover captures were re-taken because every card gained a Track control.
+
+### Note for the reader
+
+Today the nearest future deadline in the catalog is **30 November 2026 (ETH Zurich ESOP, 54 days out)**, and six dated records carry a date that has already passed. So the "due soon" window is currently empty — the tracker will show *passed* and *later*, and the first due-soon alert will appear in late October.
+
 ## [0.23.0] - 2026-10-07
 
 ### Changed — three of the four `regional` records now give a real answer

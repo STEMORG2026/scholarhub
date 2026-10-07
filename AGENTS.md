@@ -51,11 +51,16 @@ There is no TypeScript, no linting config, and no framework-specific test runner
 |------|---------|
 | `src/main.jsx` | React application (all views, state, filtering) |
 | `src/styles.css` | All styling including dark mode |
+| `src/countries.js` | Flag and destination helpers, derived from `data/countries.json` |
+| `src/eligibility.js` | Per-country eligibility verdict (pure, unit-tested) |
+| `src/tracker.js` | Deadline countdowns and the document checklist (pure, unit-tested) |
 | `data/scholarships.json` | Canonical scholarship catalog |
 | `data/scholarships.test.js` | Catalog validation tests |
 | `scripts/validate-catalog.mjs` | Standalone validation script |
 | `docs/` | Architecture, schema, API notes, roadmap |
 | `.github/` | Issue templates, PR template |
+
+**Keep decision logic in the pure modules, not in the component.** `eligibility.js` and `tracker.js` exist so that the two parts most likely to be subtly wrong — nationality rules and date arithmetic — can be unit-tested offline. Anything a test could pin down belongs there. Note that `npm test` reads the catalog and the pure modules but **never renders the component**: a bug that only exists in JSX (a missing identifier, a wrong branch) will pass every check. Only a rendered page catches it.
 
 Do not create new top-level directories without documenting the reason. Country subdirectories under `data/scholarships/` are reserved for a future split-loader; the current app reads only the flat JSON file.
 
@@ -86,5 +91,5 @@ The AI settings UI is a placeholder. No provider integration exists yet. If addi
 
 ## Privacy
 
-No PII leaves the browser. Profile data is stored under `sh-profile` in localStorage. Users on shared devices should clear storage after use.
+No PII leaves the browser. Personal state lives in localStorage under `sh-profile` (study goals, country of origin), `sh-saved` (shortlist ids), `sh-tracker` (tracked applications and their status), `sh-docs` (document checklist) and `sh-dark` (theme). Anything new that stores personal state belongs in the same place, is read back defensively, and must not be sent anywhere. Users on shared devices should clear storage after use.
 
