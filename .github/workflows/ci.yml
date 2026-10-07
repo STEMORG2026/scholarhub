@@ -1,0 +1,61 @@
+name: CI
+
+# WHY THIS EXISTS
+# Until now the only gates in this repository were the ones a developer chose to
+# run: `npm test` and `npm run build`, both manual. Nothing ran them on a pull
+# request, so nothing stopped a change from landing on `main` with them failing
+# — and a runtime error inside a view (`ReferenceError: FLAG is not defined`,
+# which blanked the shortlist for six versions) was invisible to every check
+# that did exist.
+#
+# WHAT IT RUNS
+# Exactly the canonical local entry point — `npm test`, then `npm run build`.
+# No bespoke set of checks: a CI job that runs its own private list drifts from
+# what a developer can reproduce, and a green local run stops predicting a green
+# pipeline. `npm test` is itself a chain (unit tests → catalog validation →
+# render smoke test), so adding a stage to it automatically adds it here.
+#
+# NOT INCLUDED, ON PURPOSE
+# `npm run check:links` is deliberately absent. It probes every official link
+# over the network, and the catalog's own documentation records that
+# 401/403/405/429 responses from government and university sites are
+# *unverified, not broken*. In CI that would produce red builds for network
+# weather and teach everyone to ignore the pipeline. It stays a manual,
+# opt-in check.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Least privilege: the job only needs to read the repository. A workflow with no
+# `permissions:` block inherits the repository default, which can be read/write.
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    steps:
+      # v5 is the major that targets the Node 24 runtime. v4 targets Node 20,
+      # which GitHub is now force-running on 24 and warning about on every run
+      # ("Node.js 20 is deprecated … actions/checkout@v4 … being forced to run on
+      # Node.js 24"). The warning was observed in run 37584032698.
+      - uses: actions/checkout@v5
+
+      # Pinned to the major version this project is developed on (local Node is
+      # 24). A floating `lts/*` would let the CI runtime drift away from the
+      # developer's, which quietly invalidates local predictions.
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      # The canonical command. If this line and the local `npm test` ever
+      # diverge, the equivalence is broken and the gate stops meaning anything.
+      - run: npm test
+
+      - run: npm run build

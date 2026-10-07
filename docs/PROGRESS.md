@@ -2,6 +2,39 @@
 
 Detailed log of development work on ScholarHub. For the high-level roadmap with checkboxes, see [ROADMAP.md](ROADMAP.md).
 
+## 2026-10-07 — Verification gate: CI and a render smoke test (v0.25.0)
+
+The previous pass shipped a live crash — the shortlist view still read a `FLAG` table deleted in v0.21.0 — with **every check in the repository green**. This pass closes the hole rather than the symptom.
+
+### Added
+- **`scripts/render-smoke.mjs`.** Loads `src/App.jsx` through Vite's SSR transform and renders all six views twice — once against an empty browser, once against a populated one (saved ids, tracked applications, ticked documents, a profile with a country set). **12 renders.** Rendering is the only thing that executes a view's branches, and the populated pass is what reaches the branches that only run when there is data, which is exactly where the crash lived. Zero new dependencies: Vite transforms the JSX and swallows the CSS import, `react-dom/server` does the render, `localStorage` is stubbed.
+- **`.github/workflows/ci.yml`.** The repository had no CI at all — `.github/` held only issue and PR templates — so `npm test` and `npm run build` ran only when a developer remembered to type them. The workflow runs `npm ci`, `npm test` and `npm run build` on every pull request and every push to `main`, invoking the *same canonical command* as the local gate so that any stage added to the `npm test` chain is covered remotely without editing the workflow. `permissions: contents: read`; Node pinned to major 24 to match the development runtime. Validated with `actionlint` 1.7.7 (exit 0).
+- **`npm run test:render`** as a standalone entry point for the new script; `npm test` is now a three-stage chain.
+
+### Changed
+- **`src/App.jsx` split from `src/main.jsx`.** The component could not previously be loaded outside a browser because a module-level `createRoot(document.getElementById('root'))` ran on import — which is precisely why nothing in the suite had ever rendered it. `App.jsx` now holds the application and stays free of mount-time DOM access; `main.jsx` is a three-line entry that mounts it. `App` takes an optional `initialView` prop (default `'discover'`; nothing in the app passes it) so every view is reachable without interaction. `git mv` preserved the rename in history.
+- `npm test` **232ms → 930ms**. CSS bundle unchanged at 32.19 kB, and the app was re-verified mounting in a real browser (50 cards, 6 nav items, no error overlay) because the entry point moved.
+
+### Validation — the guard was proved to fail
+A guard never observed failing is not a guard. Two violations were planted in a throwaway `git worktree` at the new commit and never committed:
+
+| Planted defect | `node --test` | `validate-catalog` | `npm run build` | `render-smoke` |
+|---|---|---|---|---|
+| `FLAG[s.country]` restored in the saved view (the historical defect) | ✅ pass | ✅ pass | ✅ pass | ❌ exit 1 — `threw ReferenceError: FLAG is not defined` |
+| Tracker empty-state heading renamed (content regression, no exception) | ✅ pass | ✅ pass | ✅ pass | ❌ exit 1 — `expected to find "Nothing tracked yet"` |
+
+All three pre-existing gates stay green on the exact defect that shipped. The worktree was removed, `git worktree prune` run, and `git status --porcelain` confirmed empty.
+
+Two method notes, recorded because they cost time:
+- The first run of the smoke test failed on a **false assertion of my own**: a record name containing `&` arrives HTML-escaped as `&amp;`, so the comparison must decode entities before matching. Fixed by decoding the rendered HTML rather than escaping the needle.
+- A later worktree attempt was blocked by a sandbox artifact — `/tmp` was cleared between calls while the `git worktree` registration survived, so `worktree add` refused and *every* gate returned exit 1 because the directory did not exist. That result was discarded rather than reported: an exit code produced by a missing directory is evidence about the harness, not about the defect. `git worktree prune` clears it.
+
+### Deliberately not done (owner decision)
+- **`verify` is not a required status check.** Branch protection requires a pull request but not a passing check, so CI can be red while a merge still succeeds. Registering the context is an externally visible change to the merge gate. The name to require is exactly `verify`.
+- **No `.nvmrc`.** Pinning the toolchain in a version file affects every contributor's shell; the workflow pins Node 24 instead, which removes the local/CI skew for CI without that side effect.
+- **`npm run check:links` stays out of CI.** It is network-dependent by nature, and this project's own docs record that a 401/403/405/429 from a government or university site means *unverified, not broken*. In CI it would go red on network weather and train everyone to ignore the pipeline.
+- **No git hooks added.** Local checks are feedback and are bypassable by construction; the remote job is the authoritative layer. Adding a hook would add ceremony without adding authority.
+
 ## 2026-10-07 — Application tracker and document checklist (v0.24.0)
 
 ### Added
