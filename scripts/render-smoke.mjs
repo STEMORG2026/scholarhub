@@ -188,6 +188,13 @@ const AI_CASES = [
     },
     expect: ['Anthropic', 'claude-opus-5-5', 'local storage'],
   },
+  {
+    name: 'AI settings — a fallback model chosen',
+    storage: {
+      'sh-ai': JSON.stringify({ providerId: 'openai', baseUrl: '', model: 'gpt-6-astra', fallbackModel: 'gpt-6-luna', rememberKey: false }),
+    },
+    expect: ['If that model is unavailable', 'GPT-6 Luna', 'which model replied'],
+  },
 ];
 
 const failures = [];

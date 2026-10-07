@@ -1,5 +1,41 @@
 # Changelog
 
+## [0.27.0] - 2026-10-07
+
+### Added — the three things v0.26.0 said were missing
+
+The previous release shipped the provider seam and listed three gaps on screen. This closes all three.
+
+**Streaming replies.** Three of the four transports stream as Server-Sent Events and Ollama streams newline-delimited JSON; `parseStreamChunk` handles both, and the reply is written into the transcript token by token instead of appearing after a pause.
+
+- **Streaming is attempted, never assumed.** It falls back to a single request when the browser cannot read a stream, when the provider refuses the streaming request (a compatible server may not recognise `stream_options`), or when the stream ends without producing any text — because **a stream that yields nothing is a failure, not an empty answer**. The reply says which path was taken.
+- **A stream is a fallible iterator.** An error frame can arrive mid-stream; it is surfaced rather than swallowed, and text received before the error is kept rather than discarded. Treating a stream as infallible is how a caller hangs on a promise that will never settle.
+- Google streams from a different method (`:streamGenerateContent`) and needs `alt=sse`; both are set, and a test asserts the non-streaming method is *replaced* rather than appended to.
+- `splitStreamBuffer` carries a partial line into the next read — a chunk boundary can land mid-line, and the naive `split('\n')` loses whatever follows it.
+
+**Cost accounting.** `estimateCost` multiplies the provider's published per-million-token price by the token count it reported. It returns **`null` rather than a number it cannot support** — the same rule this catalog applies to deadlines and award amounts.
+
+- A model with no published price is reported as **uncosted, not as $0.00**. A local Ollama model is the common case: the usage is real, the price does not exist, so the cost is unknown.
+- A half-known cost is marked `partial`, so the interface says *"input or output only"* instead of presenting half a figure as the total. Anthropic is the reason this matters — it reports input on `message_start` and output on `message_delta`, and taking the last report would silently halve the number.
+- `mergeUsage` folds those split reports together without letting a later, emptier one erase an earlier value.
+- The settings page shows a running session total with a plain statement of what it is not: **not a bill** — caching, batch discounts, tiers and reasoning tokens are not accounted for.
+
+**Model fallback, explicit and disclosed.** A reader can name a second model. It runs **only after the first fails**, never instead of it, and **the answer always says which model replied** (`fell back from …`). Silently swapping models is the kind of quiet substitution this project tries not to do.
+
+### Verified live
+
+Against a local Ollama, end to end:
+
+- The connection test returned **"Connected. Ollama answered using qwen2.5-coder:1.5b. ready — 36 tokens in, 2 out"**.
+- **Streaming was observed, not assumed.** Polling the transcript while a reply arrived gave **0 → 426 → 561 characters** in distinct steps. A non-streaming reply jumps from nothing to the whole answer in one step; this did not.
+- The spend line correctly reported **"no priced calls across 1 call · 1 uncosted — this provider publishes no per-token price for the model, so the cost is unknown rather than zero."** An earlier draft of that sentence said "no reported usage", which was wrong — the usage *was* reported and it is the price that does not exist. The transcript note was corrected the same way.
+
+### Verification
+
+- **118 tests, 0 errors / 0 warnings** — up from 99. `src/chat.test.js` gained 19, covering each transport's stream deltas, `[DONE]`, keep-alive comments, event-name lines, malformed lines, mid-stream error frames, buffer splitting across a chunk boundary, CRLF streams, and the cost rules including the partial and unpriced cases.
+- **The render smoke test went 18 → 19 renders**, adding a case for the fallback selector.
+- Main bundle **495.57 kB**, still under the warning threshold; the AI settings chunk is 12.94 kB.
+
 ## [0.26.0] - 2026-10-07
 
 ### Added — the AI side is real now

@@ -2,6 +2,35 @@
 
 Detailed log of development work on ScholarHub. For the high-level roadmap with checkboxes, see [ROADMAP.md](ROADMAP.md).
 
+## 2026-10-07 — Streaming, cost accounting and model fallback (v0.27.0)
+
+v0.26.0 shipped the provider seam and named three gaps on screen. This closes all three.
+
+### Added
+- **Streaming replies.** SSE for OpenAI, Anthropic and Google; newline-delimited JSON for Ollama. `parseStreamChunk` handles both shapes and the transcript fills token by token.
+  - **Streaming is attempted, never assumed.** It falls back to a single request when the browser cannot read a stream, when the provider refuses the streaming request (a compatible server may not recognise `stream_options`), or when the stream produces no text. **A stream that yields nothing is a failure, not an empty answer** — and the reply says which path was taken.
+  - **A stream is a fallible iterator.** An error frame mid-stream is surfaced rather than swallowed, and text received before it is kept. Treating a stream as infallible is how a caller hangs on a promise that never settles.
+  - `splitStreamBuffer` carries a partial line into the next read; a chunk boundary lands mid-line often enough that a naive `split('\n')` loses the tail.
+  - Google streams from `:streamGenerateContent` and needs `alt=sse`. A test asserts the non-streaming method is *replaced*, not appended to.
+- **Cost accounting.** `estimateCost` multiplies the provider's published per-million-token price by the token count it reported, and returns **`null` rather than a number it cannot support** — the rule this catalog already applies to deadlines and award amounts.
+  - A model with no published price is **uncosted, not $0.00**. A local Ollama model is the common case: real usage, no price, so the cost is genuinely unknown.
+  - A half-known cost is marked `partial`, so the UI says *"input or output only"* rather than presenting half a figure as the total. Anthropic is why: it reports input on `message_start` and output on `message_delta`, and taking the last report would halve the number. `mergeUsage` folds the two together without letting the later, emptier one erase the earlier value.
+  - The settings page states what the total is **not**: caching, batch discounts, tiers and reasoning tokens are not accounted for.
+- **Model fallback, explicit and disclosed.** A second model can be named; it runs **only after the first fails**, never instead of it, and the answer always says which model replied (`fell back from …`). Silently swapping models is exactly the quiet substitution this project avoids elsewhere.
+
+### Verified live, not mocked
+- Connection test: **"Connected. Ollama answered using qwen2.5-coder:1.5b. ready — 36 tokens in, 2 out"**.
+- **Streaming observed rather than assumed.** Polling the transcript while a reply arrived gave **0 → 426 → 561 characters** in distinct steps. A non-streaming reply jumps from nothing to the whole answer in one step.
+- The spend line read **"no priced calls across 1 call · 1 uncosted — this provider publishes no per-token price for the model, so the cost is unknown rather than zero."**
+
+### Fixed
+- **Two sentences claimed the wrong cause.** The spend line and the transcript note both said *"no reported usage"* when the usage **was** reported and it is the **price** that does not exist. Both now distinguish a missing price from missing usage, and the transcript note picks between them from the actual result.
+
+### Verification
+- `npm test` **118 tests, 0 errors, 0 warnings** (was 99). `chat.test.js` gained 19: per-transport deltas, `[DONE]`, keep-alive comments, `event:` lines, malformed lines, mid-stream errors, a buffer split across a chunk boundary, CRLF normalisation, and the cost rules including the partial and unpriced cases.
+- **Render smoke test 18 → 19**, adding a case for the fallback selector.
+- Main bundle 495.57 kB (under the warning threshold); AI settings chunk 12.94 kB.
+
 ## 2026-10-07 — AI providers, models and auth (v0.26.0)
 
 The AI settings page had been a placeholder since the first release: a provider dropdown nothing read, a key field nothing used, and a "Test connection" button whose only job was to print a notice saying adapters were not connected. This pass builds the seam AGENTS.md had reserved and connects it end to end.

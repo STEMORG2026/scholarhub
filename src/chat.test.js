@@ -9,6 +9,12 @@ import {
   parseModels,
   describeError,
   describeNetworkFailure,
+  supportsStreaming,
+  buildStreamRequest,
+  parseStreamChunk,
+  splitStreamBuffer,
+  estimateCost,
+  formatCost,
 } from './chat.js';
 import { providerById } from './providers.js';
 
@@ -302,4 +308,162 @@ test('a local network failure points at the local server instead', () => {
 test('a failure with no provider still produces a sentence', () => {
   assert.ok(describeError(null, 500, '').message.length > 0);
   assert.ok(describeNetworkFailure(null, null).message.length > 0);
+});
+
+// --- streaming --------------------------------------------------------------
+
+test('streaming is offered only for transports that implement it', () => {
+  for (const provider of [OPENAI, ANTHROPIC, GOOGLE, OLLAMA]) {
+    assert.equal(supportsStreaming(provider), true, `${provider.id} should stream`);
+  }
+  assert.equal(supportsStreaming(AGY), false, 'a CLI session has no stream to read');
+  assert.equal(supportsStreaming(null), false);
+});
+
+test('a stream request marks the body and keeps the key out of it', () => {
+  const request = buildStreamRequest(OPENAI, { model: 'gpt-6-astra', messages: MESSAGES, apiKey: KEY });
+  assert.equal(request.ok, true);
+  assert.equal(request.streaming, true);
+  assert.equal(request.body.stream, true);
+  assert.deepEqual(request.body.stream_options, { include_usage: true }, 'without this the API omits token counts and the cost becomes unknowable');
+  assertKeyNotInBody(request, KEY);
+  // The non-streaming body must not be mutated by building a streaming one.
+  const plain = buildRequest(OPENAI, { model: 'gpt-6-astra', messages: MESSAGES, apiKey: KEY });
+  assert.equal(plain.body.stream, undefined);
+});
+
+test('an Ollama stream request does not carry the OpenAI usage option', () => {
+  const request = buildStreamRequest(OLLAMA, { model: 'qwen3:8b', messages: MESSAGES });
+  assert.equal(request.body.stream, true);
+  assert.equal(request.body.stream_options, undefined);
+});
+
+test('a Google stream switches method and asks for SSE', () => {
+  const request = buildStreamRequest(GOOGLE, { model: 'gemini-3.8-flash', messages: MESSAGES, apiKey: KEY });
+  assert.match(request.url, /:streamGenerateContent\?key=/);
+  assert.match(request.url, /&alt=sse$/, 'without alt=sse Gemini returns a JSON array, not an event stream');
+  assert.ok(!request.url.includes(':generateContent?'), 'the non-streaming method must be replaced, not appended to');
+});
+
+test('a stream request that cannot be built fails the same way a plain one does', () => {
+  const request = buildStreamRequest(AGY, { model: 'x', messages: MESSAGES, apiKey: KEY });
+  assert.equal(request.ok, false);
+  assert.equal(request.code, 'local-cli-only');
+});
+
+test('OpenAI stream deltas accumulate, and a finish reason ends it', () => {
+  assert.equal(parseStreamChunk(OPENAI, 'data: {"choices":[{"delta":{"content":"Hel"}}]}').delta, 'Hel');
+  assert.equal(parseStreamChunk(OPENAI, 'data: {"choices":[{"delta":{"content":"lo"}}]}').delta, 'lo');
+  assert.equal(parseStreamChunk(OPENAI, 'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}').done, true);
+  assert.equal(parseStreamChunk(OPENAI, 'data: [DONE]').done, true);
+});
+
+test('an OpenAI stream reports usage from its final chunk', () => {
+  const chunk = parseStreamChunk(OPENAI, 'data: {"choices":[],"usage":{"prompt_tokens":12,"completion_tokens":4}}');
+  assert.deepEqual(chunk.usage, { input: 12, output: 4 });
+});
+
+test('an Anthropic stream reads content_block_delta and ends on message_stop', () => {
+  assert.equal(parseStreamChunk(ANTHROPIC, 'data: {"type":"content_block_delta","delta":{"type":"text_delta","text":"Hi"}}').delta, 'Hi');
+  assert.equal(parseStreamChunk(ANTHROPIC, 'data: {"type":"message_start","message":{"model":"claude-opus-5-5","usage":{"input_tokens":9}}}').usage.input, 9);
+  assert.equal(parseStreamChunk(ANTHROPIC, 'data: {"type":"message_delta","usage":{"output_tokens":3}}').usage.output, 3);
+  assert.equal(parseStreamChunk(ANTHROPIC, 'data: {"type":"message_stop"}').done, true);
+  assert.equal(parseStreamChunk(ANTHROPIC, 'data: {"type":"ping"}').delta, '');
+});
+
+test('a Google stream joins its parts', () => {
+  const chunk = parseStreamChunk(GOOGLE, 'data: {"candidates":[{"content":{"parts":[{"text":"Two "},{"text":"things"}]}}]}');
+  assert.equal(chunk.delta, 'Two things');
+  assert.equal(parseStreamChunk(GOOGLE, 'data: {"candidates":[{"content":{"parts":[]},"finishReason":"STOP"}]}').done, true);
+});
+
+test('an Ollama stream is newline-delimited JSON, not SSE', () => {
+  assert.equal(parseStreamChunk(OLLAMA, '{"message":{"content":"Local"},"done":false}').delta, 'Local');
+  const final = parseStreamChunk(OLLAMA, '{"message":{"content":""},"done":true,"prompt_eval_count":30,"eval_count":7}');
+  assert.equal(final.done, true);
+  assert.deepEqual(final.usage, { input: 30, output: 7 });
+});
+
+test('a keep-alive comment, an event name and a blank line are not errors', () => {
+  for (const line of [': keep-alive', 'event: message_start', '', '   ', null, undefined, 'not json at all']) {
+    const chunk = parseStreamChunk(OPENAI, line);
+    assert.equal(chunk.delta, '', `${line} should yield no delta`);
+    assert.equal(chunk.done, false, `${line} should not end the stream`);
+    assert.equal(chunk.error, undefined);
+  }
+});
+
+test('an error frame mid-stream is surfaced rather than swallowed', () => {
+  // A stream is a fallible iterator. Treating it as infallible hangs the caller.
+  const openaiError = parseStreamChunk(OPENAI, 'data: {"error":{"message":"overloaded"}}');
+  assert.equal(openaiError.error, 'overloaded');
+  assert.equal(openaiError.done, true);
+
+  assert.match(parseStreamChunk(ANTHROPIC, 'data: {"type":"error","error":{"message":"boom"}}').error, /boom/);
+  assert.equal(parseStreamChunk(OLLAMA, '{"error":"model not found"}').error, 'model not found');
+});
+
+test('a buffer split mid-line keeps the remainder for the next read', () => {
+  const first = splitStreamBuffer('data: {"a":1}\ndata: {"b"');
+  assert.deepEqual(first.lines, ['data: {"a":1}']);
+  assert.equal(first.remainder, 'data: {"b"');
+
+  const second = splitStreamBuffer(first.remainder + ':2}\n');
+  assert.deepEqual(second.lines, ['data: {"b":2}']);
+  assert.equal(second.remainder, '');
+});
+
+test('carriage returns are normalised, so a CRLF stream parses too', () => {
+  const split = splitStreamBuffer('data: {"a":1}\r\ndata: {"b":2}\r\n');
+  assert.deepEqual(split.lines, ['data: {"a":1}', 'data: {"b":2}']);
+  assert.equal(split.remainder, '');
+});
+
+// --- cost -------------------------------------------------------------------
+
+const PRICED = { inputPrice: 10, outputPrice: 50 };
+
+test('a cost is computed from the published price and the reported usage', () => {
+  const cost = estimateCost(PRICED, { input: 1000, output: 500 });
+  assert.equal(cost.input, 0.01);
+  assert.equal(cost.output, 0.025);
+  assert.equal(cost.total, 0.035);
+  assert.equal(cost.partial, false);
+  assert.equal(cost.currency, 'USD');
+});
+
+test('a cost is unknown rather than guessed', () => {
+  // The rule the catalog applies to deadlines: absent means absent.
+  assert.equal(estimateCost({ inputPrice: null, outputPrice: null }, { input: 10, output: 10 }), null);
+  assert.equal(estimateCost(PRICED, null), null);
+  assert.equal(estimateCost(PRICED, {}), null);
+  assert.equal(estimateCost(PRICED, { input: null, output: null }), null);
+  assert.equal(estimateCost(null, { input: 1, output: 1 }), null);
+});
+
+test('a half-known cost is reported as partial, not as a total', () => {
+  const onlyInput = estimateCost({ inputPrice: 10, outputPrice: null }, { input: 1000, output: 500 });
+  assert.equal(onlyInput.total, 0.01);
+  assert.equal(onlyInput.partial, true, 'half a figure must not be presented as the whole cost');
+  assert.equal(onlyInput.output, null);
+
+  const onlyOutput = estimateCost({ inputPrice: null, outputPrice: 50 }, { input: 1000, output: 500 });
+  assert.equal(onlyOutput.total, 0.025);
+  assert.equal(onlyOutput.partial, true);
+});
+
+test('a provider reporting only one direction still costs what it can', () => {
+  // Streaming: Anthropic sends input on message_start and output on message_delta.
+  const cost = estimateCost(PRICED, { input: 2000, output: null });
+  assert.equal(cost.total, 0.02);
+  assert.equal(cost.partial, true);
+});
+
+test('costs format with enough precision to show a fraction of a cent', () => {
+  assert.equal(formatCost(0), '$0');
+  assert.equal(formatCost(0.00004), '$0.00004');
+  assert.equal(formatCost(0.035), '$0.0350');
+  assert.equal(formatCost(1.5), '$1.50');
+  assert.equal(formatCost(null), '\u2014');
+  assert.equal(formatCost(undefined), '\u2014');
 });

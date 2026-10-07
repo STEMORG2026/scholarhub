@@ -31,6 +31,9 @@ The distinction the catalog refuses to blur: **some schemes are answerable and s
 - **Your key stays yours.** It is held in memory for the tab by default, and only written to this device if you tick a box that says so. It is never put in a request body, a log line, or an error message.
 - **Model lists are read from the provider, not hard-coded** — a roster is stale within weeks. The small seeded list carries the URL each entry came from and the date it was read, and shows a dash wherever the source published nothing.
 - **Antigravity (AGY) is explained, not faked.** It signs in through the local `agy` CLI, which a web page cannot reach, so the settings page says that and gives you the two routes that do work — the Gemini API, or a local OpenAI-compatible gateway in front of the CLI.
+- **Replies stream** where the transport supports it — token by token, not after a pause. Streaming is attempted rather than assumed: it falls back to a single request when the browser cannot read a stream or the provider refuses, and the answer says which happened.
+- **What each call cost**, estimated from the provider's published per-token price and the token count it reported. A model with no published price is reported as **uncosted, not $0.00** — a local model is the common case — and a cost known in only one direction is labelled as partial.
+- **Optional model fallback**, which runs only after the first model fails and always says which model replied. Models are never swapped silently.
 - **Offline assistant guide** by default: search planning from the catalog with no model involved. Connect a provider and it answers through your own model, grounded in the catalog and labelled as a model answer rather than catalog data.
 - JSON catalog and schema documentation designed for community contributions.
 
@@ -75,6 +78,10 @@ A selected provider, with the model list, the limits and prices it publishes, an
 Antigravity signs in through a local CLI, which a browser cannot reach — so the page explains that and gives the routes that work, rather than a login form that could never succeed:
 
 ![The Antigravity connect panel explaining that it authenticates through the agy CLI, with two alternative routes: the Gemini API, or a local OpenAI-compatible gateway](docs/screenshots/ai-antigravity-light.png)
+
+A local runtime connected and tested: model discovery, the fallback selector, and a session cost that is reported as **uncosted rather than $0.00** because a local model publishes no price:
+
+![The Ollama panel showing 10 discovered models, a fallback selector, a session cost reading "no priced calls across 1 call · 1 uncosted", and a successful connection test](docs/screenshots/ai-cost-light.png)
 
 Run the development server (`npm run dev`) to try it locally.
 
@@ -145,7 +152,7 @@ There is no login. Profile and shortlist data are stored in localStorage in the 
 
 ### Phase 3 — planned
 - Community-maintained review cadence, optional update feeds, applicant experiences, and multilingual UI. Automated data collection must be reviewed by humans and respect source terms.
-- AI: streaming replies, per-request cost accounting, and a model fallback when one is unavailable. The connection, model discovery and a working assistant are done; these three are not.
+- AI: streaming replies, per-call cost estimation, and an explicit model fallback are done (2026-10-07). Still open: a request history that survives a reload, per-scholarship cost attribution, and any provider-specific SDK.
 
 ## License
 

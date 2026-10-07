@@ -34,4 +34,4 @@ There is still **no network API owned by this project**, and there must not be o
 
 ## Not implemented
 
-Streaming replies, per-request cost accounting, model fallback, and any provider-specific SDK. The settings page says so on screen rather than leaving it to be discovered.
+A server-side request history, per-scholarship cost attribution, and any provider-specific SDK. The session cost total lives in memory and is lost on reload — deliberately, since there is nowhere to persist it that is not the reader's own browser. The settings page says so rather than leaving it to be discovered.

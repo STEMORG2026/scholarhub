@@ -32,7 +32,7 @@ import {
   Link2,
 } from 'lucide-react';
 import { CATEGORIES, providersInCategory, formatTokens, formatPrice, needsKey } from './providers.js';
-import { agyRefusal } from './chat.js';
+import { agyRefusal, formatCost } from './chat.js';
 
 const CATEGORY_ICON = {
   frontier: Cloud,
@@ -135,6 +135,9 @@ export default function AiSettings({ ai }) {
     busy,
     egress,
     needsBaseUrl,
+    setFallbackModel,
+    spend,
+    resetSpend,
   } = ai;
 
   return (
@@ -299,7 +302,53 @@ export default function AiSettings({ ai }) {
                 })()}
               </div>
             )}
+
+            {availableModels.length > 1 && (
+              <>
+                <label className="setting-label ai-fallback-label">
+                  If that model is unavailable
+                  <select value={state.fallbackModel} onChange={(event) => setFallbackModel(event.target.value)}>
+                    <option value="">Do not fall back — report the failure</option>
+                    {availableModels
+                      .filter((model) => model.id !== state.model)
+                      .map((model) => (
+                        <option key={model.id} value={model.id}>
+                          {model.label}
+                        </option>
+                      ))}
+                  </select>
+                </label>
+                <p className="ai-hint">
+                  Used only after the first model fails, never instead of it — and the answer always says which model replied.
+                </p>
+              </>
+            )}
           </div>
+
+          {spend.calls > 0 && (
+            <div className="ai-spend">
+              <span>
+                This session: <b>{spend.total > 0 ? formatCost(spend.total) : 'no priced calls'}</b> across {spend.calls} call
+                {spend.calls === 1 ? '' : 's'}
+                {spend.unpriced > 0 && (
+                  <em>
+                    {' '}
+                    · {spend.unpriced} uncosted — this provider publishes no per-token price for the model, so the cost is unknown
+                    rather than zero
+                  </em>
+                )}
+              </span>
+              <button type="button" className="link-btn" onClick={resetSpend}>
+                Reset
+              </button>
+            </div>
+          )}
+          {spend.calls > 0 && (
+            <p className="ai-hint">
+              Estimated from the per-million-token prices the provider publishes, multiplied by the token counts it reported. It is
+              not a bill: caching, batch discounts, tiers and reasoning tokens are not accounted for.
+            </p>
+          )}
 
           <div className="provider-info">
             <div>
@@ -352,8 +401,9 @@ export default function AiSettings({ ai }) {
         <div className="coming-note">
           <Clock3 size={16} />
           <span>
-            <b>Not built yet:</b> streaming replies, per-request cost accounting, and a model fallback when one is unavailable.
-            The connection, model discovery and a working assistant are real; those three are not.
+            <b>Still not built:</b> nothing is stored server-side, there is no request history beyond the session total above, and
+            no cost is attributed per scholarship record. Replies stream where the transport supports it and fall back to a single
+            request where it does not — the answer says which happened.
           </span>
         </div>
       </div>

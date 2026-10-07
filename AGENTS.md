@@ -120,6 +120,9 @@ Rules that hold for any change to this area:
 - **Do not assert a model roster.** Model ids, context windows and prices change monthly. Every provider that publishes a list endpoint is queried at runtime and that answer wins. `FRONTIER_SEED` exists only so the picker is not empty before a key is entered; each entry carries its source URL and the date it was read, and anything the source did not publish is `null`. Do not fill a `null` in with a plausible number.
 - **Do not pretend a browser can do something it cannot.** Antigravity is the worked example: it authenticates through a local CLI session that no web page can reach. `agyRefusal()` returns the honest explanation plus the two routes that do work, and the UI shows it instead of a login form that could never succeed.
 - **Never treat model output as scholarship data.** The assistant's prompt carries the catalog rows and forbids inventing a deadline, amount or eligibility rule; a model answer is labelled as one in the transcript.
+- **A stream is a fallible iterator.** Do not write code that assumes a streamed reply arrives cleanly: an error frame can land mid-stream, and a chunk boundary can split a line. Surface the error, keep the text received before it, and carry the partial line into the next read. A stream that yields no text is a **failure**, not an empty answer — fall back rather than reporting a blank reply.
+- **Never invent a cost.** `estimateCost` returns `null` when the model has no published price or no usage was reported, and the interface must say *uncosted* rather than showing `$0.00`. A cost known in only one direction is `partial` and must be labelled as such. A streamed reply reports usage in pieces, so merge them — taking the last report silently halves the figure.
+- **Fallback must be disclosed.** If a second model answers, the reply says which one, and that the first failed. Do not swap models silently.
 
 ## Privacy
 

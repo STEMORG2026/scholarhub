@@ -451,6 +451,24 @@
 .ai-roadmap{margin-top:16px}
 .ai-roadmap .coming-note{margin-top:0}
 
+/* The fallback model and the session spend. */
+.ai-fallback-label{margin-top:16px}
+.ai-spend{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px;padding:10px 12px;background:var(--wash);border-radius:8px;font-size:10.5px;color:#686f66}
+.ai-spend b{color:var(--ink);font-weight:700}
+.ai-spend em{font-style:normal;color:#8a5a12}
+.dark .ai-spend{color:#a4afa4}
+.dark .ai-spend em{color:#e8c07a}
+
+/* Three dots while a streamed reply has not produced its first token yet.
+   The global prefers-reduced-motion guard shortens this to nothing, which
+   leaves three static dots — legible, and no motion. */
+.msg-typing{display:inline-flex;gap:3px;align-items:center;height:14px;vertical-align:middle}
+.msg-typing i{width:4px;height:4px;border-radius:50%;background:#8b9388;animation:sh-blink 1.2s infinite ease-in-out}
+.msg-typing i:nth-child(2){animation-delay:.15s}
+.msg-typing i:nth-child(3){animation-delay:.3s}
+@keyframes sh-blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.dark .msg-typing i{background:#a4afa4}
+
 /* The Suspense fallback while the lazily-loaded settings chunk arrives. */
 .ai-loading{padding:52px 7%;max-width:1150px;margin:auto;font-size:11px;color:#686f66}
 .dark .ai-loading{color:#a4afa4}
