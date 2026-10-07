@@ -1914,5 +1914,134 @@
     "status": "closed",
     "source_url": "https://www.studyinjapan.go.jp/en/_mt/2026/04/01-2027_Research_Guidelines_E.pdf",
     "last_verified": "2026-10-07"
+  },
+  {
+    "id": "gks-graduate",
+    "name": "Global Korea Scholarship for Graduate Degrees (GKS-G)",
+    "provider": "National Institute for International Education (NIIED), Ministry of Education, Republic of Korea",
+    "country": "South Korea",
+    "region": "Nationwide",
+    "city": "Varies by university",
+    "university": "Participating Korean universities; Embassy Track applicants may name up to three preferred universities and are placed by NIIED",
+    "program_field": [
+      "Engineering",
+      "Natural Sciences"
+    ],
+    "degree_level": [
+      "Master",
+      "PhD",
+      "PostDoc"
+    ],
+    "funding_type": "Full scholarship — monthly allowance, tuition, Korean language training, airfare",
+    "amount": "Airfare: one economy-class flight ticket at actual expense. Tuition: up to 5,000,000 KRW, with the admission fee covered by the university. Korean language training fees: 5,200,000 KRW across four quarters. Allowance: the guidelines head this column \"Monthly Allowance\" but print annual figures — 16,560,000 KRW per year for the degree programme, 14,400,000 KRW per year during the Korean language programme, and 20,880,000 KRW per year for the Research programme — with the note that the amount is subject to budget availability. Because the source prints annual totals rather than a monthly rate, no monthly figure is recorded here.",
+    "currency": "KRW",
+    "deadline": "2026-02-25",
+    "deadline_notes": "This is the 2026 Embassy Track deadline. The online application window ran from 11:00 on Thursday 12 February to 18:00 on Wednesday 25 February 2026, Korean Standard Time; the first-round result was announced by 16 March, documents reached NIIED by 1 April, the second-round result came by early May, the third round by 5 June, and the final announcement was expected by 30 June 2026. The whole 2026 cycle is therefore over. The University Track runs a different window — February to April, with each university setting its own date — so the date recorded here belongs to the Embassy Track only. A 2027 GKS-G announcement had not been published when this record was checked on 7 October 2026: the most recent GKS-G notice on the Study in Korea portal is the 2026 final result announcement of 1 July 2026. The 2027 undergraduate programme (GKS-U) was announced in September 2026, but the graduate programme runs a February cycle, so the 2027 GKS-G guidelines should be expected around February 2027.",
+    "duration": "Master's: 3 years — one year of Korean language training plus two years of degree study. Doctoral: 4 years — one year of Korean language training plus three years of degree study. Research programme: 6 months or 1 year. Global Network programme: a master's degree within 2 years. Scholars who already hold TOPIK level 5 or 6, and others granted an exemption, proceed straight to the degree programme.",
+    "eligibility": {
+      "nationality": [
+        "Nationals of the NIIED-designated countries invited to take part in GKS — Nepal is one, with a quota of 4 places on the Embassy Track and 6 on the University Track, so 10 places in total for the 2026 round",
+        "Applicants and their parents (or legal guardians) must hold citizenship of a country other than Korea; dual nationals holding Korean citizenship are not eligible to apply",
+        "Applicants or parents who previously held Korean citizenship must submit documentation issued by the Korean government proving renunciation"
+      ],
+      "gpa_minimum": "A cumulative GPA of at least 2.64/4.0, 2.80/4.3, 2.91/4.5 or 3.23/5.0 — or a score percentile of 80% or above on a 100-point scale, or a rank in the top 20% of the class",
+      "language_requirements": {
+        "korean": "No prior Korean is required — the scholarship funds a year of Korean language training. TOPIK level 3 or above exempts applicants who have completed the IRTS Korean language programme, and TOPIK level 5 or 6 exempts the language year entirely, in which case a Korean Proficiency Grant is paid instead",
+        "english": "The guidelines state no English test requirement; only Korean language ability (TOPIK) is addressed. Applicants must be able to study in the language of instruction of the programme they choose"
+      },
+      "age_limit": "Under 40 — applicants must have been born after 1 September 1986. Current academic professors at institutions in an ODA-recipient country may be up to 45, that is born after 1 September 1981.",
+      "other": "Applicants must have obtained the required degree by 31 July of the entry year — a bachelor's degree for a master's, a master's for a doctorate, a doctorate for a post-doctoral place — or be expected to graduate by then, in which case the official graduation certificate and final transcript must reach the GKS Center by 31 July. Anyone who has graduated from, or is expected to graduate from, a Korean high school or a Korean university is not eligible, including a student in their final year at a Korean university; an online curriculum from a Korean high school or university does not qualify either. Applicants must choose one track and one track only: the Embassy Track, applied for through the Korean Embassy in the applicant's country of citizenship, or the University Track, applied for directly to a designated university. For Nepal the first round is run by the Embassy of the Republic of Korea in Kathmandu. For 2026 the Embassy Track was submitted through an online application system. Scholarship status is conditional: a scholar who withdraws within the first three months of enrolment must repay everything received — entry airfare, settlement allowance, monthly allowance and tuition — and tuition and Korean language training fees are not provided to Research programme scholars. Fields of study are open across the disciplines the participating universities offer."
+    },
+    "benefits": [
+      "Monthly allowance (printed by the guidelines as an annual figure) of 16,560,000 KRW per year for degree-programme scholars, 14,400,000 KRW per year during the Korean language programme, and 20,880,000 KRW per year for the Research programme",
+      "Tuition of up to 5,000,000 KRW, with the admission fee covered by the university",
+      "Korean language training fees of 5,200,000 KRW across four quarters",
+      "One economy-class flight ticket at actual expense",
+      "A settlement allowance on arrival",
+      "A Korean Proficiency Grant for scholars initially exempted from the language programme with TOPIK level 5 or 6",
+      "A year of Korean language training before the degree programme, where required"
+    ],
+    "official_url": "https://www.studyinkorea.go.kr/en/plan/gksNoticeRead.do?bbsId=BBSMSTR_000000000461&nttId=4420",
+    "description": "The Korean government's flagship scholarship for international graduate students, run by NIIED and inviting 2,000 students a year. It funds a master's (one year of Korean language training plus two years of degree study) or a doctorate (one year plus three), with the option of a shorter non-degree Research placement. Applicants choose between two routes: the Embassy Track, run through the Korean Embassy in their own country, which for Nepal means the Embassy of the Republic of Korea in Kathmandu, and the University Track, applied for directly to a designated university. Nepal's quota for the 2026 round was 4 places on the Embassy Track and 6 on the University Track — 10 in total. The 2026 Embassy Track window closed on 25 February 2026 and the cycle finished with results in July; the 2027 graduate guidelines had not been published at the time of checking, and are expected around February 2027.",
+    "tags": [
+      "South Korea",
+      "phd",
+      "master",
+      "government",
+      "fully-funded",
+      "research",
+      "graduate",
+      "international",
+      "verified-deadline",
+      "nepal-eligible",
+      "age-limit",
+      "no-cumulation"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "closed",
+    "source_url": "https://www.studyinkorea.go.kr/en/plan/gksNoticeRead.do?bbsId=BBSMSTR_000000000461&nttId=4420",
+    "last_verified": "2026-10-07"
+  },
+  {
+    "id": "iccr-sushma-swaraj-scholarship",
+    "name": "Sushma Swaraj Silver Jubilee Scholarship Scheme (SSSJSS)",
+    "provider": "Indian Council for Cultural Relations (ICCR), Government of India — administered for Nepal by the Embassy of India, Kathmandu",
+    "country": "India",
+    "region": "Nationwide",
+    "city": "Varies by the allotted university",
+    "university": "Indian universities and institutes; the course and institute allotted to a candidate will not be changed",
+    "program_field": [
+      "Engineering",
+      "Natural Sciences"
+    ],
+    "degree_level": [
+      "Master",
+      "PhD"
+    ],
+    "funding_type": "Full scholarship — tuition, monthly stipend, house rent allowance, contingency grant, thesis grant and return airfare",
+    "amount": "ICCR states that its scholarships cover tuition and compulsory fees paid directly to the university, a monthly stipend, a house rent allowance, an annual contingency grant, a one-time thesis or dissertation grant, medical benefits, and a return economy-class airfare to the airport nearest the place of study plus 3-tier AC train fare if required. ICCR does not publish the amounts on its scheme pages: the page says only \"Stipend, HRA, Contingent Allowances, Thesis/Dissertation Allowance, Airfare, Tuition fee/OCF paid to Universities (Norms attached)\" and no norms document is served from that page. Neither of ICCR's two official guidelines PDFs in circulation contains a financial table for the general schemes — the only rates table either document prints is for its separate AYUSH schemes. No stipend figure is recorded here, because none could be confirmed against an ICCR source on 2026-10-07. Two conflicting schedules are in circulation and both are unverified: an older ICCR schedule still carried on the High Commission of India Pretoria's page (stipend INR 5,500 undergraduate, 6,000 postgraduate, 7,000 MPhil/PhD per month) and a higher schedule quoted by several third-party sites (INR 18,000, 20,000 and 22,000). Treat any figure you read elsewhere as unconfirmed.",
+    "currency": "INR",
+    "deadline": "2026-04-15",
+    "deadline_notes": "The Embassy of India, Kathmandu set 15 April 2026 as the last date for the 2026-27 cycle, with the A2A scholarship portal opening on 27 February 2026. Applying takes two steps, and the second is easy to miss. First, the online application is submitted at a2ascholarships.iccr.gov.in. Second, an application fee of NRs 400 must be deposited to the Education Wing of the Embassy of India, Kathmandu — account number 17725240200331, at any branch of Nepal SBI in Nepal — and the original counterfoil, together with a printed copy of the application and the uploaded documents, must be submitted in person to the Embassy of India, Kathmandu, or to the Consulate General of India, Birgunj for applicants from the districts of Bara, Chitwan, Dhanusha, Mahottari, Makwanpur, Parsa, Rautahat and Sarlahi. Submitting both the fee and the printed application is mandatory, and applicants who do not are treated as ineligible. The Embassy states that it entertains applications from applicants themselves only and does not recognise consultants or agencies, and that applications received through them are liable to be rejected. The 2027-28 cycle is expected on the same rhythm — a late-February portal opening and a mid-April closing date — but no 2027-28 notice had been published when this record was checked on 7 October 2026.",
+    "duration": "The standard duration of the master's or doctoral course at the allotted Indian university",
+    "eligibility": {
+      "nationality": [
+        "Nepali nationals — this scheme is offered for Nepal only",
+        "Applicants must not hold Indian citizenship"
+      ],
+      "gpa_minimum": null,
+      "language_requirements": {
+        "english": "A 500-word essay in English on one of the topics listed on the A2A portal is mandatory, and an English Proficiency undertaking signed by the Principal or Head of the last institution attended must be submitted with the application. TOEFL or IELTS scores may also be submitted if available. Documents not issued in English must be accompanied by an English translation, and applications without them are summarily rejected."
+      },
+      "age_limit": "18 years minimum, and as on 1 July 2026: a maximum of 35 years for undergraduate, postgraduate, certificate and diploma courses, and a maximum of 40 years for PhD courses. There is no upper age limit for courses in Hindi, Sanskrit or the Indian performing arts, unless the institution prescribes one.",
+      "other": "This is the Nepal-only postgraduate and doctoral route in ICCR's 2026-27 offering, with 64 places reserved for Nepal — 60 postgraduate and 4 doctoral. The Embassy of India, Kathmandu runs two sibling schemes in the same cycle, and applicants should be careful which one they need: the Atal Bihari Vajpayee General Scholarship Scheme (ABVGSS) funds undergraduate courses, and the Lata Mangeshkar Dance & Music Scholarship Scheme (LMD&MSS) funds Indian culture, dance, music, theatre, performing art, sculpture, Indian languages, Indian cuisine and yoga. Medical and paramedical courses (nursing, physiotherapy, anaesthesia, laboratory technician), law courses and integrated courses such as the five-year BA-LLB or five-year BSc-MSc are excluded from all three schemes. Applicants for MBA must hold a GMAT score. Applicants for doctoral courses should include a synopsis of the proposed area of research. ICCR states that Indian universities are autonomous and set their own admission criteria, so the course and institute allotted will not be changed afterwards, and that hostel accommodation is not guaranteed. The application is routed through the Indian Mission rather than submitted to ICCR directly."
+    },
+    "benefits": [
+      "Full tuition and compulsory fees paid directly to the university",
+      "A monthly stipend and a house rent allowance",
+      "An annual contingency grant for books and study materials",
+      "A one-time thesis or dissertation grant",
+      "Return economy-class airfare to the airport nearest the place of study, plus 3-tier AC train fare if required",
+      "Medical benefits through the university or a government hospital",
+      "64 places reserved for Nepal — 60 postgraduate and 4 doctoral"
+    ],
+    "official_url": "https://a2ascholarships.iccr.gov.in/",
+    "description": "A Government of India scholarship reserved for Nepali nationals, funding a master's or a doctorate at an Indian university, and the Nepal-only postgraduate counterpart to ICCR's much broader Atal Bihari Vajpayee General Scholarship Scheme. It carries 64 places for Nepal, of which 60 are postgraduate and 4 doctoral, and covers tuition, a stipend, a house rent allowance, a contingency grant, a thesis grant and return airfare. Applying is a two-step process run through the Embassy of India in Kathmandu: an online application on the A2A portal, then a NRs 400 fee paid to the Embassy's Education Wing at a Nepal SBI branch, followed by the counterfoil and printed documents submitted in person. The 2026-27 window closed on 15 April 2026. Medical, paramedical, law and integrated courses are excluded, and applicants for MBA need a GMAT score.",
+    "tags": [
+      "India",
+      "phd",
+      "master",
+      "government",
+      "fully-funded",
+      "international",
+      "verified-deadline",
+      "nepal-eligible",
+      "age-limit",
+      "engineering"
+    ],
+    "last_updated": "2026-10-07",
+    "status": "closed",
+    "source_url": "https://www.cgibirgunj.gov.in/docs/1772693562ICCR-Advertisement.pdf",
+    "last_verified": "2026-10-07"
   }
 ]

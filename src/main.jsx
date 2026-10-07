@@ -7,7 +7,7 @@ import './styles.css';
 // Every country the catalog can return needs an entry here, or the card falls back
 // to a generic globe. 'Europe' and 'Multiple countries' are handled by the globe /
 // Globe2 paths on purpose — they are regions, not countries.
-const FLAG = { 'United States':'🇺🇸', China:'🇨🇳', Germany:'🇩🇪', Europe:'🇪🇺', 'United Kingdom':'🇬🇧', France:'🇫🇷', Netherlands:'🇳🇱', Switzerland:'🇨🇭', Sweden:'🇸🇪', Australia:'🇦🇺', 'New Zealand':'🇳🇿', Canada:'🇨🇦', Japan:'🇯🇵' };
+const FLAG = { 'United States':'🇺🇸', China:'🇨🇳', Germany:'🇩🇪', Europe:'🇪🇺', 'United Kingdom':'🇬🇧', France:'🇫🇷', Netherlands:'🇳🇱', Switzerland:'🇨🇭', Sweden:'🇸🇪', Australia:'🇦🇺', 'New Zealand':'🇳🇿', Canada:'🇨🇦', Japan:'🇯🇵', India:'🇮🇳', 'South Korea':'🇰🇷' };
 const stored = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
 const fmtDate = (iso) => { if (!iso) return null; const d = new Date(iso + 'T00:00:00'); return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }); };
 function App() {
