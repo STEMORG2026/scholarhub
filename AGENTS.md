@@ -25,7 +25,8 @@ ScholarHub is a static, client-side scholarship discovery application. There is 
 ```sh
 npm install          # install dependencies (uses .npm-cache locally if needed)
 npm run dev          # start Vite dev server
-npm test             # node --test on data/scholarships.test.js, then offline catalog validation
+npm test             # the canonical gate: node --test, then catalog validation, then the render smoke test
+npm run test:render  # just the render smoke test (every view, empty + populated browser)
 npm run check:links  # catalog validation plus a liveness probe of every official link (needs network)
 npm run build        # production build to dist/
 npm run preview      # preview production build
@@ -33,7 +34,13 @@ node scripts/validate-catalog.mjs  # standalone catalog validation
 node scripts/validate-catalog.mjs --links --catalog=<path>  # validate a fixture catalog
 ```
 
-There is no TypeScript, no linting config, and no framework-specific test runner beyond `node --test`. Keep it simple.
+**`npm test` is the canonical gate, and it is a chain.** Run it whole, not the
+parts you feel like. `.github/workflows/ci.yml` invokes exactly this command, so
+anything added to the chain is automatically covered on every pull request — and
+anything you skip locally is still enforced remotely.
+
+There is no TypeScript and no linting config beyond `actionlint` for the
+workflow file. Keep it simple.
 
 ## Data rules
 
@@ -49,7 +56,8 @@ There is no TypeScript, no linting config, and no framework-specific test runner
 
 | Path | Purpose |
 |------|---------|
-| `src/main.jsx` | React application (all views, state, filtering) |
+| `src/App.jsx` | The React application (all views, state, filtering). Deliberately free of mount-time DOM access so it can be rendered outside a browser. |
+| `src/main.jsx` | Entry point. Imports `App` and mounts it. Keep it to this and nothing else. |
 | `src/styles.css` | All styling including dark mode |
 | `src/countries.js` | Flag and destination helpers, derived from `data/countries.json` |
 | `src/eligibility.js` | Per-country eligibility verdict (pure, unit-tested) |
@@ -57,10 +65,13 @@ There is no TypeScript, no linting config, and no framework-specific test runner
 | `data/scholarships.json` | Canonical scholarship catalog |
 | `data/scholarships.test.js` | Catalog validation tests |
 | `scripts/validate-catalog.mjs` | Standalone validation script |
+| `scripts/render-smoke.mjs` | Renders every view (empty + populated) to catch runtime errors |
 | `docs/` | Architecture, schema, API notes, roadmap |
-| `.github/` | Issue templates, PR template |
+| `.github/` | Issue templates, PR template, and `workflows/ci.yml` |
 
-**Keep decision logic in the pure modules, not in the component.** `eligibility.js` and `tracker.js` exist so that the two parts most likely to be subtly wrong — nationality rules and date arithmetic — can be unit-tested offline. Anything a test could pin down belongs there. Note that `npm test` reads the catalog and the pure modules but **never renders the component**: a bug that only exists in JSX (a missing identifier, a wrong branch) will pass every check. Only a rendered page catches it.
+**Keep decision logic in the pure modules, not in the component.** `eligibility.js` and `tracker.js` exist so that the two parts most likely to be subtly wrong — nationality rules and date arithmetic — can be unit-tested offline. Anything a test could pin down belongs there.
+
+**Never add mount-time DOM access to `src/App.jsx`.** A module-level `createRoot(document.getElementById('root'))` is what made the component unloadable anywhere but a browser, and that is exactly why a `ReferenceError` in one view shipped undetected for six versions. `scripts/render-smoke.mjs` renders all six views against both an empty and a populated browser; `npm test` runs it. Note that `node --test` still reads only the catalog and the pure modules, and a successful build still proves only that an identifier is *referenced* — the render smoke test is the only thing that executes a view's branches.
 
 Do not create new top-level directories without documenting the reason. Country subdirectories under `data/scholarships/` are reserved for a future split-loader; the current app reads only the flat JSON file.
 
@@ -77,6 +88,16 @@ Do not create new top-level directories without documenting the reason. Country 
 Direct pushes to `main` are rejected by branch protection (`GH006: Changes must be made through a pull request`), with `enforce_admins` enabled — so the rule applies to administrators too, and cannot be bypassed by accident.
 
 Never force-push or rewrite history on `main`. Never delete or bypass the protection to land a change; if a change genuinely cannot go through a PR, that is a signal the change needs rethinking, not that the rule needs an exception.
+
+## Verification
+
+Three layers, and only the last one is authoritative:
+
+1. **Nothing at commit time.** This repository has no git hooks — `core.hooksPath` is unset and `.git/hooks` holds only the sample files. Nothing stops a commit locally.
+2. **Local gate (fast, bypassable).** `npm test` and `npm run build`, roughly a second together. Bypassable by simply not typing them, which is why they cannot be the last line of defence.
+3. **Remote CI (authoritative).** `.github/workflows/ci.yml` runs `npm ci`, `npm test` and `npm run build` on every pull request and every push to `main`. It invokes the same canonical command as layer 2, deliberately — a CI job with its own private check list drifts from what a developer can reproduce.
+
+**The workflow is not registered as a required status check.** Branch protection requires a pull request, but not a passing check, so CI can be red while a merge still succeeds. Making it required is an externally visible change to the merge gate and is left as a decision for the owner; if it is made required, the context name to require is exactly `verify`.
 
 ## Commit conventions
 

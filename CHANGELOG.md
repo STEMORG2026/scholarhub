@@ -1,5 +1,41 @@
 # Changelog
 
+## [0.25.0] - 2026-10-07
+
+### Added — the gate that was missing
+
+v0.24.0 shipped a live crash: the shortlist view still read a `FLAG` table deleted six versions earlier, so opening *My shortlist* with anything saved threw `ReferenceError: FLAG is not defined` and blanked the app. **Every check in the repository was green on that defect.** This release closes the hole rather than just patching the symptom.
+
+**`scripts/render-smoke.mjs` — render every view.** It loads `src/App.jsx` through Vite's SSR transform and renders all six views twice: once against an empty browser and once against a populated one (saved ids, tracked applications, ticked documents, a profile with a country set). **12 renders.** Rendering is the only thing that executes a view's branches, and the populated pass is what reaches the branches that only run when there is data — which is exactly where the crash lived. No new dependency: Vite handles the JSX and the CSS import, `react-dom/server` does the render, and `localStorage` is a stub.
+
+**`src/App.jsx` split from `src/main.jsx`.** The app could not previously be loaded outside a browser, because a module-level `createRoot(document.getElementById('root'))` ran on import. `App.jsx` now holds the application and stays free of mount-time DOM access; `main.jsx` is a three-line entry that mounts it. `App` takes an optional `initialView` prop — a seam for the test, defaulting to the real entry view, which nothing in the app passes. `git mv` preserved the rename in history.
+
+**`.github/workflows/ci.yml` — the repository had no CI at all.** `.github/` held only issue and PR templates, so `npm test` and `npm run build` ran only when a developer remembered to type them. The workflow runs `npm ci`, `npm test` and `npm run build` on every pull request and every push to `main` — the *same canonical command* as the local gate, so a stage added to the `npm test` chain is covered remotely without touching the workflow. `permissions: contents: read`; Node pinned to major 24 to match the development runtime. Validated with `actionlint` 1.7.7 (exit 0).
+
+`npm test` 232ms → **930ms**.
+
+### The guard was proved to fail
+
+A guard that has never been observed to fail is not a guard. Both violations were planted in a throwaway `git worktree` and never committed:
+
+| Planted defect | `node --test` | `validate-catalog` | `npm run build` | `render-smoke` |
+|---|---|---|---|---|
+| `FLAG[s.country]` restored in the saved view (the historical defect) | ✅ pass | ✅ pass | ✅ pass | ❌ **exit 1 — "threw ReferenceError: FLAG is not defined"** |
+| Tracker empty-state heading renamed (a content regression) | ✅ pass | ✅ pass | ✅ pass | ❌ **exit 1 — "expected to find …"** |
+
+All three pre-existing gates stay green on the exact defect that shipped. The new gate catches it and names the view. The worktree was removed and `git status` verified clean.
+
+### Deliberately not done
+
+**`verify` is not registered as a required status check.** Branch protection requires a pull request but not a passing check, so CI can still be red while a merge succeeds. Making it required is an externally visible change to the merge gate, so it is left as a decision for the owner — the context name to require is exactly `verify`.
+
+**No `.nvmrc` was added.** Pinning the toolchain in a version file is a project-wide decision; the workflow pins Node 24 instead, which removes the local/CI skew for CI without changing what a contributor's shell picks up.
+
+### Notes
+
+- `npm run check:links` is deliberately excluded from CI. It probes official links over the network, and this project's own documentation records that a 401/403/405/429 from a government or university site means *unverified, not broken*. In CI it would go red on network weather and teach everyone to ignore the pipeline.
+- There are still no git hooks in this repository. Local checks are feedback, not enforcement; the remote job is the authoritative layer.
+
 ## [0.24.0] - 2026-10-07
 
 ### Added — an application tracker, and a document checklist
