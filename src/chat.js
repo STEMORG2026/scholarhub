@@ -329,3 +329,217 @@ export function describeNetworkFailure(provider, error) {
       : `The request to ${target} never completed. The browser will not say whether that was a network problem, a blocked origin (CORS), or an offline machine \u2014 only that it did not arrive.`,
   };
 }
+
+// --- streaming --------------------------------------------------------------
+//
+// Three of the four transports stream as Server-Sent Events (`data: {...}` lines,
+// OpenAI terminated by `data: [DONE]`); Ollama streams newline-delimited JSON.
+// The parser below handles both shapes and is pure, so the awkward part — a chunk
+// split across two reads — is testable without a network.
+//
+// A stream is a *fallible* iterator: an error frame can arrive mid-stream, and
+// the caller has to be able to surface it rather than hanging on a promise that
+// will never settle. `parseStreamChunk` reports `error` for exactly that case.
+
+/** True when the transport can stream. Antigravity never gets this far. */
+export function supportsStreaming(provider) {
+  return !!provider && ['openai', 'anthropic', 'google', 'ollama'].includes(provider.transport);
+}
+
+/**
+ * The same request as `buildRequest`, marked for streaming.
+ *
+ * `stream_options.include_usage` is sent on the OpenAI shape because without it
+ * that API omits token counts from a streamed reply and the cost of the call
+ * becomes unknowable. A compatible server that does not recognise the field may
+ * reject the request — which is why the caller falls back to a single
+ * non-streaming call rather than surfacing a failure the reader cannot act on.
+ */
+export function buildStreamRequest(provider, options) {
+  const base = buildRequest(provider, options);
+  if (!base.ok) return base;
+  if (!supportsStreaming(provider)) return { ...base, streaming: false };
+
+  if (provider.transport === 'google') {
+    // Gemini streams from a different method on the same resource, and needs
+    // `alt=sse` or the reply is a JSON array rather than an event stream.
+    return {
+      ...base,
+      streaming: true,
+      url: base.url.replace(':generateContent', ':streamGenerateContent') + '&alt=sse',
+      body: base.body,
+    };
+  }
+
+  return {
+    ...base,
+    streaming: true,
+    body: {
+      ...base.body,
+      stream: true,
+      ...(provider.transport === 'openai' ? { stream_options: { include_usage: true } } : {}),
+    },
+  };
+}
+
+/**
+ * Read one line of a stream.
+ *
+ * @returns {{delta: string, done: boolean, usage?: object, model?: string, error?: string}}
+ *   `delta` is the new text, `done` marks the end, `error` a failure frame. An
+ *   unrecognised or malformed line yields an empty delta rather than throwing —
+ *   a keep-alive comment or a partial line is not an error.
+ */
+export function parseStreamChunk(provider, line) {
+  const empty = { delta: '', done: false };
+  if (typeof line !== 'string') return empty;
+  const trimmed = line.trim();
+  if (!trimmed) return empty;
+  // SSE comments (`: keep-alive`) and `event:` names carry no payload.
+  if (trimmed.startsWith(':') || trimmed.startsWith('event:')) return empty;
+
+  let payload = trimmed;
+  if (payload.startsWith('data:')) payload = payload.slice(5).trim();
+  if (!payload) return empty;
+  if (payload === '[DONE]') return { delta: '', done: true };
+
+  let json;
+  try {
+    json = JSON.parse(payload);
+  } catch {
+    return empty;
+  }
+
+  const transport = provider ? provider.transport : 'openai';
+
+  if (transport === 'openai') {
+    if (json.error) return { delta: '', done: true, error: (json.error.message || 'The provider sent an error mid-stream.') };
+    const choice = (json.choices || [])[0] || {};
+    return {
+      delta: (choice.delta && choice.delta.content) || '',
+      done: !!choice.finish_reason,
+      usage: json.usage ? { input: json.usage.prompt_tokens ?? null, output: json.usage.completion_tokens ?? null } : undefined,
+      model: json.model || undefined,
+    };
+  }
+
+  if (transport === 'anthropic') {
+    if (json.type === 'error') {
+      return { delta: '', done: true, error: (json.error && json.error.message) || 'The provider sent an error mid-stream.' };
+    }
+    if (json.type === 'content_block_delta') return { delta: (json.delta && json.delta.text) || '', done: false };
+    if (json.type === 'message_delta') {
+      return {
+        delta: '',
+        done: false,
+        usage: json.usage ? { output: json.usage.output_tokens ?? null } : undefined,
+      };
+    }
+    if (json.type === 'message_start' && json.message && json.message.usage) {
+      return { delta: '', done: false, usage: { input: json.message.usage.input_tokens ?? null }, model: json.message.model };
+    }
+    if (json.type === 'message_stop') return { delta: '', done: true };
+    return empty;
+  }
+
+  if (transport === 'google') {
+    const candidate = (json.candidates || [])[0] || {};
+    const parts = (candidate.content && candidate.content.parts) || [];
+    return {
+      delta: parts.map((part) => part.text || '').join(''),
+      done: !!candidate.finishReason,
+      usage: json.usageMetadata
+        ? { input: json.usageMetadata.promptTokenCount ?? null, output: json.usageMetadata.candidatesTokenCount ?? null }
+        : undefined,
+      model: json.modelVersion || undefined,
+    };
+  }
+
+  if (transport === 'ollama') {
+    if (json.error) return { delta: '', done: true, error: json.error };
+    return {
+      delta: (json.message && json.message.content) || '',
+      done: json.done === true,
+      usage: json.done ? { input: json.prompt_eval_count ?? null, output: json.eval_count ?? null } : undefined,
+      model: json.model || undefined,
+    };
+  }
+
+  return empty;
+}
+
+/**
+ * Split a raw stream buffer into complete lines, keeping the remainder.
+ * A chunk can end mid-line, so the tail must be carried into the next read.
+ */
+export function splitStreamBuffer(buffer) {
+  const normalised = buffer.replace(/\r\n/g, '\n');
+  const parts = normalised.split('\n');
+  const remainder = parts.pop() || '';
+  return { lines: parts, remainder };
+}
+
+// --- cost -------------------------------------------------------------------
+
+/**
+ * Estimate what one call cost, from the model's published price and the usage
+ * the provider reported.
+ *
+ * Returns `null` when it cannot be known — an unpriced model, or a provider that
+ * did not report tokens. **It never invents a number**: a cost the app cannot
+ * support is reported as unknown, which is the same rule the scholarship catalog
+ * applies to deadlines and award amounts.
+ *
+ * `partial` is true when only one direction was known, so a caller can say
+ * "input only" rather than presenting half a figure as the total.
+ */
+export function estimateCost(model, usage) {
+  if (!model || !usage) return null;
+  const inputPrice = typeof model.inputPrice === 'number' ? model.inputPrice : null;
+  const outputPrice = typeof model.outputPrice === 'number' ? model.outputPrice : null;
+  if (inputPrice === null && outputPrice === null) return null;
+
+  const inputTokens = typeof usage.input === 'number' ? usage.input : null;
+  const outputTokens = typeof usage.output === 'number' ? usage.output : null;
+  if (inputTokens === null && outputTokens === null) return null;
+
+  const input = inputPrice !== null && inputTokens !== null ? (inputTokens / 1000000) * inputPrice : null;
+  const output = outputPrice !== null && outputTokens !== null ? (outputTokens / 1000000) * outputPrice : null;
+  const known = [input, output].filter((value) => value !== null);
+  if (!known.length) return null;
+
+  return {
+    input,
+    output,
+    total: known.reduce((sum, value) => sum + value, 0),
+    partial: known.length < 2,
+    currency: 'USD',
+  };
+}
+
+/** A money string precise enough to show a fraction of a cent. */
+export function formatCost(value) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return '\u2014';
+  if (value === 0) return '$0';
+  if (value < 0.01) return '$' + value.toFixed(5);
+  if (value < 1) return '$' + value.toFixed(4);
+  return '$' + value.toFixed(2);
+}
+
+/**
+ * Fold one usage report into another.
+ *
+ * A streamed reply reports its token counts in pieces — Anthropic sends the
+ * input count when the message starts and the output count when it ends, Google
+ * sends them on whichever chunk carries `usageMetadata`. Taking the *last*
+ * report would throw away the earlier half and under-report the cost, so the
+ * two are merged, and a field the newer report omits is left alone.
+ */
+export function mergeUsage(current, incoming) {
+  if (!incoming) return current || null;
+  const merged = { ...(current || {}) };
+  for (const direction of ['input', 'output']) {
+    if (typeof incoming[direction] === 'number') merged[direction] = incoming[direction];
+  }
+  return Object.keys(merged).length ? merged : null;
+}
