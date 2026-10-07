@@ -128,6 +128,7 @@ There is no login. Profile and shortlist data are stored in localStorage in the 
 - [Development progress](docs/PROGRESS.md)
 - [Data schema and verification](docs/DATA-SCHEMA.md)
 - [Application notes](docs/API.md)
+- [Reading your documents and comparing them to requirements](docs/DOCUMENT-INGESTION.md) — a design proposal, not implemented
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
 
