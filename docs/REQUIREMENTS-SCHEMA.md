@@ -94,7 +94,7 @@ into `unstated`, which the current scalar cannot avoid:
 | `percentile` | `minimum` + `of` | a percentile bar, e.g. top 20% |
 | `rank` | `minimum` + `of` | a class-rank bar |
 | `count` | `minimum` + **`unit`** (both mandatory) | a quantity with no ceiling — 240 ECTS |
-| `prose` | optional `varies_by` — the wording is the requirement's `text` | stated, but with no single scalar form |
+| `prose` | optional `varies_by`, optional `delegated_to` — the wording is the requirement's `text` | stated, but with no single scalar form; with `delegated_to`, the bar is somebody else's |
 | `none-stated` | `quote` (the proof) | **the provider states there is no threshold** |
 | `unstated` | nothing, and the requirement carries **no** `text` | **the catalog has not looked** — the honest default |
 
@@ -200,8 +200,14 @@ quoted in `text` and not encoded, for the same reason as the German 2.8.
 
 Two independent cases in two batches is the point at which an open item stops being an edge
 case, so batch 4 was run under a standing trigger: **a third instance gets `direction` built
-before the pass continues.** Batch 4 produced none, so the trigger has not fired and the pass
-continued. The trigger stands for batch 5 — it is not discharged by one quiet batch.
+before the pass continues.** Batch 4 produced none and batch 5 produced none — neither the Pan
+African University's age limits nor CGRS-D's month cap is an academic score on a downward scale
+— so the trigger has not fired.
+
+**Wiring the file in did not force it either**, contrary to an earlier prediction here: both
+inverted cases are recorded as `prose`, so no rule in the data is currently inverted and nothing
+numeric compares the wrong way. `direction` remains unbuilt and unneeded, with the trigger
+standing.
 
 ### 3.6 The delegated bar is the dominant shape, not an edge case
 
@@ -226,10 +232,29 @@ answer is not a number but a pointer — *"this award has no academic bar of its
 programme sets it"* is more actionable than any figure would be, because it tells the reader
 which document to open.
 
-The consequence for Phase 3: `unresolvable` is the wrong reason code for these eight. They are
-not unresolvable — they are **delegated**, which is a definite answer, and rendering it as
-"we could not work this out" would understate what is known. A `delegated` reason code is
-therefore an open item alongside `direction`.
+The consequence for Phase 3: `unresolvable` is the wrong reason code for these. They are not
+unresolvable — they are **delegated**, which is a definite answer, and rendering it as "we could
+not work this out" would understate what is known. **Built in v0.37.0 as the `delegated` reason
+code** — see §3.6.1 for the mechanism.
+
+#### 3.6.1 Delegation is a field, not a phrase match
+
+The first plan was to detect delegation by searching `text` for wording like *"set by the
+university"* or *"each beneficiary recruits its own"*. That is not a mechanism: it breaks the
+moment a provider words it differently, it fails silently when it does, and it would put a regex
+on the read path of the app — the same defect class as inferring a reader's nationality from a
+substring of a country name.
+
+Delegation is instead **stated**:
+
+```jsonc
+{ "kind": "prose", "delegated_to": "the UK university making the unconditional offer" }
+```
+
+`delegated_to` is only meaningful on a `prose` rule — a rule carrying a figure is not delegated,
+because a figure is already the answer — and it is forbidden on `unstated`, which is bare by
+definition. The comparison then has something definite to say: *"This award sets no academic bar
+of its own. It is set by the UK university making the unconditional offer."*
 
 ### 3.7 The wording has exactly one home
 
@@ -336,8 +361,9 @@ described the old `text` rule for two releases after both had changed.
 11. `unstated` must be bare, and must carry **no** `text` — the absence is the finding, and a
     sentence there would be a claim.
 12. `rule.text` is never allowed. The wording lives on the requirement (§3.7).
-13. `applies_to` and `varies_by`, when present, must be non-empty strings. A qualifier that
-    silently does nothing is worse than no qualifier.
+13. `applies_to`, `varies_by` and `delegated_to`, when present, must be non-empty strings. A
+    qualifier that silently does nothing is worse than no qualifier. `delegated_to` is only
+    legal on a `prose` rule, and never on `unstated`.
 
 **Provenance**
 

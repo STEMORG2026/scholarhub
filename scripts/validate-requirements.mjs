@@ -264,8 +264,25 @@ function checkRule(where, rule) {
   }
 
   if (rule.kind === 'unstated') {
-    if (rule.minimum !== undefined || rule.scale !== undefined || rule.text !== undefined || rule.quote !== undefined || rule.branches !== undefined) {
+    if (rule.minimum !== undefined || rule.scale !== undefined || rule.text !== undefined || rule.quote !== undefined || rule.branches !== undefined || rule.delegated_to !== undefined) {
       error(where, 'rule.kind "unstated" must be bare — it means nothing has been recorded');
+    }
+  }
+
+  // A delegated bar is named, not inferred.
+  //
+  // The first attempt at this was going to detect delegation by matching phrases
+  // in `text` — "set by the university", "each beneficiary recruits its own".
+  // That is not a mechanism: it breaks the moment a provider words it differently,
+  // it fails silently, and it would put a regex on the read path of the app. The
+  // nine records that delegate now name who sets the bar, in a field the comparison
+  // can read.
+  if (rule.delegated_to !== undefined) {
+    if (typeof rule.delegated_to !== 'string' || rule.delegated_to.trim() === '') {
+      error(where, 'rule.delegated_to must be a non-empty string when present');
+    }
+    if (rule.kind !== 'prose') {
+      error(where, 'rule.delegated_to is only meaningful on a "prose" rule — a rule with a figure is not delegated');
     }
   }
 
