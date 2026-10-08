@@ -76,9 +76,12 @@ test('a delegated prose rule maps to `delegated`, not to plain prose', () => {
   assert.equal(r.to, 'the admitting university');
 });
 
-test('plain prose stays prose', () => {
+test('a sourced prose finding maps to `criterion-only`, not to catalog prose', () => {
+  // The mapper knows the provenance, so it must say which case this is: the two
+  // render different sentences and `src/ingest.test.js` proved they are not
+  // interchangeable.
   const r = requirementFor(entry({ kind: 'prose' }));
-  assert.equal(r.kind, 'prose');
+  assert.equal(r.kind, 'criterion-only');
 });
 
 test('an unrecognised rule kind maps to absent, never to a pass', () => {

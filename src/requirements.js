@@ -80,7 +80,18 @@ export function requirementFor(entry) {
       if (typeof rule.delegated_to === 'string' && rule.delegated_to.trim()) {
         return { kind: 'delegated', to: rule.delegated_to, text };
       }
-      return { kind: 'prose', text };
+      // `criterion-only`, not `prose`. The two are different findings and the
+      // difference is provenance, which only this mapper knows:
+      //
+      //   - a **file** prose rule means "the provider weighs academic
+      //     performance and publishes no bar" — the sourcing pass writes one only
+      //     after reading the page and finding no figure;
+      //   - a **catalog** prose `gpa_minimum` is an unparsed string that may well
+      //     list several scales, which is why `compareGpa` hands it back rather
+      //     than picking one.
+      //
+      // They must not share a sentence. The catalog case is `prose`; this is not.
+      return { kind: 'criterion-only', text };
 
     default:
       return { kind: 'absent' };

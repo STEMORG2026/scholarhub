@@ -127,6 +127,7 @@ export default function IngestPanel({ onConfirm, currentGpa, currentLanguage, cu
   const notRecorded = tally ? tally.byReason['not-recorded'] || 0 : 0;
   const notPublished = tally ? tally.byReason['not-published'] || 0 : 0;
   const delegated = tally ? tally.byReason.delegated || 0 : 0;
+  const criterionOnly = tally ? tally.byReason['criterion-only'] || 0 : 0;
 
   return (
     <div className="form-card ingest-card">
@@ -188,6 +189,13 @@ export default function IngestPanel({ onConfirm, currentGpa, currentLanguage, cu
                 throw away the most useful thing the sourced file knows: which
                 of these records have no bar at all, which have one that
                 somebody else sets, and which nobody has looked at yet. */}
+            {/* The largest group, and the most useful sentence in the app: these
+                providers weigh academic performance but publish no bar, so a
+                reader should stop looking for a number rather than assume one
+                exists and they failed to find it. */}
+            {criterionOnly > 0 && (
+              <>{criterionOnly} weigh academic performance but publish no threshold. </>
+            )}
             {notPublished > 0 && (
               <>{notPublished} state no GPA threshold of their own. </>
             )}

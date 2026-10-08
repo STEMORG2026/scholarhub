@@ -45,7 +45,9 @@ test('every reason compare.js can emit is in the declared vocabulary', () => {
   collect(compareGpa(record('a'), gpa(3.5, 4), { kind: 'absent', checked: true })); // not-published
   collect(compareGpa(record('a'), gpa(3.5, 4), { kind: 'none-stated', text: 'x' })); // no-requirement
   collect(compareGpa(record('a'), gpa(3.5, 4), { kind: 'delegated', to: 'them' }));  // delegated
-  collect(compareGpa(record('a'), gpa(3.5, 4), { kind: 'prose', text: 'x' }));       // unresolvable
+  collect(compareGpa(record('a'), gpa(3.5, 4), { kind: 'criterion-only', text: 'x' })); // criterion-only
+  collect(compareGpa(record('a'), gpa(3.5, 4), { kind: 'prose', text: 'x' }));          // unresolvable (catalog)
+  collect(compareGpa(record('a'), gpa(3.5, 4), { kind: 'branches', branches: [{ value: 2, scale: 5 }, { value: 2, scale: 4.3 }] })); // unresolvable
   collect(compareGpa(record('a'), null, { kind: 'numeric', value: 3, scale: 4 }));   // no-value
   collect(compareGpa(record('a'), gpa(3.5), { kind: 'numeric', value: 3, scale: 4 })); // no-scale
 
@@ -81,9 +83,40 @@ test('the provider stating there is no threshold is its own reason', () => {
   assert.equal(r.quote, 'no formula');
 });
 
-test('prose with no scalar form reads as unresolvable', () => {
-  const r = compareGpa(record('a'), gpa(3.5, 4), { kind: 'prose', text: 'grades are one of four criteria' });
+test('a sourced prose finding is reported as a criterion, not as a broken scale', () => {
+  const r = compareGpa(record('a'), gpa(3.5, 4), { kind: 'criterion-only', text: 'grades are one of four criteria' });
+  assert.equal(r.reason, 'criterion-only');
+  assert.equal(r.quote, 'grades are one of four criteria');
+});
+
+test('the criterion sentence never claims scales or branches', () => {
+  // The regression this release exists for. 18 of 36 records were rendering
+  // "states its requirement in a form that has more than one scale or branch",
+  // a sentence written for the `branches` case — and not one of those 18 has a
+  // scale or a branch. A negative control, because the defect was a claim that
+  // was false about the record it was attached to, and only asserting the
+  // absence of that claim catches it coming back.
+  const r = compareGpa(record('a'), gpa(3.5, 4), { kind: 'criterion-only', text: 'x' });
+  assert.doesNotMatch(r.sentence, /scale|branch/i);
+  assert.match(r.sentence, /publishes no threshold/i);
+});
+
+test('the two prose cases do NOT share a sentence', () => {
+  // Provenance, not phrasing: a sourced finding is a criterion; an unparsed
+  // catalog string may list several scales. `src/ingest.test.js` caught this
+  // being collapsed — it was the only test that noticed, and it was right.
+  const fromFile = compareGpa(record('a'), gpa(3.5, 4), { kind: 'criterion-only', text: 'x' });
+  const fromCatalog = compareGpa(record('a', 'a 2:1 or equivalent'), gpa(3.5, 4));
+  assert.notEqual(fromFile.sentence, fromCatalog.sentence);
+  assert.notEqual(fromFile.reason, fromCatalog.reason);
+});
+
+test('a branch mismatch DOES talk about scales, and keeps the old reason', () => {
+  // The sentence was correct here, and only here. It must not be removed along
+  // with the misuse of it.
+  const r = compareGpa(record('a'), gpa(3.5, 4.3), { kind: 'branches', branches: [{ value: 2.64, scale: 4 }, { value: 3.23, scale: 5 }] });
   assert.equal(r.reason, 'unresolvable');
+  assert.match(r.sentence, /scale/i);
 });
 
 // --- delegated: a definite answer, not a failure ----------------------------

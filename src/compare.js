@@ -37,7 +37,8 @@ export const UNKNOWN_REASONS = [
   'not-published', // the provider's page was checked and publishes no threshold
   'not-recorded', // nobody has looked — the catalog does not carry one
   'delegated', // the award sets no bar; a named body does
-  'unresolvable', // recorded as prose that has no single scalar form
+  'criterion-only', // the provider weighs academic performance but publishes no bar
+  'unresolvable', // recorded, but the two sides cannot be lined up
   'no-value', // the reader has not confirmed a value to compare
   'no-scale', // a value with no scale cannot be compared against a scaled rule
 ];
@@ -180,7 +181,29 @@ export function compareGpa(record, value, requirement) {
     };
   }
 
-  // 4. Recorded, but as prose with no single scalar form.
+  // 4a. The sourced file read this provider's page and found a criterion but no
+  //     threshold. This is the dominant shape in the whole catalog — 18 of 36
+  //     sourced records — and it is the finding the sourcing pass kept producing:
+  //     the usual case is a criterion that is *weighed*, not a threshold that is
+  //     enforced.
+  if (req.kind === 'criterion-only') {
+    return {
+      verdict: 'unknown',
+      reason: 'criterion-only',
+      sentence: 'This programme records how academic performance is weighed but publishes no threshold, so there is no figure to compare against. Read the provider\u2019s own wording below.',
+      quote: req.text,
+    };
+  }
+
+  // 4b. An unparsed string from the catalog. It may genuinely list several
+  //     scales, which is why the rule is handed back rather than one branch being
+  //     chosen — the reader's transcript decides.
+  //
+  //     This sentence is correct here and false anywhere else. It was nearly
+  //     deleted while fixing 4a: the wired file sends its prose findings through
+  //     `criterion-only`, so nothing in the *current* data reaches this branch,
+  //     and `src/ingest.test.js` was the only thing that noticed. A branch that
+  //     no data reaches today is still reachable by a record nobody has sourced.
   if (req.kind === 'prose') {
     return {
       verdict: 'unknown',
