@@ -262,6 +262,16 @@ function checkRule(where, rule) {
   if (rule.varies_by !== undefined && (typeof rule.varies_by !== 'string' || rule.varies_by.trim() === '')) {
     error(where, 'rule.varies_by must be a non-empty string when present');
   }
+
+  // `applies_to` says *what* a figure counts — "the best 35% of students", "22.5
+  // ECTS in university-level mathematics", one branch per GPA scale. It was
+  // checked on a `branches` entry and nowhere else, so `applies_to: 5` or
+  // `applies_to: ""` on a `rank` or a `count` passed silently. A qualifier that
+  // silently does nothing is worse than no qualifier: the record looks
+  // narrowed and is not.
+  if (rule.applies_to !== undefined && (typeof rule.applies_to !== 'string' || rule.applies_to.trim() === '')) {
+    error(where, 'rule.applies_to must be a non-empty string when present');
+  }
 }
 
 for (const recordId of ids) {

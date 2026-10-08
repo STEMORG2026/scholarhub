@@ -1,5 +1,89 @@
 # Changelog
 
+## [0.34.0] - 2026-10-08
+
+### Added — six more records, and 26 of 50
+
+Six new, spanning PhD agencies, a national scholarship and three more Erasmus Mundus
+consortia. Each read off the provider's own page and dated `2026-10-08`.
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `swiss-government-excellence` | FCS assesses on three criteria: candidate profile, quality of the research project, synergies. No academic figure at all. | `prose` |
+| `cgrs-doctoral` | No GPA published. Academic record is one indicator inside a 50%-weighted criterion. | `prose` |
+| `eesic-emjm` | Academic merit scored on Grades/GPA and "student's ranking, **if available**". | `prose` |
+| `emerald-emjm` | rated, top 40 interviewed; no GPA bar | `prose` + `credits` 180 + 22.5 |
+| `biopham-emjm` | no GPA bar; physics/mathematics background assessed by committee | `prose` + `credits` 180 + 18 |
+| `paris-saclay-international-masters` | **no academic criterion at all**; the bar is delegated to admission to the master's | `prose` |
+
+**All six publish no GPA figure.** That is 17 of 21 across the pass.
+
+### Added — ECTS requirements are subject-specific, so `count` can now be narrowed
+
+EMerald requires *"at least 22.5 ECTS in university level mathematics **for application
+eligibility**"* — not 22.5 ECTS of anything. BIOPHAM expects *"a minimum 18 ECTS each"* in
+physics and in mathematics. A total-credit figure and a subject-specific one are not
+interchangeable, so `count` now carries `applies_to`, the same qualifier `rank` and `branches`
+already used.
+
+BIOPHAM's 18 ECTS is recorded **separately** from its 180-ECTS degree requirement and marked
+`not_a_requirement`, because BIOPHAM words it as *"should possess … **usually** a minimum"* and
+says it *"will be assessed by the Selection Committee"* — an expectation weighed in selection,
+not an eligibility gate. Collapsing the two would have made a soft expectation look like a hard
+gate, which is the `pec-pg-brazil` lesson: a finding must survive as the finding it is.
+
+### Added — the delegated bar gets its own row in §3.1
+
+Paris-Saclay publishes **no academic criterion whatsoever**: eligibility is nationality,
+admission to a Paris-Saclay master's, first-time enrolment in France, under 30, and no other
+funding above EUR 600/month. The jury evaluates "academic background, personal project,
+motivation", and the page states that *"the jury being discretionary, its decisions are
+confidential and cannot lead to appeal"*. Any academic bar lives in the programme's own
+admission decision.
+
+That is the same shape as Chevening's 2:1, which is set by a UK university's unconditional
+offer rather than by the scholarship. It now has its own row in the §3.1 table, because
+"the award publishes no threshold" and "there is no threshold" are different claims, and only
+the first is true here.
+
+### Added — providers say "if available" too
+
+EESIC scores *"Student's ranking, if available"*; CGRS-D lists *"relative standing in program
+(if available)"*. Both know a class rank often does not exist — which is exactly what this
+schema records as `unstated` on the reader's side. The phrase is kept verbatim so that whoever
+wires `compare.js` can see that the provider expects `unknown` here as well, and a `rank` rule
+must not be treated as answerable by default.
+
+### Fixed — a qualifier that silently did nothing
+
+`applies_to` was validated on a `branches` entry and **nowhere else**, so `applies_to: 5` or
+`applies_to: ""` on a `rank` or a `count` passed silently. A qualifier that does nothing is
+worse than no qualifier: the record looks narrowed and is not. It is now checked on every rule.
+Three tests, and the defect observed to fail (**2 fail**) with the validator verified
+byte-identical after restore.
+
+### Changed — §3.5 now has two instances, which makes it a pattern
+
+CGRS-D's only numeric academic threshold is a **ceiling**: *"no more than 36 months of
+full-time equivalent doctoral study"*. `count` compares with `>=`, so recording 36 would have
+meant "you must exceed 36 months" — the opposite of a cap. It is quoted and not encoded, like
+MS²'s German 2.8. Two independent cases in two batches is where an open item stops being an
+edge case: **if batch 4 produces a third, `direction` gets built before the pass continues.**
+
+### Not recorded, and why
+
+- **`resco-emjm`** — `resco-master.eu` serves a Cloudflare interstitial; no content. Not
+  recorded.
+- **`eesic-emjm` is partial, and says so.** Its selection procedure was readable and is
+  recorded; its "Academic requirements" block renders as a collapsed accordion and was **not**.
+  The record's `text` states explicitly that no credit or degree figure is claimed in either
+  direction, so its absence here is not read as a finding that none exists. Recording presence
+  is fine; claiming absence is not.
+
+`npm test` **204 → 207**. Requirements validation 0 errors, 2 warnings, both real and both
+pre-existing. **No user-visible behaviour changes** — nothing in the app reads
+`data/requirements.json` yet.
+
 ## [0.33.0] - 2026-10-08
 
 ### Added — seven more records, all from the Erasmus Mundus family
