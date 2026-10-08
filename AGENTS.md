@@ -167,6 +167,16 @@ Rules that hold for any change to this area:
 
 Personal state lives in localStorage under `sh-profile` (study goals, country of origin), `sh-saved` (shortlist ids), `sh-tracker` (tracked applications and their status), `sh-docs` (document checklist) and `sh-dark` (theme). Anything new that stores personal state belongs in the same place and is read back defensively. Users on shared devices should clear storage after use.
 
+**A write that fails must say so, and the warning must persist.** `localStorage.setItem` throws when
+the quota is full or storage is blocked (private mode, a site-data policy, a locked-down profile).
+Never call it directly and never swallow it: route every write through `persist()` in `App.jsx`,
+which reports the failure, and render a warning that **stays on screen** — a 2.4-second toast is
+the wrong shape for "nothing you do here is being kept". Until v0.40.0 three of the four writes
+called `setItem` directly, so a failure threw inside a click handler and the control simply looked
+dead, while the fourth swallowed it and the reader's tracker silently stopped saving. The sidebar
+promises *"Your data stays on this device"*; a write that fails is the one case where that promise
+needs checking rather than asserting.
+
 **"No PII leaves the browser" was the rule until v0.31.0, and it was false.** The
 AI assistant attached the reader's profile — field, degree, nationality — to
 *every* chat request, because the system prompt named the reader unconditionally.

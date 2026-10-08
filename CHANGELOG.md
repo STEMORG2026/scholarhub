@@ -1,5 +1,96 @@
 # Changelog
 
+## [0.40.0] - 2026-10-09
+
+### Fixed — the app could fail to save and never say so
+
+Found by an audit with `Universal_Software_Auditor` (report and a verified triage are in
+`USA-AUDIT.md` and `USA-AUDIT-TRIAGE.md`). The tool's finding was "errors are handled, not
+swallowed"; the reality was worse than the finding.
+
+**Three of the four writes to `localStorage` in `App.jsx` called `setItem` directly**, so when
+storage was full or blocked the call **threw inside a click handler**: the confirmation toast
+never appeared and the control simply looked dead. The fourth swallowed the error, so the
+reader's tracker and document checklist **silently stopped being saved while the UI went on
+looking saved**.
+
+Both are one defect seen from two sides, and it is this project's own failure mode turned on
+itself: the sidebar promises *"Your data stays on this device"* and nothing checked that it did.
+
+All four writes now go through one `persist()` that reports failure, and the failure renders a
+**persistent** warning rather than a 2.4-second toast — the condition persists, so the warning
+has to:
+
+> This browser is not saving anything — storage is full or blocked. Your tracker, checklist and
+> profile will be lost when you close this tab.
+
+Verified in a browser, not reasoned about: with `localStorage.setItem` overridden to throw, both
+the dark-mode toggle **and** the save button render the warning (the save button is the handler
+that used to throw). The warning's contrast is **8.15:1**, measured in the page against WCAG AA's
+4.5:1.
+
+### Fixed — all five dependencies were declared as `"latest"`
+
+The audit reported 4 occurrences and downgraded it to LOW. It is **5**, and it was the most
+consequential finding in the report. `react`, `react-dom`, `vite`, `@vitejs/plugin-react` and
+`lucide-react` were all `"latest"`.
+
+The lockfile pins real versions, so `npm ci` in CI was reproducible — but the declared spec in
+`package.json` **and in the lockfile's own root entry** was `"latest"`, so a fresh `npm install`
+on any clone re-resolves and rewrites the lock. A contributor silently upgrading React is not a
+hypothetical.
+
+Now pinned to exactly what the lock already resolved: `react`/`react-dom` `19.3.0`, `vite`
+`8.3.1`, `@vitejs/plugin-react` `6.1.1`, `lucide-react` `1.48.0`. Nothing changes at runtime.
+
+### Fixed — the CI actions were on mutable tags
+
+`actions/checkout@v7` and `actions/setup-node@v7` are tags, and a tag can be moved under you by
+whoever owns the action. Both are now pinned to the commit SHAs the runner actually used
+(`3d3c42e5…`, `949feb24…`), with `# v7` trailing so Dependabot can still raise updates.
+`actionlint` 1.7.7 clean.
+
+### Fixed — the smoke test's canary looked like a live credential
+
+The audit's only CRITICAL was `SEC-001`, "hardcoded credentials in source", pointing at
+`render-smoke.mjs:348`. **It was a false positive**: the string was
+`sk-ant-SECRET-DO-NOT-RENDER`, the smoke test's own leak canary, searched for in rendered markup
+to prove the key never reaches visible text.
+
+The finding was wrong, but it will recur for every scanner that ever reads this repo, so the
+cause is removed rather than the symptom: both canaries are now clearly not credentials
+(`CANARY-LEAK-SENTINEL-4f2a9c71`, `CANARY-REMEMBERED-KEY-7b1e04`). The test proves exactly what
+it proved before — that a stored value never reaches visible text — and no key-shaped literal
+remains anywhere in the repo.
+
+### Added
+
+- **`SECURITY.md`** — which the audit correctly reported missing. It leads with what the project
+  actually is (static, client-side, no server, no accounts) so that inapplicable reports are
+  pre-empted, and it points at GitHub's private advisory flow rather than publishing an address.
+- **`.nvmrc`** pinning Node 24, matching what CI already hardcodes.
+- **`npm run test:cov`** — `node --test --experimental-test-coverage`. First measured number:
+  **84.06% statements, 83.67% branches, 82.04% functions**.
+- The empty `catch` in `validate-catalog.mjs` now says why it is empty, rather than being a
+  silent swallow.
+
+### Deliberately not done, and why
+
+- **A linter and a formatter** are genuinely absent, and adding ESLint means a new dependency, a
+  config, and a backlog of findings it will raise on existing code. That is a decision to make
+  on purpose, not as a footnote to an audit.
+- **No git tags** after 23 releases. Worth fixing, but tagging 23 historical releases is a
+  judgement call about what each one *was*, and a lone tag on the current commit is a partial
+  answer that looks complete.
+- **An ErrorBoundary and client-side error reporting.** Real — a `ReferenceError` shipped
+  undetected for six versions, which is precisely what a boundary catches — but it is a feature
+  with a UI decision attached, not a config fix.
+- **IaC, Dockerfile, SLSA provenance, Sigstore signing, CODEOWNERS** — the audit flags them and
+  they are not applicable to a static site with one maintainer.
+
+`npm test` unchanged at **256**. Bundle **499,985 bytes** against the 512,000 assertion
+(+222 for the warning; 12,015 headroom).
+
 ## [0.39.0] - 2026-10-08
 
 ### Added — five more records, and 41 of 50

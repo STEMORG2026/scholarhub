@@ -262,6 +262,11 @@ async function probe(url) {
         headers: { 'user-agent': USER_AGENT, accept: 'text/html,*/*' },
       });
       // We only need the status line; do not buffer whole pages.
+      // An empty catch, deliberately: this is best-effort cleanup of a body we
+      // are not going to read. Cancelling can fail if the stream already ended
+      // or was never opened, and there is nothing to recover — the response
+      // itself is returned either way. Swallowing it here cannot hide a problem
+      // the caller would act on.
       try { await res.body?.cancel(); } catch {}
       return res;
     } finally {

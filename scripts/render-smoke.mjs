@@ -259,7 +259,7 @@ const AI_CASES = [
     name: 'AI settings — a key remembered on the device',
     storage: {
       'sh-ai': JSON.stringify({ providerId: 'anthropic', baseUrl: '', model: 'claude-opus-5-5', rememberKey: true }),
-      'sh-ai-key': JSON.stringify('sk-ant-not-a-real-key'),
+      'sh-ai-key': JSON.stringify('CANARY-REMEMBERED-KEY-7b1e04'),
     },
     expect: ['Anthropic', 'claude-opus-5-5', 'local storage'],
   },
@@ -345,21 +345,21 @@ for (const scenario of INGEST_CASES) {
 // hold it, and it is masked on screen — but the key must never reach visible
 // text, a title, an aria-label, a placeholder, or anything else a screenshot,
 // a screen reader or a copied page would expose.
-const SECRET = 'sk-ant-SECRET-DO-NOT-RENDER';
+const LEAK_CANARY = 'CANARY-LEAK-SENTINEL-4f2a9c71';
 store.clear();
 store.set('sh-ai', JSON.stringify({ providerId: 'anthropic', baseUrl: '', model: 'claude-opus-5-5', rememberKey: true }));
-store.set('sh-ai-key', JSON.stringify(SECRET));
+store.set('sh-ai-key', JSON.stringify(LEAK_CANARY));
 try {
   const html = renderToStaticMarkup(React.createElement(AiHarness));
   rendered += 1;
 
-  const escaped = SECRET.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const escaped = LEAK_CANARY.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const withoutFieldValue = html.replace(new RegExp(`value="${escaped}"`, 'g'), 'value="[the field itself]"');
 
-  if (withoutFieldValue.includes(SECRET)) {
+  if (withoutFieldValue.includes(LEAK_CANARY)) {
     failures.push('AI settings: the key reached an attribute or a text node other than the password field it belongs to');
   }
-  if (withoutFieldValue.replace(/<[^>]*>/g, ' ').includes(SECRET)) {
+  if (withoutFieldValue.replace(/<[^>]*>/g, ' ').includes(LEAK_CANARY)) {
     failures.push('AI settings: the key was rendered as visible text');
   }
   if (!html.includes('type="password"')) {

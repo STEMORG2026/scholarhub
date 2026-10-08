@@ -63,7 +63,10 @@ jobs:
       # to leave a token in `.git/config` where a later step's script could use
       # it. The checkout is also shallow by default, which is all this needs;
       # full history buys nothing when no step inspects it.
-      - uses: actions/checkout@v7
+      # Pinned to a commit SHA, with the tag in a trailing comment so Dependabot can
+      # still raise update PRs. A mutable tag can be moved under you by whoever owns
+      # the action — and these were bumped by Dependabot days ago.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
@@ -71,7 +74,7 @@ jobs:
       # which GitHub force-runs on 24 and warns about on every run ("Node.js 20
       # is deprecated … actions/checkout@v4 … being forced to run on Node.js
       # 24"). The warning was observed in run 37584032698.
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: '24'
           cache: npm
