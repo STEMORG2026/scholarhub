@@ -1,5 +1,82 @@
 # Changelog
 
+## [0.35.0] - 2026-10-08
+
+### Added — five more records, and 31 of 50
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `holland-scholarship` | "You meet the specific requirements of the institution of your choice" — 34 institutions, no central bar | `prose` |
+| `msca-doctoral-networks` | funding goes to consortia; vacancies and requirements live on EURAXESS | `prose` |
+| `nz-scholarships` | "the academic entry requirements ... determined by the applicant's preferred education institutions" | `prose` |
+| `anso-cas-twas-unesco-phd` | "meet the admission criteria for international students of USTC/UCAS" | `prose` |
+| `australia-awards` | **partial** — programme page publishes nothing; country pages not read | `prose` |
+
+### Measured — the delegated bar is the dominant shape, not an edge case
+
+Across the 31 records sourced so far: **5 carry a comparable GPA figure. 8 state explicitly
+that the academic bar is set by somebody else.** The second number is larger than the first, and
+it is not noise — it is how large programmes are actually administered. Chevening's bar is set
+by the UK university's unconditional offer; the Swedish Institute's by University Admissions;
+the NL Scholarship's by each of 34 institutions; MSCA-DN's by each funded consortium; Manaaki
+NZ's by the applicant's preferred institution, in its own words.
+
+**This reframes what the file is for.** The instinct is that `requirements.json` exists to hold
+thresholds. It mostly does not, and cannot. For a quarter of the records the honest and *useful*
+answer is not a number but a pointer — *"this award has no academic bar of its own; the host
+programme sets it"* is more actionable than any figure, because it tells the reader which
+document to open. Written up as `REQUIREMENTS-SCHEMA.md` §3.6, with the consequence recorded:
+`unresolvable` is the wrong reason code for those eight. They are not unresolvable, they are
+**delegated** — a definite answer — and rendering it as "we could not work this out" would
+understate what is known. A `delegated` reason code is now an open item alongside `direction`.
+
+### Fixed — the requirement wording had two homes, one of them silently empty
+
+`text` lived on the **rule** for the first five records, on the **requirement** for everything
+since. Measured before touching anything: **17 records carried the identical string in both
+fields and 7 carried it only on the rule.** Every duplicate pair was byte-identical — verified,
+not assumed — so collapsing them lost nothing: 37 distinct strings before, 37 after.
+
+The defect that mattered was not the duplication but the **7 records with no requirement-level
+`text` at all**. A consumer reading `text` renders nothing for those, and a blank requirement
+reads as "no requirement" rather than "not loaded" — which is the same class of error as
+`unstated` versus `none-stated`, arriving from a third direction. Two shapes, one of them
+silently empty, is worse than either shape alone.
+
+`of.text` is now rejected outright and `text` is **required on every requirement except
+`unstated`**, where it is forbidden because there the absence *is* the finding. Written up as
+§3.7.
+
+Three new tests, and the defect classes planted and observed to fail: allowing `text` back on
+the rule (**1 fails**), dropping the requirement-level requirement (**1 fails**), letting
+`unstated` carry text again (**1 fails**). Validator verified byte-identical after restore.
+
+**Two existing tests were passing for the wrong reason and are now fixed.** The prose and
+unstated divergence tests asserted only that a warning was *absent* — which a validator that
+**rejected the fixture** also satisfies. Both now assert the exit status too. A test that
+cannot distinguish "silent" from "failed" is not testing silence.
+
+### Changed — §5 of the schema doc now matches its own validator
+
+It had said "`kind` must be one of the seven" and "`text` is mandatory on `prose` and
+`none-stated`" for two releases after both had changed. Rewritten as the seventeen rules the
+script actually enforces, grouped by shape, numbers, meaning and provenance.
+
+`npm test` **207 → 210**. Requirements validation 0 errors, 2 warnings, both real and both
+pre-existing. **No user-visible behaviour changes** — nothing in the app reads
+`data/requirements.json` yet.
+
+### Not recorded, and why
+
+- **`nsf-grfp`** — `nsf.gov` returns "Request blocked: this resource is not available in your
+  region". Not recorded. The solicitation is the one document most likely to state a
+  *none-stated* position on GPA, so it is worth re-attempting from another route.
+- **`tfmasa-emjm`**, **`rem-plus-plus-emjm`** — home pages reached, admission pages not. Not
+  recorded rather than guessed.
+- **`australia-awards`** is recorded **partially and says so** in its own `text`: the programme
+  page publishes nothing and the "how to apply" page timed out, so the absence of a threshold
+  there is explicitly *not* a finding that the programme has none.
+
 ## [0.34.0] - 2026-10-08
 
 ### Added — six more records, and 26 of 50

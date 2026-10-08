@@ -81,7 +81,7 @@ workflow file. Keep it simple.
 | `src/IngestPanel.jsx` | The document-reading surface on the profile page. Lazily loaded; the smoke test renders it directly. |
 | `data/scholarships.json` | Canonical scholarship catalog |
 | `data/scholarships.test.js` | Catalog validation tests |
-| `data/requirements.json` | Machine-comparable requirements, keyed by record id — 26 of 50 records as of v0.34.0; the sourcing pass is in progress, not finished |
+| `data/requirements.json` | Machine-comparable requirements, keyed by record id — 31 of 50 records as of v0.35.0; the sourcing pass is in progress, not finished |
 | `scripts/validate-catalog.mjs` | Standalone validation script |
 | `scripts/validate-requirements.mjs` | Validates `data/requirements.json` against `docs/REQUIREMENTS-SCHEMA.md` |
 | `scripts/render-smoke.mjs` | Renders every view (empty + populated) to catch runtime errors |
