@@ -1,0 +1,183 @@
+# Schema — the requirement entity
+
+**Status:** proposal, written 2026-10-08. The schema and the five worked examples are real;
+the **data file holds only the 5 hardest records** (`data/requirements.json`), as the proof
+that the schema can hold what providers actually publish. The remaining 45 are a sourcing
+pass and are the owner's call.
+
+This is the companion to `SCHEMA-PERSONAL-PROFILE.md`. That document defines the *applicant*
+side; this one defines the *requirement* side. A comparison needs both, and they meet only in
+the browser — never merged into one shipped file.
+
+---
+
+## 1. Why requirements are their own file, not more fields on a record
+
+The catalog's unit is the **scholarship**. Requirements live at the level of the **program
+or the institution**. Those are different entities, and one record can span many of the
+latter:
+
+- `daad-study-scholarships` has `university: "German higher education institutions"` and
+  `city: "Various"`. It is not a program; it is a scheme over hundreds of programs, each
+  with its own requirement.
+- `csc-government-scholarship` names no university at all.
+- `kaust-fellowship` *is* institution-level — every admitted graduate student gets it — so
+  its requirement genuinely belongs to the record.
+
+So the requirement gets its own file, keyed by `record_id`, and a record may carry **zero,
+one or many** requirements. Leaving `eligibility.gpa_minimum` as a scalar on the record
+forces every provider's rule into one field, which is exactly the shape that has already
+failed: 45 `null`, 0 numbers, 5 prose.
+
+---
+
+## 2. Where the requirement entity should live — the one structural trade-off
+
+Three options, and the honest trade-off is shorter paths versus shorter files:
+
+| Option | Shape | Trade-off |
+|---|---|---|
+| **A. Central file** (chosen) | `data/requirements.json` : `{ [record_id]: Requirement[] }` | One file to source and validate; a reader must fetch it separately from the record |
+| B. Inline | `record.requirements: Requirement[]` | Shortest read path; grows `scholarships.json`, which is already the bundle's biggest asset |
+| C. Hybrid | a `has_requirements` flag on the record + the central file | Fast "does this record have any" check; two places to keep consistent |
+
+**A is chosen for the proof, and the reason is the sourcing pass, not performance.** A
+sourcing pass touches *only* requirements; with option A it is one file, one diff, one
+validator, and `data/scholarships.json` is never rewritten (which matters — that file has a
+documented serialisation trap; see `MEMORY-scholarhub.md`). If the split fetch ever becomes
+the larger cost, option C is the upgrade and it does not require re-sourcing anything.
+
+---
+
+## 3. The entity
+
+```jsonc
+{
+  "record_id": "gks-graduate",        // must exist in data/scholarships.json
+  "requirements": [
+    {
+      "kind": "gpa",                  // what is being required
+      "of": {                         // the rule
+        "kind": "branches",
+        "branches": [
+          { "minimum": 2.64, "scale": 4.0 },
+          { "minimum": 2.80, "scale": 4.3 },
+          { "minimum": 2.91, "scale": 4.5 },
+          { "minimum": 3.23, "scale": 5.0 }
+        ],
+        "alternatives": [
+          { "kind": "percentile", "minimum": 80, "of": 100 },
+          { "kind": "rank", "minimum": 20, "of": 100 }
+        ]
+      },
+      "text": "A cumulative GPA of at least 2.64/4.0, 2.80/4.3, 2.91/4.5 or 3.23/5.0 — or a score percentile of 80% or above on a 100-point scale, or a rank in the top 20% of the class",
+      "source": "https://www.studyinkorea.go.kr/en/plan/gksNoticeRead.do?bbsId=BBSMSTR_000000000461&nttId=4420",
+      "last_verified": "2026-10-07"
+    }
+  ]
+}
+```
+
+### The rule discriminator
+
+The rule's `kind` is the load-bearing part. It is what keeps `none-stated` from collapsing
+into `unstated`, which the current scalar cannot avoid:
+
+| `kind` | Carries | Meaning |
+|---|---|---|
+| `numeric` | `minimum` + **`scale`** (both mandatory) | one figure, directly comparable |
+| `branches` | `branches[]` of `{minimum, scale}`, optional `alternatives[]` | the reader picks their branch — the provider states several |
+| `percentile` | `minimum` + `of` | a percentile bar, e.g. top 20% |
+| `rank` | `minimum` + `of` | a class-rank bar |
+| `prose` | `text` only, optional `varies_by` | stated, but with no single scalar form |
+| `none-stated` | `quote` | **the provider states there is no threshold** |
+| `unstated` | nothing | **the catalog has not looked** — the honest default |
+
+`prose`, `none-stated` and `unstated` are three *different facts*. `numeric`, `branches`,
+`percentile` and `rank` are four different *comparison procedures*. All seven are one closed
+set, and the validator rejects an eighth.
+
+### Mapping to `src/compare.js` — every reason code already exists
+
+| rule `kind` | verdict | reason | needs |
+|---|---|---|---|
+| `numeric` (scale matches the reader's) | `meets` / `fails` | — | a confirmed value with a scale |
+| `numeric` (scale ≠ the reader's) | `unknown` | `unresolvable` | one side converted |
+| `percentile` | `meets` / `fails` | — | a confirmed value *and* its percentile |
+| `rank` | `unknown` | `unresolvable` | the reader's class rank |
+| `branches` (one branch matches) | `meets` / `fails` | — | the reader's scale picks a branch |
+| `branches` (no branch matches) | `unknown` | `unresolvable` | the reader picks, or a conversion rule |
+| `prose` | `unknown` | `unresolvable` | a human read |
+| `none-stated` | `unknown` | `no-requirement` | nothing — it is an answer |
+| `unstated` | `unknown` | `not-recorded` | the sourcing pass |
+
+**No new verdict and no new reason code is required.** The schema's job is to hold the data;
+the engine's job is already done.
+
+---
+
+## 4. The five worked examples — the proof
+
+These are the five records whose `gpa_minimum` is a prose string, and they were chosen
+because they are the **hardest** case. If the schema holds these, it holds anything. All
+five are transcribed verbatim into `data/requirements.json`.
+
+| Record | `kind` | Why this shape |
+|---|---|---|
+| `gks-graduate` | `branches` | Four figures on four scales, plus a percentile and a rank alternative. `numeric` cannot hold it; it is genuinely a set of alternatives. |
+| `mext-research-students` | `branches` | Two thresholds split by field, not by scale. Needs a way to say *which branch applies to whom*. |
+| `groundwater-emjm` | `prose` | Two *different systems* (US letter grade, UK classification). Comparable only after a conversion, which the provider states as "or equivalent" rather than as a rule. |
+| `kaust-fellowship` | `numeric` | The rare clean case: `3.0` on a `4.0` scale. The extra context (90% above 3.3) is **not** a requirement and is kept in `text`, not as a number to compare against. |
+| `pec-pg-brazil` | `none-stated` | Explicitly no threshold. The single most important case, because it is the one that must never render as "we do not know". |
+
+### What the examples established
+
+- **`branches` needs to record *why* it branches.** GKS branches by scale (the reader's
+  transcript decides); MEXT branches by field (the applicant's subject decides). Both are
+  representable, but they are not the same kind of branch, so each branch carries an optional
+  `applies_to` label. **Without it the UI cannot tell the reader which branch is theirs**,
+  which would make the schema hold the data and still be useless.
+- **`kaust-fellowship` splits context from requirement.** "Typically 90% of admitted
+  applicants have a GPA above 3.3" is not a threshold and must never be compared against.
+  It belongs in `text`. This is the same class of error as the catalog's own KAUST record
+  printing an impossible "TOEFL iBT 5 overall" — a number that is present but not a rule.
+- **`none-stated` is a real answer, not a gap.** `pec-pg-brazil` states the requirement is
+  set programme by programme. That is a *finding*, and it must survive as one.
+
+---
+
+## 5. What the validator enforces
+
+`scripts/validate-requirements.mjs`, added to the `npm test` chain:
+
+1. `record_id` must exist in `data/scholarships.json` — a requirement for no record is a typo.
+2. `kind` must be one of the seven. An eighth is a schema change, not a data edit.
+3. `numeric` **must** carry both `minimum` and `scale`. A numeric requirement without a scale
+   is rejected — it is the same defect as a GPA without a scale, on the other side.
+4. A non-numeric kind **must not** carry `minimum` or `scale` — those belong inside `branches`.
+5. Every branch must carry both `minimum` and `scale`.
+6. `source` and `last_verified` are **mandatory on every requirement**. A requirement with no
+   source is not verifiable; a requirement with no `last_verified` cannot be aged.
+7. `last_verified` must be a real ISO date, not in the future.
+8. `text` is mandatory on `prose` and `none-stated` — those kinds *are* their text.
+
+Rule 6 is the one worth stating plainly: **a requirement is the thing that goes stale
+fastest.** Providers change a threshold without changing the page, and there is no diff to
+notice. `last_verified` is how the app can eventually say "this was checked 14 months ago"
+rather than presenting a stale figure as current.
+
+---
+
+## 6. What this does not do
+
+- **It does not change `data/scholarships.json`.** The five records keep their prose
+  `gpa_minimum` untouched; the new file sits beside them. Nothing in the app reads it yet.
+- **It does not invent a number.** Every value in the five examples is transcribed from the
+  parent record's own text; none was computed, averaged, or converted.
+- **It does not add a language-requirement shape.** The same problem exists for
+  `language_requirements` (15 prose dicts), and it needs the same treatment, but the GPA
+  case is the one that blocks the comparison engine, so it goes first.
+- **It does not settle the sub-field question.** `program_field` is a flat set at one level
+  ("Civil Engineering", not "Structural Engineering"). Whether a second level is needed is a
+  separate decision, and the catalog's `fields` filter derives from the data, so adding one
+  is additive when it happens.

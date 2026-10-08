@@ -1,0 +1,88 @@
+{
+  "gks-graduate": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "branches",
+          "branches": [
+            { "minimum": 2.64, "scale": 4.0 },
+            { "minimum": 2.80, "scale": 4.3 },
+            { "minimum": 2.91, "scale": 4.5 },
+            { "minimum": 3.23, "scale": 5.0 }
+          ],
+          "alternatives": [
+            { "kind": "percentile", "minimum": 80, "of": 100, "applies_to": "score percentile on a 100-point scale" },
+            { "kind": "rank", "minimum": 20, "of": 100, "applies_to": "top 20% of the class" }
+          ]
+        },
+        "text": "A cumulative GPA of at least 2.64/4.0, 2.80/4.3, 2.91/4.5 or 3.23/5.0 — or a score percentile of 80% or above on a 100-point scale, or a rank in the top 20% of the class",
+        "source": "https://www.studyinkorea.go.kr/en/plan/gksNoticeRead.do?bbsId=BBSMSTR_000000000461&nttId=4420",
+        "last_verified": "2026-10-07"
+      }
+    ]
+  },
+  "mext-research-students": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "branches",
+          "branches": [
+            { "minimum": 3.1, "scale": 4.0, "applies_to": "Natural Sciences (70% marks)", "equivalences": [{ "kind": "percent", "minimum": 70 }] },
+            { "minimum": 2.5, "scale": 4.0, "applies_to": "Humanities and Social Sciences (60% marks)", "equivalences": [{ "kind": "percent", "minimum": 60 }] }
+          ]
+        },
+        "text": "The Embassy of Japan in Nepal requires 70% marks (CGPA 3.1) for Natural Sciences and 60% marks (CGPA 2.5) for Humanities and Social Sciences, averaged across the +2 and above degree. This is a Nepal-specific bar set by the mission, not a MEXT-wide rule.",
+        "branch_axis": "field",
+        "scope_note": "Nepal-specific. The mission sets this bar; MEXT's own guidelines do not. A reader applying from another country must check their own mission.",
+        "source": "https://www.studyinjapan.go.jp/en/_mt/2026/04/01-2027_Research_Guidelines_E.pdf",
+        "last_verified": "2026-10-07"
+      }
+    ]
+  },
+  "groundwater-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "varies_by": "grading system",
+          "text": "CGPA of at least B/B+ on the US system, or a 2nd upper classification on the UK system"
+        },
+        "source": "https://www.groundwatermaster.eu/scholarships",
+        "last_verified": "2026-10-07"
+      }
+    ]
+  },
+  "kaust-fellowship": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "numeric",
+          "minimum": 3.0,
+          "scale": 4.0
+        },
+        "text": "3.0 on a 4-point scale (or equivalent) is the minimum permitted GPA. KAUST adds context for applicants: typically 90% of admitted applicants have a GPA above 3.3, and 75% have a GPA above 3.5 on a 4-point scale (or equivalent).",
+        "not_a_requirement": "The figures 3.3 and 3.5 describe who was typically admitted, not a threshold. They are recorded here as context and must never be compared against.",
+        "source": "https://admissions.kaust.edu.sa/how-to-apply/admission-timelines",
+        "last_verified": "2026-10-07"
+      }
+    ]
+  },
+  "pec-pg-brazil": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "none-stated",
+          "quote": "No minimum GPA is stated in the Edital.",
+          "text": "No minimum GPA is stated in the Edital. Academic admission requirements are set by the individual postgraduate programme the candidate applies to, and the Edital states that CAPES's requirements and the programme's requirements are cumulative."
+        },
+        "source": "https://www.gov.br/capes/pt-br/centrais-de-conteudo/editais/04072025_Edital_2630513_SEI_2630221_Edital_n__12_2025.pdf/@@display-file/file",
+        "last_verified": "2026-10-07"
+      }
+    ]
+  }
+}

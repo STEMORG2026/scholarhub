@@ -1,5 +1,50 @@
 # Changelog
 
+## [0.29.0] - 2026-10-08
+
+### Added — the requirement entity, and five worked examples of the hardest case
+
+`docs/SCHEMA-PERSONAL-PROFILE.md` specified the *applicant* side of a comparison and named the
+gap: the catalog's `eligibility.gpa_minimum` is **45 `null`, 0 numbers, 5 prose**, so a
+comparison against it can only ever return `unknown`. This adds the other side, and the proof
+that a schema can hold what providers actually publish.
+
+**Requirements get their own file, not more fields on a record.** The catalog's unit is the
+*scholarship*; requirements live at the level of the *program* or *institution*, and one record
+can span many of the latter — `daad-study-scholarships` names "German higher education
+institutions", `csc-government-scholarship` names no university at all. `data/requirements.json`
+is keyed by record id and holds zero or more requirements per record. The sourcing pass therefore
+touches one file, and `data/scholarships.json` is never rewritten.
+
+**The rule carries a `kind`, and the `kind` is the whole point.** `none-stated` ("the provider
+states there is no threshold") and `unstated` ("the catalog has not looked") are opposite claims
+that the current `null`/number/string shape **cannot tell apart** — both are "no number". The
+schema separates them, along with `branches` (several figures, e.g. one per scale), `percentile`,
+`rank`, `prose` (no single scalar form) and `numeric`.
+
+**Five records, chosen because they are the hardest.** All five of the prose requirements are
+transcribed verbatim:
+
+| Record | `kind` | Why |
+|---|---|---|
+| `gks-graduate` | `branches` | Four figures on four scales, plus a percentile and a rank alternative |
+| `mext-research-students` | `branches` | Two thresholds split by **field**, not scale — so branches carry `applies_to` |
+| `groundwater-emjm` | `prose` | Two different grading systems, joined by "or equivalent" rather than a rule |
+| `kaust-fellowship` | `numeric` | The rare clean case: `3.0` on `4.0`. Its "90% of admitted applicants score above 3.3" is **context, not a requirement** |
+| `pec-pg-brazil` | `none-stated` | Explicitly no threshold — the case that must never render as "we do not know" |
+
+**The validator was proved to fail before being trusted.** `scripts/validate-requirements.mjs`
+is **stage 3 of `npm test`** and rejects twelve defect classes, every one of them verified to
+fire by planting it and watching the exit code change: a numeric rule with no scale, an unknown
+`kind`, a `record_id` that is not a record, a missing `source`, a future `last_verified`, an
+impossible date (`2026-02-30`), a `prose` rule carrying a number, `none-stated` with no quote,
+`branches` with a top-level number, a single-branch "branches" array, an empty requirements
+array, and a minimum above its own scale.
+
+`npm test` 163 tests → **163 tests, now a 4-stage chain**. `data/scholarships.json` is untouched,
+and **nothing in the app reads the new file yet** — this is the shape the Phase 2 sourcing pass
+will write into.
+
 ## [0.28.0] - 2026-10-08
 
 ### Added — reading the reader's own documents (Phase 1 of the ingestion design)

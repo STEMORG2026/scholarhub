@@ -1,15 +1,15 @@
 {
   "name": "scholarhub",
-  "version": "0.28.0",
+  "version": "0.29.0",
   "private": false,
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "node --test && node scripts/validate-catalog.mjs && node scripts/render-smoke.mjs",
+    "test": "node --test && node scripts/validate-catalog.mjs && node scripts/validate-requirements.mjs && node scripts/render-smoke.mjs",
     "test:render": "node scripts/render-smoke.mjs",
-    "validate": "node scripts/validate-catalog.mjs",
+    "validate": "node scripts/validate-catalog.mjs && node scripts/validate-requirements.mjs",
     "check:links": "node scripts/validate-catalog.mjs --links"
   },
   "dependencies": {
