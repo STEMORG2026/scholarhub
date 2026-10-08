@@ -116,6 +116,7 @@ fell out, and the kind used for each is a decision, not an accident:
 | **Grades are a selection criterion, no bar published** (KTH: grades are 1 of 4 criteria; Melbourne: candidates are *ranked* on academic results) | `prose` | something *is* stated — that grades count — and it has no scalar form |
 | **Nothing about academic standards published on the page** | `unstated` | nothing is stated, so `prose` would be a claim |
 | **The bar is delegated** — the award requires admission to a programme that sets its own (Chevening's 2:1, Paris-Saclay's master's admission) | `prose` | the award genuinely publishes none; the bar exists elsewhere and is named |
+| **The provider says its criteria are not yet published** (REM+ 2: *"currently under review … will be published shortly"*) | `prose` | the provider states something definite about the state of its own procedure — that is a finding, not an absence |
 | The provider affirmatively says there is no threshold (Knight-Hennessy) | `none-stated` | the distinct fact |
 
 **A qualifier the provider itself supplies is part of the finding.** EESIC scores *"Student's
@@ -372,9 +373,21 @@ rather than presenting a stale figure as current.
   that are deliberately unsourced: `eth-excellence-scholarship`, whose eligibility text sits in
   JavaScript accordions that could not be read, and `fulbright-foreign-student`, which is
   administered by roughly fifty country commissions rather than by one programme.
-- **It does not add a language-requirement shape.** The same problem exists for
-  `language_requirements` (15 prose dicts), and it needs the same treatment, but the GPA
-  case is the one that blocks the comparison engine, so it goes first.
+- **It does not record selection weights, and that is a decision rather than an omission.**
+  Two records publish a scoring rubric with explicit weights: CGRS-D (research potential 50%,
+  relevant experience 50%) and JJ/WBGSP (professional experience 30%, recommendations 30%,
+  commitment to the home country 30%, education background **10%**). A weight is genuinely
+  useful — a reader optimising for JJ/WBGSP should learn that grades are the smallest of four
+  components — but a weight is *not a requirement*. This file holds gates: what a reader must
+  have. A rubric is how applicants are ordered once they clear the gates, and mixing the two
+  would make `compare.js` answer "do I meet this?" with a number that means "how are you
+  ranked?". The weights are quoted in `text`, which is where a fact that is not a gate belongs.
+- **`language` is a requirement kind with a rule, and it is now in use.** TF MASA publishes real
+  English thresholds (IELTS 6.5 with no band below 6, TOEFL iBT 93, CAE/CPE B/C, or a letter
+  from the applicant's university) and they are recorded as a `language` requirement. The rule
+  is `prose` rather than `numeric` because the alternatives sit on different scales — a band
+  score out of 9, a TOEFL total, a Cambridge letter grade — and a single `numeric` would have
+  to pick one and silently discard the rest.
 - **It does not settle the sub-field question.** `program_field` is a flat set at one level
   ("Civil Engineering", not "Structural Engineering"). Whether a second level is needed is a
   separate decision, and the catalog's `fields` filter derives from the data, so adding one
