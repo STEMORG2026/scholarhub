@@ -1,5 +1,91 @@
 # Changelog
 
+## [0.32.0] - 2026-10-08
+
+### Added — eight more records carry a sourced academic requirement
+
+`data/requirements.json` goes from **5 records to 13 of 50**. Each new requirement was read off the
+provider's own page, transcribed rather than summarised, and dated `2026-10-08`.
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `tu-delft-van-effen` | "top 10% of graduates", stated *as an indication*, **proof of ranking not required** | `rank` |
+| `knight-hennessy-scholars` | "There is no formula for admission, and there are no scores… that automatically qualify you" | `none-stated` |
+| `kth-scholarship` | academic grades are 1 of 4 selection criteria; no bar published | `prose` |
+| `melbourne-graduate-research` | ranked on academic results; no GPA or WAM published | `prose` |
+| `chevening-scholarship` | no academic threshold of its own — the bar is delegated to the unconditional offer | `prose` |
+| `si-global-professionals` | no transcript requested at all; admission deferred to University Admissions | `prose` |
+| `gates-cambridge` | nothing published | `unstated` |
+| `eiffel-excellence-scholarship` | nothing published | `unstated` |
+
+**The finding that matters is not the count.** Five of the eight publish **no academic figure at
+all**. The five records this file started with were chosen because they were the *hardest*, and
+four of them carry real numbers — so they are the least representative sample in the catalog. The
+dominant case in a real pass is a **criterion that is weighed**, not a threshold that is enforced.
+`unstated` would have been the easy answer and would have been wrong: it would have discarded the
+fact that grades *are* part of the decision. Those records are `prose`, with the weighing quoted.
+
+**Chevening's 2:1 is not Chevening's.** The figure is repeated across the web; it does not appear
+in Chevening's own eligibility criteria, which require an unconditional offer from a UK university
+and let *that* set the academic bar. It is recorded under `not_a_requirement` with the reasoning,
+rather than quietly dropped — a reader who has seen the claim elsewhere needs to find the answer
+here, not an absence.
+
+### Fixed — two validator defects, both found because a record refused to validate
+
+The TU Delft record was correct and the validator rejected it. Same shape as the catalog work:
+when the data and the rule disagree, check which one is wrong before editing either.
+
+**A portion is not a point on a scale.** `numeric` is a reading on a grade scale, so its
+denominator is `scale`. A `percentile` and a `rank` are portions *of* something — top 20% of 100,
+of a class — so theirs is `of`. The validator required `scale` for all three, which contradicted
+both `REQUIREMENTS-SCHEMA.md` §3 and **this file's own `alternatives` path**, which already read
+`of`. One kind with two different required fields depending on where it is nested: a `rank` was
+legal as an alternative and illegal at the top level. The denominator now follows the kind, and a
+leftover `scale` on a portion is an error rather than a silently ignored field.
+
+**A warning nobody can act on teaches people to ignore warnings.** The catalog-divergence warning
+fired on *every* `gpa` finding. It compares against `eligibility.gpa_minimum`, a scalar that holds
+`null`, a number or prose — so only a finding that states a **figure** can diverge in a way a
+reader can see. With 37 records left and most of them landing on `prose`, it would have produced
+dozens of unactionable warnings and buried the one that is real. It now fires only for
+`numeric`, `branches`, `percentile` and `rank`.
+
+### Added — the validator's rules are now executable
+
+`data/requirements.test.js` is new: **14 tests** that run `scripts/validate-requirements.mjs`
+itself through `spawnSync` against temp fixtures, with `--requirements=` and `--catalog=` pointed
+at them. `npm test` **184 → 198**.
+
+Two traps worth recording, because both produce silence rather than a failure:
+
+- `execFileSync` with `stdio: 'pipe'` **discards stderr on success**, and every warning in this
+  validator goes to `console.warn`. A test that asserted a warning was emitted passed against a
+  validator emitting nothing. The suite now uses `spawnSync` and concatenates stdout and stderr.
+- A fixture written as `{ scholarships: [...] }` fails with *"Catalog root must be a JSON array"*
+  — an error about the wrong file. The catalog fixture is a bare array.
+
+**Three defect classes were planted and each observed to fail** before the suite was trusted:
+reverting the denominator fix (**4 tests fail**), dropping the leftover-`scale` guard (**1 fails**),
+and warning on every `gpa` kind again (**2 fail**). The validator was verified byte-identical after
+restore.
+
+### Fixed — a roadmap row that rendered outside its table
+
+The v0.31.0 progress-log row had been appended at the end of `docs/ROADMAP.md`, beneath
+`## Principles`, so it was not part of the progress log it belongs to and read as a stray table
+fragment. Moved into the table. Every row in the file now parses to the same **4 cells** (checked
+with `awk -F'|'`), which is how the v0.30.0 corruption was caught in the first place and how this
+one was caught now.
+
+### Not shipped
+
+Nothing in the app reads `data/requirements.json` yet. `src/compare.js` still answers `unknown`
+from the catalog's `eligibility.gpa_minimum`, so **no user-visible behaviour changes in this
+release**. The open item from §3.1 of the schema doc stands: its `unresolvable` sentence says
+*"more than one scale or branch"*, which does not describe a ranked field with no published bar,
+and will need a variant when Phase 3 wires the two together.
+
 ## [0.31.0] - 2026-10-08
 
 ### Fixed — the AI request carried the reader's profile with *every* question
