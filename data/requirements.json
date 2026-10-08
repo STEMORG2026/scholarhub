@@ -238,5 +238,153 @@
         "last_verified": "2026-10-08"
       }
     ]
+  },
+  "terra-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "Admission is subject to the approval of the TERRA Managing Board and is based on the applicant's academic ability, motivation, recommendation letters and language proficiency. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar."
+        },
+        "text": "Admission is subject to the approval of the TERRA Managing Board and is based on the applicant's academic ability, motivation, recommendation letters and language proficiency. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar.",
+        "source": "https://msc-terra.org/applications/",
+        "last_verified": "2026-10-08"
+      },
+      {
+        "kind": "credits",
+        "of": {
+          "kind": "count",
+          "minimum": 240,
+          "unit": "ECTS"
+        },
+        "text": "Applicants are expected to have a higher education degree with a minimum of: a Bachelor's degree with 240 ECTS-credit points (typically equivalent to 4 years of study), or Bachelor's and/or Master's degree(s) with 300 ECTS-credit points (typically equivalent to 5 years of study) — the 300-credit requirement is mandatory for all students whose mobility track includes UNIFI. Applicants must hold a degree in Civil Engineering, Architecture or equivalent qualifications.",
+        "source": "https://msc-terra.org/applications/",
+        "last_verified": "2026-10-08",
+        "varies_by": "mobility track — 300 ECTS where the track includes UNIFI, 240 ECTS otherwise"
+      }
+    ]
+  },
+  "norisk-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "Admission to NORISK will be decided on a competitive basis; the students are assessed on the basis of their previous academic record. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar."
+        },
+        "text": "Admission to NORISK will be decided on a competitive basis; the students are assessed on the basis of their previous academic record. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar.",
+        "source": "https://msc-norisk.org/applications/",
+        "last_verified": "2026-10-08"
+      },
+      {
+        "kind": "credits",
+        "of": {
+          "kind": "count",
+          "minimum": 240,
+          "unit": "ECTS"
+        },
+        "text": "Applicants must have completed at least 240 ECTS education in Civil Engineering, Industrial and/or Systems Engineering, Materials Engineering, Environmental Engineering or related fields, having been awarded a recognised degree in any of such fields. For students having a study period in UNIPD (either coursework or dissertation) a minimum of 300 ECTS education is required, including specified credits in hydraulics, structural mechanics, structural engineering and geotechnics.",
+        "source": "https://msc-norisk.org/applications/",
+        "last_verified": "2026-10-08",
+        "varies_by": "mobility track — 300 ECTS where the track includes UNIPD, 240 ECTS otherwise"
+      }
+    ]
+  },
+  "frp-plus-plus-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "Admission is made on a competitive basis; the students are assessed on the basis of their previous academic records. Admission is subjected to the approval of the FRP++ Managing Board and is based upon the applicant's ability and motivation, recommendation letters and language skills. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar."
+        },
+        "text": "Admission is made on a competitive basis; the students are assessed on the basis of their previous academic records. Admission is subjected to the approval of the FRP++ Managing Board and is based upon the applicant's ability and motivation, recommendation letters and language skills. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar.",
+        "source": "https://msc-frp.org/applications/",
+        "last_verified": "2026-10-08"
+      },
+      {
+        "kind": "credits",
+        "of": {
+          "kind": "count",
+          "minimum": 240,
+          "unit": "ECTS"
+        },
+        "text": "Students are expected to have a higher education degree with a minimum of: Bachelor and/or Master degree(s) with 300 ECTS-credit points (typically equivalent to a graduation with a total of 5 years of studies) — this requirement becomes mandatory for all students whose mobility track includes UNINA — or Bachelor degree(s) with 240 ECTS-credit points (typically equivalent to a graduation with a total of 4 years of studies). The degree must be in Civil Engineering, Mechanical and/or Industrial Engineering, Materials Engineering, Aeronautical Engineering, Polymers Engineering or related fields.",
+        "source": "https://msc-frp.org/applications/",
+        "last_verified": "2026-10-08",
+        "varies_by": "mobility track — 300 ECTS where the track includes UNINA, 240 ECTS otherwise"
+      }
+    ]
+  },
+  "mamaself-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "Ranking is performed on basis of the following criteria: academic level, University of last degree, English proficiency, motivation, reference letters. Within the eligible candidates selected, the consortium awards scholarships for mobility on basis of the score obtained in the selection ranking. No GPA, marks percentage, degree classification or numeric ranking threshold is published as a bar."
+        },
+        "text": "Ranking is performed on basis of the following criteria: academic level, University of last degree, English proficiency, motivation, reference letters. Within the eligible candidates selected, the consortium awards scholarships for mobility on basis of the score obtained in the selection ranking. No GPA, marks percentage, degree classification or numeric ranking threshold is published as a bar.",
+        "source": "https://www.mamaself.eu/admission",
+        "last_verified": "2026-10-08"
+      },
+      {
+        "kind": "credits",
+        "of": {
+          "kind": "count",
+          "minimum": 180,
+          "unit": "ECTS"
+        },
+        "text": "Students must have a Bachelor's Degree (180 ECTS) in Physics, Chemistry, Materials Science or related disciplines: Geo-science, Nano-science, Materials engineering. (Bachelors in Mechanical engineering and in Mechatronics are not adapted to the Mamaself program.)",
+        "source": "https://www.mamaself.eu/admission",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "flux-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "The minimum GPA (Grade Point Average) depends on the country of study, as defined by IHE Delft (based on a thorough comparative assessment done at a higher level in the Netherlands). In case of doubt, the programme coordinator is contacted. Following the eligibility check, a shortlist of around 50-80 applicants eligible for a scholarship is built by the coordinator of the programme in close collaboration with the student admission office, based on the relevance and grade of the obtained bachelor degree and followed disciplines, relevant work experience, other academic qualifications or activities, the number of applicants per country and the letter of motivation.",
+          "varies_by": "country of study — the programme states that a minimum GPA exists and is set per country of study, but publishes no figure for any country"
+        },
+        "text": "The minimum GPA (Grade Point Average) depends on the country of study, as defined by IHE Delft (based on a thorough comparative assessment done at a higher level in the Netherlands). In case of doubt, the programme coordinator is contacted. Following the eligibility check, a shortlist of around 50-80 applicants eligible for a scholarship is built by the coordinator of the programme in close collaboration with the student admission office, based on the relevance and grade of the obtained bachelor degree and followed disciplines, relevant work experience, other academic qualifications or activities, the number of applicants per country and the letter of motivation.",
+        "source": "https://www.floodriskmaster.org/scholarships",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "ms2-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "rank",
+          "minimum": 35,
+          "of": 100,
+          "applies_to": "the best 35% of students in the qualifying degree"
+        },
+        "text": "The qualifying degree has to be passed with an average grade higher or equal to B (or a final grading higher or equal to B) according to the ECTS grading system, i.e. the best 35% of students (corresponding to a grade of up to 2.8 (\"gut\"/\"good\") in the German grading scale). The qualifying degree must be a first-cycle degree qualification according to the European Qualifications Framework or an equivalent degree qualification in the field of Civil Engineering, subject to an examination of equivalence by the programme's Admission Board.",
+        "source": "https://www.ms2master.com/how-to-apply",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "erasmus-mundus-joint-masters": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "This record is the European Commission's catalogue of the 218 Erasmus Mundus Joint Master programmes currently supported by the EU, not a programme itself, and it publishes no admission criteria. It directs applicants to \"visit the program's official website and directly contact the consortium for information on courses, application procedures, and scholarship availability\". The academic requirement belongs to each consortium's own programme, and ScholarHub records it there — TERRA, NORISK, FRP++, MaMaSELF+, MS² and Flood Risk Management each carry their own entry in this file."
+        },
+        "text": "This record is the European Commission's catalogue of the 218 Erasmus Mundus Joint Master programmes currently supported by the EU, not a programme itself, and it publishes no admission criteria. It directs applicants to \"visit the program's official website and directly contact the consortium for information on courses, application procedures, and scholarship availability\". The academic requirement belongs to each consortium's own programme, and ScholarHub records it there — TERRA, NORISK, FRP++, MaMaSELF+, MS² and Flood Risk Management each carry their own entry in this file.",
+        "source": "https://www.eacea.ec.europa.eu/scholarships/erasmus-mundus-catalogue_en",
+        "last_verified": "2026-10-08"
+      }
+    ]
   }
 }
