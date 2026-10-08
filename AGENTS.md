@@ -74,6 +74,7 @@ workflow file. Keep it simple.
 | `src/providers.js` | Provider registry + the sourced frontier model seed (pure, unit-tested) |
 | `src/chat.js` | The provider adapter: request shapes, replies, model discovery, errors (pure, unit-tested) |
 | `src/useAi.js` | AI connection state and the network calls (the only AI module that touches `fetch`) |
+| `src/assistant.js` | What the assistant may send and may claim: the per-question profile gate, the assessor guard, and the egress disclosure (pure, unit-tested). Never lazily loaded — a decision about what leaves the browser should not be code the reader has to trigger. |
 | `src/AiSettings.jsx` | The AI settings view. Lazily loaded; the smoke test renders it directly. |
 | `src/ingest.js` | Reading the reader's documents: a zero-dependency DOCX/ZIP reader, the deterministic extractor, and the refusal paths (pure, unit-tested). Lazily loaded. |
 | `src/compare.js` | The three-valued requirement comparison — `meets` / `fails` / `unknown`, with `unknown` as the default (pure, unit-tested). |
@@ -87,7 +88,7 @@ workflow file. Keep it simple.
 | `docs/` | Architecture, schema, API notes, roadmap |
 | `.github/` | Issue templates, PR template, and `workflows/ci.yml` |
 
-**Keep decision logic in the pure modules, not in the component.** `eligibility.js`, `tracker.js`, `ingest.js` and `compare.js` exist so that the parts most likely to be subtly wrong — nationality rules, date arithmetic, and whether a document actually yielded a value — can be unit-tested offline. Anything a test could pin down belongs there.
+**Keep decision logic in the pure modules, not in the component.** `eligibility.js`, `tracker.js`, `ingest.js`, `compare.js` and `assistant.js` exist so that the parts most likely to be subtly wrong — nationality rules, date arithmetic, whether a document actually yielded a value, and what a request is allowed to carry — can be unit-tested offline. Anything a test could pin down belongs there.
 
 **Document reading: a refusal is a result.** `readDocument` never returns a blank document. An unreadable file, a scanned PDF, a binary named `.txt` and an empty extraction each produce an explicit outcome with a reason, because a blank profile reads as "this applicant has no GPA" — a different and false claim. Likewise `compareGpa` never defaults to `meets`: its default is `unknown`, and *"the provider states there is no threshold"* must never share a sentence with *"the catalog does not record one"*. Both rules are enforced by negative-control tests, and a test that only asserts a value is *absent* is not enough — it can pass with the guard removed.
 
@@ -128,7 +129,7 @@ Use Conventional Commits: `feat:`, `fix:`, `data:`, `docs:`, `test:`, `chore:`. 
 
 ## AI provider policy
 
-The provider seam is **implemented as of v0.26.0**. `src/providers.js` is the registry, `src/chat.js` is the adapter, `src/useAi.js` is the state, and `src/AiSettings.jsx` is the UI. There is still no ScholarHub server, and there must not be one.
+The provider seam is **implemented as of v0.26.0**, and what a request may *carry* was constrained in v0.31.0. `src/providers.js` is the registry, `src/chat.js` is the adapter, `src/useAi.js` is the state, `src/assistant.js` decides what may be sent and claimed, and `src/AiSettings.jsx` is the UI. There is still no ScholarHub server, and there must not be one.
 
 Rules that hold for any change to this area:
 
@@ -136,6 +137,8 @@ Rules that hold for any change to this area:
 - **A key is session-only unless the reader opts in.** The default is React state, forgotten on reload. The opt-in writes it to `localStorage` under `sh-ai-key`, and the UI must say plainly that anyone using that browser profile can read it.
 - **Never state that a connection works.** The only acceptable evidence is a reply that actually came back. `Test connection` makes a real call for exactly this reason.
 - **Never claim a security property.** Say where a request goes, not that it is safe. `egressSummary()` is written to name a host and nothing more, and a test enforces that it contains no word like "secure" or "private".
+- **Say what a request carries, not only where it goes.** Naming the host was never the whole picture. `egressSummary()` takes the profile and states both halves in one line, and the assistant puts the disclosure on the reply itself. The two claims are different and both are now made.
+- **The profile is opt-in per question, not per session.** `needsProfile()` decides from the reader's wording whether the three facts may be attached, and it defaults to *no*. Never reintroduce an unconditional reader clause — that was the v0.26.0–v0.30.0 defect, and `src/assistant.test.js` now fails on it.
 - **Do not assert a model roster.** Model ids, context windows and prices change monthly. Every provider that publishes a list endpoint is queried at runtime and that answer wins. `FRONTIER_SEED` exists only so the picker is not empty before a key is entered; each entry carries its source URL and the date it was read, and anything the source did not publish is `null`. Do not fill a `null` in with a plausible number.
 - **Do not pretend a browser can do something it cannot.** Antigravity is the worked example: it authenticates through a local CLI session that no web page can reach. `agyRefusal()` returns the honest explanation plus the two routes that do work, and the UI shows it instead of a login form that could never succeed.
 - **Never treat model output as scholarship data.** The assistant's prompt carries the catalog rows and forbids inventing a deadline, amount or eligibility rule; a model answer is labelled as one in the transcript.
@@ -145,5 +148,38 @@ Rules that hold for any change to this area:
 
 ## Privacy
 
-No PII leaves the browser. Personal state lives in localStorage under `sh-profile` (study goals, country of origin), `sh-saved` (shortlist ids), `sh-tracker` (tracked applications and their status), `sh-docs` (document checklist) and `sh-dark` (theme). Anything new that stores personal state belongs in the same place, is read back defensively, and must not be sent anywhere. Users on shared devices should clear storage after use.
+Personal state lives in localStorage under `sh-profile` (study goals, country of origin), `sh-saved` (shortlist ids), `sh-tracker` (tracked applications and their status), `sh-docs` (document checklist) and `sh-dark` (theme). Anything new that stores personal state belongs in the same place and is read back defensively. Users on shared devices should clear storage after use.
+
+**"No PII leaves the browser" was the rule until v0.31.0, and it was false.** The
+AI assistant attached the reader's profile — field, degree, nationality — to
+*every* chat request, because the system prompt named the reader unconditionally.
+The rule was stated in this file and enforced nowhere. Naming the destination in
+`egressSummary()` is a statement about *where* a request goes; it is not a
+statement about *what* the request carries, and only the first was tested. A
+privacy claim held by a comment is a claim that will drift.
+
+The rule is now an enforced predicate, and it is deliberately narrow:
+
+- **A request carries the profile only when the question is about the reader.**
+  `needsProfile()` in `src/assistant.js` decides, from the reader's own words.
+  "What is the MEXT deadline?" sends catalog rows and nothing about the reader.
+  "Am I eligible?" may carry field, degree and nationality. The default is
+  **not to send** — a missed cue costs one rephrased question, a false positive
+  sends a nationality to a cloud provider, and those failures are not symmetric.
+- **What was attached is disclosed in the transcript**, per reply, by
+  `egressDisclosure()` — not just in a settings panel the reader may never open.
+- **`null` means "not sent" and must never become an empty string.** An
+  interpolated `null` renders visibly broken; an omitted sentence reads as "not
+  given", which is a different and false claim.
+- **Which fields may be sent is a decision, not an accident.** Adding a field to
+  the profile does not add it to the prompt. `readerClause()` names the three it
+  is allowed to send, and a change to that list is a change to this policy.
+- **The assistant is not an assessor.** `ASSESSOR_GUARD` forbids a verdict. The
+  catalog records **zero** numeric GPA thresholds across all fifty records, so a
+  model asked "am I eligible?" has nothing to reason from and will produce
+  confident prose over an empty table — the exact failure `compare.js` refuses
+  in its own domain. Do not answer that question with a model.
+- Tests for both rules are negative controls: they assert the profile is
+  **absent** from a programme question, and each was verified to fail against a
+  planted unconditional send before being trusted. See `src/assistant.test.js`.
 

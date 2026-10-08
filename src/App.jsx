@@ -6,6 +6,7 @@ import { VERDICT, eligibilityFor } from './eligibility.js';
 import { TRACK_STATUSES, DEFAULT_TRACK_STATUS, DUE_SOON_DAYS, DOCUMENTS, deadlineInfo, trackerSummary, sortTracked, documentChecklist, todayIso, isValidStatus, isOpenStatus, statusLabel } from './tracker.js';
 import { useAi } from './useAi.js';
 import { formatCost } from './chat.js';
+import { readerClause, egressDisclosure, offlineAnswer, ASSESSOR_GUARD } from './assistant.js';
 import './styles.css';
 
 // The AI settings view is loaded on demand. It is an optional surface — a reader
@@ -184,21 +185,21 @@ function App({ initialView = 'discover' }) {
  // The assistant. It answers from the offline guide by default, and from the
  // reader's own model once one is connected AND has been proven to answer.
  //
- // Two things it will not do, both from AGENTS.md: it never presents model
- // output as scholarship fact, and it never lets the model invent a deadline,
- // an amount or an eligibility rule. The prompt carries the catalog rows and
- // forbids going beyond them; the reply is labelled as coming from a model.
+ // Three things it will not do, two from AGENTS.md and one added in v0.31.0: it
+ // never presents model output as scholarship fact, it never lets the model
+ // invent a deadline, an amount or an eligibility rule, and — since the profile
+ // was being attached to every request — it never sends the reader's profile
+ // with a question that is not about them. See `src/assistant.js` for the gate,
+ // the assessor guard and the disclosure.
  const answer=async(text)=>{
   const q=text||chat;if(!q.trim())return;
   const pool=scholarships.filter(s=>(!profile.field||s.program_field.includes(profile.field))&&(!profile.degree||s.degree_level.includes(profile.degree)));
   const open=pool.filter(s=>elig[s.id]&&elig[s.id].verdict==='open');
   const closed=pool.filter(s=>elig[s.id]&&elig[s.id].verdict==='closed');
   const picks=(open.length?open:pool).slice(0,3);
-  let response='Based on your saved profile ('+(profile.field||'your field')+' \u00b7 '+(profile.degree||'degree level')+(profile.nationality?' \u00b7 '+profile.nationality:'')+'), start by reviewing '+picks.map(s=>s.name).join(', ')+'.';
-  if(profile.nationality&&open.length)response+=' These are marked open to applicants from '+profile.nationality+' in this catalog.';
-  else if(profile.nationality&&closed.length)response+=' Note that '+closed.length+' of the opportunities in this catalog are not open to applicants from '+profile.nationality+' \u2014 every card carries the reason.';
-  else if(!profile.nationality)response+=' Set your country of origin in My profile and each card will say whether that programme is open to you.';
-  response+=' These are discovery suggestions, not an eligibility decision \u2014 open the official links to verify before applying.';
+  // The offline reply is composed in src/assistant.js so it can be unit-tested —
+  // it is the default answer, so it is the one most readers actually see.
+  const response=offlineAnswer({picks,open,closed,profile});
   setMessages(m=>[...m,{from:'you',text:q}]);setChat('');
   if(!ai.connected){setMessages(m=>[...m,{from:'assistant',text:response}]);return}
   // A streaming reply arrives token by token, so the message is placed empty and
@@ -206,13 +207,22 @@ function App({ initialView = 'discover' }) {
   // without assuming it is last.
   setMessages(m=>[...m,{from:'assistant',text:'',model:true,streaming:true}]);
   const rows=picks.map(s=>'- '+s.name+' | '+s.country+' | '+s.degree_level.join('/')+' | deadline: '+(s.deadline||'no single closing date recorded')+' | funding: '+s.funding_type+' | nationality rule: '+s.eligibility.nationality.join('; ')).join('\n');
+  // What leaves the browser is decided by the question, not by whether AI is on.
+  // `readerClause` returns null for anything that is not a question about the
+  // reader, and the clause is filtered out rather than interpolated — see
+  // src/assistant.js for why null beats an empty string here.
+  const reader=readerClause(q,profile);
   const system=[
    'You are a scholarship-search assistant inside ScholarHub, a static catalog of '+scholarships.length+' engineering scholarships. You are talking to one reader.',
-   'The reader: country of origin '+(profile.nationality||'not given')+', aiming at a '+profile.degree+' in '+profile.field+'.',
+   reader,
    'Catalog rows relevant to them, exactly as recorded:',
    rows,
+   ASSESSOR_GUARD,
    'Rules you must follow: do not invent a deadline, an award amount, a funding term or an eligibility rule that is not in the rows above. If the catalog does not record something, say that it does not and point the reader at the official page. You are not an eligibility decision. Be concrete, and keep the answer under 150 words.',
-  ].join('\n');
+  ].filter(Boolean).join('\n');
+  // Disclosed before the call, not after: the reader is told what was attached
+  // and why, and the note survives on the reply so it is visible in the transcript.
+  const disclosure=egressDisclosure(q,profile);
   let accumulated='';
   const onDelta=(delta)=>{accumulated+=delta;setMessages(m=>{const next=[...m];const at=next.findIndex(x=>x.streaming);if(at>=0)next[at]={...next[at],text:accumulated};return next})};
   const result=await ai.chatStream([{role:'system',content:system},{role:'user',content:q}],{onDelta});
@@ -226,6 +236,8 @@ function App({ initialView = 'discover' }) {
   if(result&&result.streamFallback)notes.push('no streaming — '+result.streamFallback);
   if(ok&&result.cost)notes.push('\u2248'+formatCost(result.cost.total)+(result.cost.partial?' (input or output only)':''));
   if(ok&&!result.cost)notes.push(result.usage?'no published price for this model, so the cost is unknown':'the provider reported no token usage');
+  // What was attached to the request, said in the transcript rather than assumed.
+  notes.push(disclosure.included?'profile sent: '+disclosure.fields.join(', '):'no profile sent');
   setMessages(m=>[...m.filter(x=>!x.streaming),{from:'assistant',text:reply,model:ok,notes:notes.join(' \u00b7 ')}]);
  };
  const nav=[['discover','Discover',Compass],['saved','My shortlist',Bookmark],['tracker','Application tracker',ClipboardList],['profile','My profile',UserRound],['assistant','AI assistant',Sparkles],['settings','AI settings',Settings2]];
@@ -277,7 +289,7 @@ function App({ initialView = 'discover' }) {
    <div className="privacy-note"><ShieldCheck size={17}/><span><strong>A checklist, not a requirement list.</strong> No scheme's exact document set is knowable from this catalog, so these are the items applicants are ordinarily asked for. Your ticks are stored on this device and are never sent anywhere.</span></div>
   </div></section>}
   {view==='assistant'&&<section className="page-section assistant-page"><div className="eyebrow muted"><Sparkles size={13}/> YOUR THOUGHTFUL SCHOLARSHIP COMPANION</div><h1 className="page-title">A little help, <em>on your terms.</em></h1><p className="page-lede">Get started with a local guide—or connect an AI model you trust in settings.</p><div className="chat-card"><div className="chat-top"><div className="assistant-orb"><Sparkles size={19}/></div><div><b>Scholarship guide</b><span><i/> {ai.connected?ai.provider.label+' · '+((ai.availableModels.find(m=>m.id===ai.ai.model)||{}).label||ai.ai.model):'Offline · No model connected'}</span></div><button className="icon-btn" aria-label="Open AI settings" onClick={()=>go('settings')}><Settings2 size={18}/></button></div><div className="chat-body" role="log" aria-live="polite" aria-label="Conversation">{messages.length===0?<div className="chat-welcome"><div className="welcome-spark">✦</div><h3>Where would you like to begin?</h3><p>I can help you think through your search. For current eligibility and calls, official program pages are always the source of truth.</p><div className="suggestions">{['What should I check before applying?','Help me plan a scholarship search','Which opportunities fit my study goals?'].map(x=><button key={x} onClick={()=>answer(x)}>{x}<ArrowUpRight size={14}/></button>)}</div></div>:messages.map((m,i)=><div className={`chat-message ${m.from}`} key={i}><div className="message-avatar">{m.from==='you'?'S':<Sparkles size={14}/>}</div><div>{m.text}{m.streaming&&!m.text&&<span className="msg-typing" aria-hidden="true"><i/><i/><i/></span>}{m.notes&&<em className="msg-source">{m.notes} — a model answer, not catalog data</em>}</div></div>)}</div><form className="chat-input" onSubmit={e=>{e.preventDefault();answer()}}><input value={chat} onChange={e=>setChat(e.target.value)} placeholder="Ask a question or explore an idea…" aria-label="Ask the scholarship assistant"/><button aria-label="Send question"><Send size={17}/></button></form><p className="chat-disclaimer">AI suggestions are informational, can be incomplete, and aren't a substitute for official scholarship requirements.</p></div></section>}
-  {view==='settings'&&<section className="page-section"><Suspense fallback={<div className="ai-loading" role="status">Loading AI settings…</div>}><AiSettings ai={ai}/></Suspense></section>}
+  {view==='settings'&&<section className="page-section"><Suspense fallback={<div className="ai-loading" role="status">Loading AI settings…</div>}><AiSettings ai={ai} profile={profile}/></Suspense></section>}
   {selected&&<div className="modal-backdrop" onClick={()=>setSelected(null)}><section ref={dialogRef} tabIndex={-1} className="detail-modal" role="dialog" aria-modal="true" aria-label={selected.name} onClick={e=>e.stopPropagation()}><button className="modal-close" onClick={()=>setSelected(null)} aria-label="Close details"><X size={20}/></button><div className="eyebrow muted">{flagFor(selected.country)||'🌐'} &nbsp;{selected.country.toUpperCase()}</div><h2>{selected.name}</h2><p className="detail-provider">{selected.provider} · {selected.university}</p><p className="detail-desc">{selected.description}</p><div className="detail-grid"><div><span>Degree levels</span><b>{selected.degree_level.join(', ')}</b></div><div><span>Funding</span><b>{selected.funding_type}</b></div><div><span>Deadline</span><b>{selected.deadline?fmtDate(selected.deadline):(selected.deadline_notes?'No single date — see the note below':'Not maintained — check official source')}</b>{selected.deadline&&<em className={'deadline-note countdown-text countdown-'+deadlineInfo(selected,TODAY).level}>{deadlineInfo(selected,TODAY).label}</em>}{selected.deadline_notes&&<em className="deadline-note">{selected.deadline_notes}</em>}</div><div><span>Amount</span><b>{selected.amount}</b></div><div><span>Location</span><b>{selected.city}, {selected.region}</b></div><div><span>Eligibility</span><b>{selected.eligibility.nationality.join('; ')}</b><em className={'elig-note elig-'+elig[selected.id].verdict}>{VERDICT[elig[selected.id].verdict]} — {elig[selected.id].reason}</em>{profile.nationality&&selected.country_notes&&selected.country_notes[profile.nationality]&&<em className="elig-note country-note">For {profile.nationality}: {selected.country_notes[profile.nationality]}</em>}</div>
    {/* Shown only when the reader has a confirmed GPA — otherwise the row would
        be a per-record "unknown" that says nothing the profile summary has not

@@ -10,7 +10,10 @@
 //   * It never claims a connection works. The only statement of success is a
 //     reply that actually came back, and the button that produces it is the only
 //     thing that says "connected".
-//   * It shows where a request goes, per provider, before you send one.
+//   * It shows where a request goes, per provider, before you send one — and,
+//     since v0.31.0, *what* it carries. The egress line used to name only the
+//     destination, which understated a request that also carried the reader's
+//     profile. Both halves are now stated below the provider name.
 //   * It does not pretend Antigravity can be reached from here.
 
 import React, { useState } from 'react';
@@ -31,7 +34,7 @@ import {
   BadgeCheck,
   Link2,
 } from 'lucide-react';
-import { CATEGORIES, providersInCategory, formatTokens, formatPrice, needsKey } from './providers.js';
+import { CATEGORIES, providersInCategory, formatTokens, formatPrice, needsKey, egressSummary } from './providers.js';
 import { agyRefusal, formatCost } from './chat.js';
 
 const CATEGORY_ICON = {
@@ -119,7 +122,7 @@ function AuthPanel({ ai }) {
   );
 }
 
-export default function AiSettings({ ai }) {
+export default function AiSettings({ ai, profile }) {
   const {
     ai: state,
     provider,
@@ -133,7 +136,6 @@ export default function AiSettings({ ai }) {
     test,
     testConnection,
     busy,
-    egress,
     needsBaseUrl,
     setFallbackModel,
     spend,
@@ -212,7 +214,7 @@ export default function AiSettings({ ai }) {
 
           <div className="ai-egress">
             {provider.category === 'local' ? <Server size={14} /> : <Cloud size={14} />}
-            <span>{egress}</span>
+            <span>{egressSummary(provider, state.baseUrl, profile)}</span>
           </div>
 
           <label className="setting-label">

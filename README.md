@@ -127,7 +127,11 @@ Country/program coverage currently includes selected opportunities in the USA, C
 
 ## Privacy
 
-There is no login. Profile and shortlist data are stored in localStorage in the browser. Do not use a shared browser for private information. The AI settings page is a placeholder; no provider request currently happens. If provider integration is added, it must clearly explain that prompts leave the browser and go to the selected provider.
+There is no login and no server. Profile, shortlist, tracker and document-checklist state are stored in localStorage in your own browser. Do not use a shared browser profile for private information, and clear storage after use on a shared device.
+
+The AI settings page is **live, not a placeholder** — that sentence was stale from before v0.26.0. When you connect a provider, prompts leave the browser and go directly to that provider; there is no ScholarHub server to proxy them, and your key never reaches one.
+
+**What a request carries is decided per question, not per session.** A question about a programme — "What is the MEXT deadline?" — sends the catalog rows and nothing about you. A question about you — "Am I eligible?" — may also send your field, degree and nationality, because fit cannot be assessed without them. Each reply says in its footer which of the two happened (`profile sent: field, degree, nationality` or `no profile sent`), and the provider panel states the same before you send anything. The gate lives in `src/assistant.js` and is enforced by tests, not by this paragraph.
 
 ## Documentation
 
