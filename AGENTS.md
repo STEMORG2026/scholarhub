@@ -105,19 +105,22 @@ Do not create new top-level directories without documenting the reason. Country 
 4. Open a PR, then merge it.
 5. Delete the branch after merge.
 
-Direct pushes to `main` are rejected by branch protection (`GH006: Changes must be made through a pull request`), with `enforce_admins` enabled — so the rule applies to administrators too, and cannot be bypassed by accident.
+Direct pushes to `main` are rejected, and **the rejection names the rule that fired**. A rule protecting `main` is now enforced in two places: classic branch protection (`enforce_admins` enabled, so it applies to administrators too) and an active **ruleset** (`main-protection`, `bypass_actors: []`, `current_user_can_bypass: "never"`). Both apply as a *union* — a ruleset does not override classic protection, it adds to it.
 
 Never force-push or rewrite history on `main`. Never delete or bypass the protection to land a change; if a change genuinely cannot go through a PR, that is a signal the change needs rethinking, not that the rule needs an exception.
 
 ## Verification
 
-Three layers, and only the last one is authoritative:
+Four layers, and only the last two are authoritative:
 
 1. **Nothing at commit time.** This repository has no git hooks — `core.hooksPath` is unset and `.git/hooks` holds only the sample files. Nothing stops a commit locally.
 2. **Local gate (fast, bypassable).** `npm test` and `npm run build`, roughly a second together. Bypassable by simply not typing them, which is why they cannot be the last line of defence.
-3. **Remote CI (authoritative).** `.github/workflows/ci.yml` runs `npm ci`, `npm test` and `npm run build` on every pull request and every push to `main`. It invokes the same canonical command as layer 2, deliberately — a CI job with its own private check list drifts from what a developer can reproduce.
+3. **Remote CI.** `.github/workflows/ci.yml` runs `npm ci`, `npm test`, `npm run build` and a build-artifact assertion on every pull request and every push to `main`. It invokes the same canonical command as layer 2, deliberately — a CI job with its own private check list drifts from what a developer can reproduce.
+4. **The merge gate (authoritative).** The `verify` check is a **required status check**, with `strict_required_status_checks_policy` on, so a PR cannot merge while it is red *or* while the branch is behind `main`. Verified by attempting a direct push and reading the rejection: `Required status check "verify" is expected`.
 
-**The workflow is not registered as a required status check.** Branch protection requires a pull request, but not a passing check, so CI can be red while a merge still succeeds. Making it required is an externally visible change to the merge gate and is left as a decision for the owner; if it is made required, the context name to require is exactly `verify`.
+**The context name is exactly `verify`** — the *job's* `name:` in the workflow, not the workflow's `name:`. If the job is ever renamed, the ruleset must be updated in the same change or the gate waits forever for a check that no longer reports.
+
+**Watch the interaction with Dependabot.** `strict_required_status_checks_policy: true` means any merge into `main` invalidates other open PRs until CI re-runs. That is correct for a multi-person repo and mildly annoying for a solo one with bot PRs open. It can be relaxed per-repo without touching the required check itself.
 
 ## Commit conventions
 

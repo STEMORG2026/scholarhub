@@ -1,5 +1,56 @@
 # Changelog
 
+## [0.30.0] - 2026-10-08
+
+### Changed — the merge gate is now real, and the pipeline is hardened
+
+**The largest hole was not in the workflow, it was in the merge gate.** `main` had classic branch
+protection requiring a pull request but with `required_status_checks: null` — so **CI could be red
+and a merge still succeeded**. The gate was advisory, and nothing on screen said so. It has been
+required since v0.25.0 that this was left as the owner's decision; that decision is now made.
+
+An active **ruleset** (`main-protection`, `bypass_actors: []`, `current_user_can_bypass: "never"`)
+carries five rules: `deletion`, `non_fast_forward`, `required_linear_history`, `pull_request` with
+thread resolution, and **`required_status_checks: [verify]` with
+`strict_required_status_checks_policy: true`**. **Proved by attempting the forbidden action** — a
+direct push to `main` was rejected with `Required status check "verify" is expected` /
+`push declined due to repository rule violations`.
+
+**Four workflow gaps closed**, each measured rather than assumed:
+
+| Gap | Was | Now |
+|---|---|---|
+| Hung job | no `timeout-minutes` — blocks the queue and reports nothing, forever | `timeout-minutes: 10` (~20× the observed ~15s, so it fires only on a genuine hang) |
+| Superseded run | kept running after a newer push; the earlier answer was worthless | `concurrency` cancels it — **`main` exempt**, because a run there is the record of what shipped |
+| Credentials | checkout left a token in `.git/config` for a job that only reads | `persist-credentials: false` |
+| Build trust | `vite build` exiting 0 was taken as "the app built" | asserts `dist/index.html` and a main JS chunk exist, and **caps the main bundle at the 500 kB ceiling** |
+
+That last one is a real failure mode: `vite build` can exit 0 with an empty or entry-less `dist/`
+and look exactly like success. **The assertion was observed passing and failing locally** before
+being shipped — passes on the real build (497,358 bytes) and fires when `dist/index.html` is
+removed. The ceiling is **asserted, never raised**; `chunkSizeWarningLimit` is untouched.
+
+**Added `.github/dependabot.yml` — the repository had none.** Its one advisory (`source-map-js`,
+reached transitively through `vite → postcss`) was reported by `npm audit` on every run and acted on
+by nothing. Now weekly npm **and `github-actions`** updates: watching the actions ecosystem is what
+catches an action major drifting off the pinned Node runtime, which is exactly how the
+"Node.js 20 is deprecated" warning arrived unremarked. Patch and minor updates are grouped into one
+pull request; `vite` and `@vitejs/plugin-react` majors are excluded, because a major is a decision
+rather than maintenance. **No auto-merge** — a bot that merges itself would be the one actor the
+branch protection does not constrain.
+
+**Advisories are reported, not enforced** (`npm audit --audit-level=high || true`). The known
+advisory is transitive and cannot be fixed without a lockfile decision that has been deliberately
+deferred, and a gate that fails on a condition nobody can act on teaches people to ignore red —
+the same asymmetry the catalog already applies to links answering 401/403, where the honest answer
+is *unverified*, not *broken*.
+
+Also set `delete_branch_on_merge`, which removes the manual branch cleanup and the stale
+remote-tracking ref that cleanup used to leave behind.
+
+`actionlint` 1.7.7 exits 0. `npm test` is unchanged — still 163 tests across a four-stage chain —
+so this release changes the gate around the checks, not the checks themselves.
+
 ## [0.29.0] - 2026-10-08
 
 ### Added — the requirement entity, and five worked examples of the hardest case
