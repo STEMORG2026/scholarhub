@@ -1,5 +1,431 @@
 # Changelog
 
+## [0.35.0] - 2026-10-08
+
+### Added — five more records, and 31 of 50
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `holland-scholarship` | "You meet the specific requirements of the institution of your choice" — 34 institutions, no central bar | `prose` |
+| `msca-doctoral-networks` | funding goes to consortia; vacancies and requirements live on EURAXESS | `prose` |
+| `nz-scholarships` | "the academic entry requirements ... determined by the applicant's preferred education institutions" | `prose` |
+| `anso-cas-twas-unesco-phd` | "meet the admission criteria for international students of USTC/UCAS" | `prose` |
+| `australia-awards` | **partial** — programme page publishes nothing; country pages not read | `prose` |
+
+### Measured — the delegated bar is the dominant shape, not an edge case
+
+Across the 31 records sourced so far: **5 carry a comparable GPA figure. 8 state explicitly
+that the academic bar is set by somebody else.** The second number is larger than the first, and
+it is not noise — it is how large programmes are actually administered. Chevening's bar is set
+by the UK university's unconditional offer; the Swedish Institute's by University Admissions;
+the NL Scholarship's by each of 34 institutions; MSCA-DN's by each funded consortium; Manaaki
+NZ's by the applicant's preferred institution, in its own words.
+
+**This reframes what the file is for.** The instinct is that `requirements.json` exists to hold
+thresholds. It mostly does not, and cannot. For a quarter of the records the honest and *useful*
+answer is not a number but a pointer — *"this award has no academic bar of its own; the host
+programme sets it"* is more actionable than any figure, because it tells the reader which
+document to open. Written up as `REQUIREMENTS-SCHEMA.md` §3.6, with the consequence recorded:
+`unresolvable` is the wrong reason code for those eight. They are not unresolvable, they are
+**delegated** — a definite answer — and rendering it as "we could not work this out" would
+understate what is known. A `delegated` reason code is now an open item alongside `direction`.
+
+### Fixed — the requirement wording had two homes, one of them silently empty
+
+`text` lived on the **rule** for the first five records, on the **requirement** for everything
+since. Measured before touching anything: **17 records carried the identical string in both
+fields and 7 carried it only on the rule.** Every duplicate pair was byte-identical — verified,
+not assumed — so collapsing them lost nothing: 37 distinct strings before, 37 after.
+
+The defect that mattered was not the duplication but the **7 records with no requirement-level
+`text` at all**. A consumer reading `text` renders nothing for those, and a blank requirement
+reads as "no requirement" rather than "not loaded" — which is the same class of error as
+`unstated` versus `none-stated`, arriving from a third direction. Two shapes, one of them
+silently empty, is worse than either shape alone.
+
+`of.text` is now rejected outright and `text` is **required on every requirement except
+`unstated`**, where it is forbidden because there the absence *is* the finding. Written up as
+§3.7.
+
+Three new tests, and the defect classes planted and observed to fail: allowing `text` back on
+the rule (**1 fails**), dropping the requirement-level requirement (**1 fails**), letting
+`unstated` carry text again (**1 fails**). Validator verified byte-identical after restore.
+
+**Two existing tests were passing for the wrong reason and are now fixed.** The prose and
+unstated divergence tests asserted only that a warning was *absent* — which a validator that
+**rejected the fixture** also satisfies. Both now assert the exit status too. A test that
+cannot distinguish "silent" from "failed" is not testing silence.
+
+### Changed — §5 of the schema doc now matches its own validator
+
+It had said "`kind` must be one of the seven" and "`text` is mandatory on `prose` and
+`none-stated`" for two releases after both had changed. Rewritten as the seventeen rules the
+script actually enforces, grouped by shape, numbers, meaning and provenance.
+
+`npm test` **207 → 210**. Requirements validation 0 errors, 2 warnings, both real and both
+pre-existing. **No user-visible behaviour changes** — nothing in the app reads
+`data/requirements.json` yet.
+
+### Not recorded, and why
+
+- **`nsf-grfp`** — `nsf.gov` returns "Request blocked: this resource is not available in your
+  region". Not recorded. The solicitation is the one document most likely to state a
+  *none-stated* position on GPA, so it is worth re-attempting from another route.
+- **`tfmasa-emjm`**, **`rem-plus-plus-emjm`** — home pages reached, admission pages not. Not
+  recorded rather than guessed.
+- **`australia-awards`** is recorded **partially and says so** in its own `text`: the programme
+  page publishes nothing and the "how to apply" page timed out, so the absence of a threshold
+  there is explicitly *not* a finding that the programme has none.
+
+## [0.34.0] - 2026-10-08
+
+### Added — six more records, and 26 of 50
+
+Six new, spanning PhD agencies, a national scholarship and three more Erasmus Mundus
+consortia. Each read off the provider's own page and dated `2026-10-08`.
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `swiss-government-excellence` | FCS assesses on three criteria: candidate profile, quality of the research project, synergies. No academic figure at all. | `prose` |
+| `cgrs-doctoral` | No GPA published. Academic record is one indicator inside a 50%-weighted criterion. | `prose` |
+| `eesic-emjm` | Academic merit scored on Grades/GPA and "student's ranking, **if available**". | `prose` |
+| `emerald-emjm` | rated, top 40 interviewed; no GPA bar | `prose` + `credits` 180 + 22.5 |
+| `biopham-emjm` | no GPA bar; physics/mathematics background assessed by committee | `prose` + `credits` 180 + 18 |
+| `paris-saclay-international-masters` | **no academic criterion at all**; the bar is delegated to admission to the master's | `prose` |
+
+**All six publish no GPA figure.** That is 17 of 21 across the pass.
+
+### Added — ECTS requirements are subject-specific, so `count` can now be narrowed
+
+EMerald requires *"at least 22.5 ECTS in university level mathematics **for application
+eligibility**"* — not 22.5 ECTS of anything. BIOPHAM expects *"a minimum 18 ECTS each"* in
+physics and in mathematics. A total-credit figure and a subject-specific one are not
+interchangeable, so `count` now carries `applies_to`, the same qualifier `rank` and `branches`
+already used.
+
+BIOPHAM's 18 ECTS is recorded **separately** from its 180-ECTS degree requirement and marked
+`not_a_requirement`, because BIOPHAM words it as *"should possess … **usually** a minimum"* and
+says it *"will be assessed by the Selection Committee"* — an expectation weighed in selection,
+not an eligibility gate. Collapsing the two would have made a soft expectation look like a hard
+gate, which is the `pec-pg-brazil` lesson: a finding must survive as the finding it is.
+
+### Added — the delegated bar gets its own row in §3.1
+
+Paris-Saclay publishes **no academic criterion whatsoever**: eligibility is nationality,
+admission to a Paris-Saclay master's, first-time enrolment in France, under 30, and no other
+funding above EUR 600/month. The jury evaluates "academic background, personal project,
+motivation", and the page states that *"the jury being discretionary, its decisions are
+confidential and cannot lead to appeal"*. Any academic bar lives in the programme's own
+admission decision.
+
+That is the same shape as Chevening's 2:1, which is set by a UK university's unconditional
+offer rather than by the scholarship. It now has its own row in the §3.1 table, because
+"the award publishes no threshold" and "there is no threshold" are different claims, and only
+the first is true here.
+
+### Added — providers say "if available" too
+
+EESIC scores *"Student's ranking, if available"*; CGRS-D lists *"relative standing in program
+(if available)"*. Both know a class rank often does not exist — which is exactly what this
+schema records as `unstated` on the reader's side. The phrase is kept verbatim so that whoever
+wires `compare.js` can see that the provider expects `unknown` here as well, and a `rank` rule
+must not be treated as answerable by default.
+
+### Fixed — a qualifier that silently did nothing
+
+`applies_to` was validated on a `branches` entry and **nowhere else**, so `applies_to: 5` or
+`applies_to: ""` on a `rank` or a `count` passed silently. A qualifier that does nothing is
+worse than no qualifier: the record looks narrowed and is not. It is now checked on every rule.
+Three tests, and the defect observed to fail (**2 fail**) with the validator verified
+byte-identical after restore.
+
+### Changed — §3.5 now has two instances, which makes it a pattern
+
+CGRS-D's only numeric academic threshold is a **ceiling**: *"no more than 36 months of
+full-time equivalent doctoral study"*. `count` compares with `>=`, so recording 36 would have
+meant "you must exceed 36 months" — the opposite of a cap. It is quoted and not encoded, like
+MS²'s German 2.8. Two independent cases in two batches is where an open item stops being an
+edge case: **if batch 4 produces a third, `direction` gets built before the pass continues.**
+
+### Not recorded, and why
+
+- **`resco-emjm`** — `resco-master.eu` serves a Cloudflare interstitial; no content. Not
+  recorded.
+- **`eesic-emjm` is partial, and says so.** Its selection procedure was readable and is
+  recorded; its "Academic requirements" block renders as a collapsed accordion and was **not**.
+  The record's `text` states explicitly that no credit or degree figure is claimed in either
+  direction, so its absence here is not read as a finding that none exists. Recording presence
+  is fine; claiming absence is not.
+
+`npm test` **204 → 207**. Requirements validation 0 errors, 2 warnings, both real and both
+pre-existing. **No user-visible behaviour changes** — nothing in the app reads
+`data/requirements.json` yet.
+
+## [0.33.0] - 2026-10-08
+
+### Added — seven more records, all from the Erasmus Mundus family
+
+`data/requirements.json` goes from **13 to 20 of 50**. Everything here was read off the
+consortium's own page and dated `2026-10-08`.
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `terra-emjm` | no GPA bar; assessed "solely on academic merit" against six curriculum criteria | `prose` + `credits` 240 ECTS |
+| `norisk-emjm` | "assessed on the basis of their previous academic record"; same six criteria | `prose` + `credits` 240 ECTS |
+| `frp-plus-plus-emjm` | "assessed on the basis of their previous academic records" | `prose` + `credits` 240 ECTS |
+| `mamaself-emjm` | ranked on academic level, university of last degree, English, motivation, references | `prose` + `credits` 180 ECTS |
+| `flux-emjm` | **a minimum GPA exists and is set per country of study — but no figure is published for any country** | `prose`, `varies_by` |
+| `ms2-emjm` | **top 35% of students** (ECTS grade B or better, "corresponding to a grade of up to 2.8" German) | `rank` 35/100 |
+| `erasmus-mundus-joint-masters` | the EU catalogue publishes no criteria of its own; each consortium sets its own | `prose` |
+
+**Six of the seven publish no GPA figure at all.** Batch 1 found five of eight; batch 2 finds
+six of seven. That is now 11 of 15 across the pass, and it is the shape of the whole catalog
+rather than a run of bad luck. The honest consequence: a comparison engine wired to this data
+will answer `unknown` for grades on most records and will be *right* to.
+
+### Added — the gate this family does publish is credits, which is why `credits` exists
+
+Four of the seven publish a **credit load** — 240 ECTS (TERRA, NORISK, FRP++), 180 ECTS
+(MaMaSELF) — and it is the only numeric academic requirement most of them state. It could not
+be written as `numeric`: 240 is not 240 *of* anything and not 240 *on* a bounded scale, and a
+graduate can hold 300. Recording it needed a fake scale, and a fake scale is the one defect the
+validator exists to stop. `credits` / `count` were added for it, with a mandatory `unit`
+because 240 credits means four different things in ECTS, US semester hours and the Nepali
+system. Full reasoning in `REQUIREMENTS-SCHEMA.md` §3.4.
+
+### Added — MS² is the second real academic threshold in the whole catalog
+
+The first was KAUST's `3.0`/`4.0`. MS² is the second, and the first expressed as a rank: the
+qualifying degree must be in **the best 35% of students**. Its German equivalent — *"up to
+2.8"* — is quoted in `text` and deliberately **not** encoded, because the German scale runs
+downward and every numeric rule here assumes higher is better. Recording 2.8 as a `minimum`
+would have produced the opposite verdict from the one the provider means. The `direction` field
+that would fix this is an open item (§3.5), not a shipped defect — nothing reads the file yet.
+
+### Not recorded, and why
+
+Two candidates were dropped rather than guessed, because the pass's whole value is that a
+recorded requirement means it was read:
+
+- **`eth-excellence-scholarship`** — the ETH page renders its eligibility and selection text
+  inside JavaScript-driven accordions; two fetches returned the section headings and nothing
+  else. Writing `unstated` here would have asserted *"the provider publishes no threshold"*
+  about a page that was never actually read, which is the exact claim this file exists to avoid.
+  It stays unsourced until the page can be read.
+- **`fulbright-foreign-student`** — the landing page carries no eligibility criteria at all,
+  because the programme is administered by roughly fifty country commissions. Sourcing it means
+  sourcing a commission, not a programme; deferred rather than flattened.
+
+### Changed
+
+`npm test` **198 → 204**. Requirements validation now reports **0 errors and 2 warnings**, both
+of them real: `tu-delft-van-effen` and `ms2-emjm` each carry a comparable GPA figure while the
+catalog record still has `eligibility.gpa_minimum = null`. `AGENTS.md`'s file-boundaries row for
+`data/requirements.json` corrected from "5 records as the schema proof" to 20 of 50.
+
+**No user-visible behaviour changes.** Nothing in the app reads `data/requirements.json` yet.
+
+## [0.32.0] - 2026-10-08
+
+### Added — eight more records carry a sourced academic requirement
+
+`data/requirements.json` goes from **5 records to 13 of 50**. Each new requirement was read off the
+provider's own page, transcribed rather than summarised, and dated `2026-10-08`.
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `tu-delft-van-effen` | "top 10% of graduates", stated *as an indication*, **proof of ranking not required** | `rank` |
+| `knight-hennessy-scholars` | "There is no formula for admission, and there are no scores… that automatically qualify you" | `none-stated` |
+| `kth-scholarship` | academic grades are 1 of 4 selection criteria; no bar published | `prose` |
+| `melbourne-graduate-research` | ranked on academic results; no GPA or WAM published | `prose` |
+| `chevening-scholarship` | no academic threshold of its own — the bar is delegated to the unconditional offer | `prose` |
+| `si-global-professionals` | no transcript requested at all; admission deferred to University Admissions | `prose` |
+| `gates-cambridge` | nothing published | `unstated` |
+| `eiffel-excellence-scholarship` | nothing published | `unstated` |
+
+**The finding that matters is not the count.** Five of the eight publish **no academic figure at
+all**. The five records this file started with were chosen because they were the *hardest*, and
+four of them carry real numbers — so they are the least representative sample in the catalog. The
+dominant case in a real pass is a **criterion that is weighed**, not a threshold that is enforced.
+`unstated` would have been the easy answer and would have been wrong: it would have discarded the
+fact that grades *are* part of the decision. Those records are `prose`, with the weighing quoted.
+
+**Chevening's 2:1 is not Chevening's.** The figure is repeated across the web; it does not appear
+in Chevening's own eligibility criteria, which require an unconditional offer from a UK university
+and let *that* set the academic bar. It is recorded under `not_a_requirement` with the reasoning,
+rather than quietly dropped — a reader who has seen the claim elsewhere needs to find the answer
+here, not an absence.
+
+### Fixed — two validator defects, both found because a record refused to validate
+
+The TU Delft record was correct and the validator rejected it. Same shape as the catalog work:
+when the data and the rule disagree, check which one is wrong before editing either.
+
+**A portion is not a point on a scale.** `numeric` is a reading on a grade scale, so its
+denominator is `scale`. A `percentile` and a `rank` are portions *of* something — top 20% of 100,
+of a class — so theirs is `of`. The validator required `scale` for all three, which contradicted
+both `REQUIREMENTS-SCHEMA.md` §3 and **this file's own `alternatives` path**, which already read
+`of`. One kind with two different required fields depending on where it is nested: a `rank` was
+legal as an alternative and illegal at the top level. The denominator now follows the kind, and a
+leftover `scale` on a portion is an error rather than a silently ignored field.
+
+**A warning nobody can act on teaches people to ignore warnings.** The catalog-divergence warning
+fired on *every* `gpa` finding. It compares against `eligibility.gpa_minimum`, a scalar that holds
+`null`, a number or prose — so only a finding that states a **figure** can diverge in a way a
+reader can see. With 37 records left and most of them landing on `prose`, it would have produced
+dozens of unactionable warnings and buried the one that is real. It now fires only for
+`numeric`, `branches`, `percentile` and `rank`.
+
+### Added — the validator's rules are now executable
+
+`data/requirements.test.js` is new: **14 tests** that run `scripts/validate-requirements.mjs`
+itself through `spawnSync` against temp fixtures, with `--requirements=` and `--catalog=` pointed
+at them. `npm test` **184 → 198**.
+
+Two traps worth recording, because both produce silence rather than a failure:
+
+- `execFileSync` with `stdio: 'pipe'` **discards stderr on success**, and every warning in this
+  validator goes to `console.warn`. A test that asserted a warning was emitted passed against a
+  validator emitting nothing. The suite now uses `spawnSync` and concatenates stdout and stderr.
+- A fixture written as `{ scholarships: [...] }` fails with *"Catalog root must be a JSON array"*
+  — an error about the wrong file. The catalog fixture is a bare array.
+
+**Three defect classes were planted and each observed to fail** before the suite was trusted:
+reverting the denominator fix (**4 tests fail**), dropping the leftover-`scale` guard (**1 fails**),
+and warning on every `gpa` kind again (**2 fail**). The validator was verified byte-identical after
+restore.
+
+### Fixed — a roadmap row that rendered outside its table
+
+The v0.31.0 progress-log row had been appended at the end of `docs/ROADMAP.md`, beneath
+`## Principles`, so it was not part of the progress log it belongs to and read as a stray table
+fragment. Moved into the table. Every row in the file now parses to the same **4 cells** (checked
+with `awk -F'|'`), which is how the v0.30.0 corruption was caught in the first place and how this
+one was caught now.
+
+### Not shipped
+
+Nothing in the app reads `data/requirements.json` yet. `src/compare.js` still answers `unknown`
+from the catalog's `eligibility.gpa_minimum`, so **no user-visible behaviour changes in this
+release**. The open item from §3.1 of the schema doc stands: its `unresolvable` sentence says
+*"more than one scale or branch"*, which does not describe a ranked field with no published bar,
+and will need a variant when Phase 3 wires the two together.
+
+## [0.31.0] - 2026-10-08
+
+### Fixed — the AI request carried the reader's profile with *every* question
+
+**A privacy rule that was stated and not enforced.** `AGENTS.md` said "No PII leaves the
+browser." It was false. The assistant's system prompt named the reader unconditionally:
+
+```js
+'The reader: country of origin ' + profile.nationality + ', aiming at a ' + profile.degree + ' in ' + profile.field + '.',
+```
+
+so **field, degree and nationality were attached to every chat request**, including "What is the
+MEXT deadline?" — a question that needs none of them. The guards around that line were all
+honest and all pointed the wrong way: `egressSummary()` names the host, the key never reaches a
+server, a test forbids the word "secure". Each proves *where* a request goes. None proves *what it
+carries*. Two different claims, and only the first was tested.
+
+**The fix is a predicate, not a promise.** `src/assistant.js` is new and pure: `needsProfile()`
+decides from the reader's own words whether the three facts may be attached, and it defaults to
+**not sending**. A missed cue costs one rephrased question; a false positive sends a nationality to
+a cloud provider. Those failures are not symmetric, so the gate stays narrow.
+
+| Question | Before | Now |
+|---|---|---|
+| "What is the deadline for MEXT?" | profile attached | catalog rows only |
+| "Tell me about the DAAD programme." | profile attached | catalog rows only |
+| "Am I eligible for MEXT?" | profile attached | field, degree, nationality |
+
+`readerClause()` returns **`null`** when the profile may not be sent, and the clause is filtered out
+rather than interpolated — an interpolated `null` renders visibly broken, whereas an omitted
+sentence reads as "not given", which is a different and false claim.
+
+### Added — the assistant is not an assessor
+
+The catalog records **zero numeric GPA thresholds across all fifty records** (measured), so a model
+asked "am I eligible?" has nothing to reason from and will produce confident prose over an empty
+table. That is the exact failure `compare.js` refuses in its own domain, arriving by a different
+door. `ASSESSOR_GUARD` now forbids a verdict and names the gap in the prompt itself.
+
+### Changed — egress is disclosed, in both directions
+
+- `egressSummary()` takes the profile and states **where a request goes *and* what it carries**, in
+  the one line the reader already reads before sending anything. Naming only the host understated
+  it.
+- The assistant puts the disclosure **on the reply**, per turn: `profile sent: field, degree,
+  nationality` or `no profile sent`. Not only in a settings panel the reader may never open.
+- `src/AiSettings.jsx` and `src/App.jsx` thread the profile through; the stale `egress`
+  destructure is gone.
+
+### Tests
+
+**21 new tests, 163 → 184.** The profile-egress tests are **negative controls**: they assert the
+profile is *absent* from a programme question, because a test that only asserts the happy path
+would have passed against the broken code too. **Seven defect classes were planted and each was
+observed to fail before the guard was trusted** — unconditional send, substring instead of word
+boundaries, empty string instead of `null`, empty profile treated as sendable, a disclosure that
+always claims a send, a dropped profile sentence, and a reintroduced security claim. Restored file
+verified byte-identical to the pre-plant state.
+
+The cue pattern needed its own correction during the work: bare `\bme\b` matched "**Tell me** about
+the DAAD programme" — the reader addressing the assistant, not a fact about them. The cues are now
+phrases (`my gpa`, `for me`, `am i`) rather than loose pronouns.
+
+
+## [0.30.0] - 2026-10-08
+
+### Changed — the merge gate is now real, and the pipeline is hardened
+
+**The largest hole was not in the workflow, it was in the merge gate.** `main` had classic branch
+protection requiring a pull request but with `required_status_checks: null` — so **CI could be red
+and a merge still succeeded**. The gate was advisory, and nothing on screen said so. It has been
+required since v0.25.0 that this was left as the owner's decision; that decision is now made.
+
+An active **ruleset** (`main-protection`, `bypass_actors: []`, `current_user_can_bypass: "never"`)
+carries five rules: `deletion`, `non_fast_forward`, `required_linear_history`, `pull_request` with
+thread resolution, and **`required_status_checks: [verify]` with
+`strict_required_status_checks_policy: true`**. **Proved by attempting the forbidden action** — a
+direct push to `main` was rejected with `Required status check "verify" is expected` /
+`push declined due to repository rule violations`.
+
+**Four workflow gaps closed**, each measured rather than assumed:
+
+| Gap | Was | Now |
+|---|---|---|
+| Hung job | no `timeout-minutes` — blocks the queue and reports nothing, forever | `timeout-minutes: 10` (~20× the observed ~15s, so it fires only on a genuine hang) |
+| Superseded run | kept running after a newer push; the earlier answer was worthless | `concurrency` cancels it — **`main` exempt**, because a run there is the record of what shipped |
+| Credentials | checkout left a token in `.git/config` for a job that only reads | `persist-credentials: false` |
+| Build trust | `vite build` exiting 0 was taken as "the app built" | asserts `dist/index.html` and a main JS chunk exist, and **caps the main bundle at the 500 kB ceiling** |
+
+That last one is a real failure mode: `vite build` can exit 0 with an empty or entry-less `dist/`
+and look exactly like success. **The assertion was observed passing and failing locally** before
+being shipped — passes on the real build (497,358 bytes) and fires when `dist/index.html` is
+removed. The ceiling is **asserted, never raised**; `chunkSizeWarningLimit` is untouched.
+
+**Added `.github/dependabot.yml` — the repository had none.** Its one advisory (`source-map-js`,
+reached transitively through `vite → postcss`) was reported by `npm audit` on every run and acted on
+by nothing. Now weekly npm **and `github-actions`** updates: watching the actions ecosystem is what
+catches an action major drifting off the pinned Node runtime, which is exactly how the
+"Node.js 20 is deprecated" warning arrived unremarked. Patch and minor updates are grouped into one
+pull request; `vite` and `@vitejs/plugin-react` majors are excluded, because a major is a decision
+rather than maintenance. **No auto-merge** — a bot that merges itself would be the one actor the
+branch protection does not constrain.
+
+**Advisories are reported, not enforced** (`npm audit --audit-level=high || true`). The known
+advisory is transitive and cannot be fixed without a lockfile decision that has been deliberately
+deferred, and a gate that fails on a condition nobody can act on teaches people to ignore red —
+the same asymmetry the catalog already applies to links answering 401/403, where the honest answer
+is *unverified*, not *broken*.
+
+Also set `delete_branch_on_merge`, which removes the manual branch cleanup and the stale
+remote-tracking ref that cleanup used to leave behind.
+
+`actionlint` 1.7.7 exits 0. `npm test` is unchanged — still 163 tests across a four-stage chain —
+so this release changes the gate around the checks, not the checks themselves.
+
 ## [0.29.0] - 2026-10-08
 
 ### Added — the requirement entity, and five worked examples of the hardest case

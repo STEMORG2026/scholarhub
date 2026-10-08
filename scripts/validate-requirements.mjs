@@ -32,10 +32,13 @@ const URL_PATTERN = /^https:\/\//;
 
 // The closed sets. Both are schema, not data: adding a member changes what the
 // comparison engine has to handle, so it is a code change rather than an edit.
-const REQUIREMENT_KINDS = new Set(['gpa', 'language']);
-const RULE_KINDS = new Set(['numeric', 'branches', 'percentile', 'rank', 'prose', 'none-stated', 'unstated']);
+const REQUIREMENT_KINDS = new Set(['gpa', 'language', 'credits']);
+const RULE_KINDS = new Set(['numeric', 'branches', 'percentile', 'rank', 'count', 'prose', 'none-stated', 'unstated']);
 // Kinds whose whole content is a number, and which therefore must carry one.
 const NUMERIC_RULE_KINDS = new Set(['numeric', 'percentile', 'rank']);
+// Kinds that state a figure a comparison can actually run on. Used for the
+// catalog-divergence warning, which is about numbers a reader could see.
+const FIGURE_RULE_KINDS = new Set(['numeric', 'branches', 'percentile', 'rank']);
 // Kinds that are their own text, and must say so.
 const TEXT_RULE_KINDS = new Set(['prose', 'none-stated']);
 
@@ -104,23 +107,82 @@ function checkRule(where, rule) {
   }
 
   if (NUMERIC_RULE_KINDS.has(rule.kind)) {
-    // The scale is mandatory. This is the same rule the profile side enforces on
-    // a GPA, and for the same reason: 3.0 means four different things on /4.0,
-    // /4.3, /4.5 and /5.0, and the comparison engine will refuse to guess.
+    // The denominator is mandatory. This is the same rule the profile side
+    // enforces on a GPA, and for the same reason: 3.0 means four different
+    // things on /4.0, /4.3, /4.5 and /5.0, and the comparison engine will
+    // refuse to guess.
+    //
+    // But *which* field holds it depends on the kind. `numeric` is a point on a
+    // grade scale, so its denominator is `scale`. A `percentile` and a `rank`
+    // are portions *of* something — top 20% of 100, of a class — so theirs is
+    // `of`. Requiring `scale` for all three contradicted both the schema
+    // (REQUIREMENTS-SCHEMA.md §3 gives percentile/rank "minimum + of") and this
+    // file's own `alternatives` path below, which reads `of`. Same kind, two
+    // required fields depending on nesting, is a bug: it made a rank legal as an
+    // alternative and illegal at the top level.
+    const isPortion = rule.kind === 'percentile' || rule.kind === 'rank';
+    const field = isPortion ? 'of' : 'scale';
+    const denominator = rule[field];
+
     if (typeof rule.minimum !== 'number' || !Number.isFinite(rule.minimum)) {
       error(where, 'rule.kind "' + rule.kind + '" needs a numeric minimum');
     }
-    if (typeof rule.scale !== 'number' || !Number.isFinite(rule.scale)) {
-      error(where, 'rule.kind "' + rule.kind + '" needs a numeric scale — a threshold with no scale cannot be compared against anything');
+    if (typeof denominator !== 'number' || !Number.isFinite(denominator)) {
+      error(
+        where,
+        'rule.kind "' + rule.kind + '" needs a numeric ' + field + ' — ' +
+          (isPortion
+            ? 'a threshold with nothing to be a portion of cannot be compared against anything'
+            : 'a threshold with no scale cannot be compared against anything'),
+      );
     }
-    if (typeof rule.minimum === 'number' && typeof rule.scale === 'number' && rule.minimum > rule.scale && rule.kind !== 'percentile' && rule.kind !== 'rank') {
-      error(where, 'rule minimum ' + rule.minimum + ' is above its own scale ' + rule.scale + ' — not a reading');
+    if (typeof rule.minimum === 'number' && typeof denominator === 'number' && rule.minimum > denominator && !isPortion) {
+      error(where, 'rule minimum ' + rule.minimum + ' is above its own scale ' + denominator + ' — not a reading');
+    }
+    // A percentile or rank legitimately carries `scale` nowhere — but a leftover
+    // `scale` on one is a symptom of the bug above, so it is named rather than
+    // silently ignored.
+    if (isPortion && rule.scale !== undefined) {
+      error(where, 'rule.kind "' + rule.kind + '" must not carry "scale" — a portion is written as minimum + "of"');
     }
     if (rule.branches !== undefined) {
       error(where, 'rule.kind "' + rule.kind + '" must not carry branches (that is the "branches" kind)');
     }
     if (rule.text !== undefined) {
       error(where, 'rule.kind "' + rule.kind + '" must not carry text (that is the "prose" kind)');
+    }
+  }
+
+  if (rule.kind === 'count') {
+    // A quantity, not a reading on a bounded scale. The sourcing pass hit this
+    // immediately: the Erasmus Mundus programmes publish almost no GPA figure,
+    // and the one numeric academic gate most of them do publish is a credit
+    // load — "a minimum of 240 ECTS-credit points". 240 is not 240 *of*
+    // anything and not 240 *on* a 4.0 scale; a graduate can hold 300. Forcing
+    // it into `numeric` would have needed a fake scale, and a fake scale is
+    // exactly what this file exists to prevent.
+    //
+    // The unit is mandatory for the mirror-image reason the scale is on a GPA:
+    // 240 credits means four different things in ECTS, US semester hours and
+    // the Nepali credit system. `count` with no unit is as uncomparable as
+    // `numeric` with no scale.
+    if (typeof rule.minimum !== 'number' || !Number.isFinite(rule.minimum)) {
+      error(where, 'rule.kind "count" needs a numeric minimum');
+    }
+    if (typeof rule.unit !== 'string' || rule.unit.trim() === '') {
+      error(where, 'rule.kind "count" needs a unit — "240" means four different things in ECTS, US credit hours and the Nepali system');
+    }
+    if (rule.scale !== undefined) {
+      error(where, 'rule.kind "count" must not carry "scale" — a quantity is not a reading on a bounded scale');
+    }
+    if (rule.of !== undefined) {
+      error(where, 'rule.kind "count" must not carry "of" — that is the "percentile" and "rank" kind');
+    }
+    if (rule.branches !== undefined) {
+      error(where, 'rule.kind "count" must not carry branches — where the load differs by route, say so in text and varies_by');
+    }
+    if (rule.text !== undefined) {
+      error(where, 'rule.kind "count" must not carry text (that is the "prose" kind)');
     }
   }
 
@@ -175,12 +237,22 @@ function checkRule(where, rule) {
   }
 
   if (TEXT_RULE_KINDS.has(rule.kind)) {
-    if (typeof rule.text !== 'string' || rule.text.trim() === '') {
-      error(where, 'rule.kind "' + rule.kind + '" needs text — this kind is its own explanation');
-    }
     if (rule.minimum !== undefined || rule.scale !== undefined || rule.branches !== undefined) {
       error(where, 'rule.kind "' + rule.kind + '" must not carry a number — it is recorded precisely because no single number holds it');
     }
+  }
+
+  // The wording belongs to the requirement, not to the rule.
+  //
+  // `req.text` is the one field a reader sees and the one field the comparison
+  // engine will render. A second copy on the rule is a second place for the same
+  // sentence to drift — and by the time this was noticed, 17 records carried the
+  // identical string in both fields (verified byte-identical, not assumed) while
+  // 7 carried it only on the rule, so a consumer reading `req.text` rendered
+  // nothing for those 7. Two shapes, one of them silently empty, is worse than
+  // either shape alone.
+  if (rule.text !== undefined) {
+    error(where, 'rule.text is not allowed — the wording lives on the requirement (text), so there is exactly one copy');
   }
 
   if (rule.kind === 'none-stated') {
@@ -199,6 +271,16 @@ function checkRule(where, rule) {
 
   if (rule.varies_by !== undefined && (typeof rule.varies_by !== 'string' || rule.varies_by.trim() === '')) {
     error(where, 'rule.varies_by must be a non-empty string when present');
+  }
+
+  // `applies_to` says *what* a figure counts — "the best 35% of students", "22.5
+  // ECTS in university-level mathematics", one branch per GPA scale. It was
+  // checked on a `branches` entry and nowhere else, so `applies_to: 5` or
+  // `applies_to: ""` on a `rank` or a `count` passed silently. A qualifier that
+  // silently does nothing is worse than no qualifier: the record looks
+  // narrowed and is not.
+  if (rule.applies_to !== undefined && (typeof rule.applies_to !== 'string' || rule.applies_to.trim() === '')) {
+    error(where, 'rule.applies_to must be a non-empty string when present');
   }
 }
 
@@ -250,24 +332,38 @@ for (const recordId of ids) {
       }
     }
 
-    if (req.text !== undefined && (typeof req.text !== 'string' || req.text.trim() === '')) {
-      error(where, 'text must be a non-empty string when present');
-    }
-    // `text` on a prose-bearing rule was already required by checkRule; require it
-    // here too for any rule whose numbers a reader should be able to check against
-    // the provider's own wording.
-    if (NUMERIC_RULE_KINDS.has(req.of && req.of.kind) && !req.text && !req.quote) {
-      warn(where, 'a numeric rule should carry the provider\'s own wording in text, so the reader can check it');
+    // `text` is the reader-facing sentence, and it is mandatory on every
+    // requirement except the one kind whose whole meaning is that there is
+    // nothing to say. `unstated` must therefore carry no text at all: a sentence
+    // there would be a claim, and the claim it would make is false.
+    const ruleKind = req.of && req.of.kind;
+    if (ruleKind === 'unstated') {
+      if (req.text !== undefined) {
+        error(where, 'an "unstated" rule must carry no text — nothing was recorded, so any sentence would be a claim');
+      }
+    } else if (typeof req.text !== 'string' || req.text.trim() === '') {
+      error(where, 'text is required on every requirement — it is the one field a reader sees, and an empty one renders as nothing');
     }
   });
 
   // A record that carries requirements should still say so on the record itself,
   // or the two files can disagree about whether a requirement exists at all.
+  //
+  // Only a *figure* counts for this warning. `src/compare.js` reads the catalog's
+  // `eligibility.gpa_minimum` scalar, which can hold null, a number or a prose
+  // string — so a number here with `null` there is a divergence a reader can
+  // actually see. A `prose`, `none-stated` or `unstated` finding cannot be
+  // written into that scalar in any shape that renders differently, and the
+  // sourcing pass is going to produce dozens of them: warning on all of them
+  // would bury the few that matter. A warning nobody can act on teaches people
+  // to ignore warnings.
   const catalogEntry = catalogById.get(recordId);
   if (catalogEntry && catalogEntry.eligibility && catalogEntry.eligibility.gpa_minimum === null) {
-    const hasGpa = entry.requirements.some((r) => r && r.kind === 'gpa');
-    if (hasGpa) {
-      warn(recordId, 'now carries a GPA requirement here, but the catalog record still has eligibility.gpa_minimum = null — the two disagree');
+    const hasGpaFigure = entry.requirements.some(
+      (r) => r && r.kind === 'gpa' && r.of && FIGURE_RULE_KINDS.has(r.of.kind),
+    );
+    if (hasGpaFigure) {
+      warn(recordId, 'now carries a comparable GPA figure here, but the catalog record still has eligibility.gpa_minimum = null — the two disagree');
     }
   }
 }

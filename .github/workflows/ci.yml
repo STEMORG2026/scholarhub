@@ -71,7 +71,7 @@ jobs:
       # which GitHub force-runs on 24 and warns about on every run ("Node.js 20
       # is deprecated … actions/checkout@v4 … being forced to run on Node.js
       # 24"). The warning was observed in run 37584032698.
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: npm
