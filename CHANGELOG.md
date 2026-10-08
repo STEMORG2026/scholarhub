@@ -35,14 +35,28 @@ Lint is now the **first stage of `npm test`**, so it gates.
 ### Added — coverage has a floor, not just a number
 
 `node --test --experimental-test-coverage` supports thresholds, and they gate the exit code — so
-the floors are real rather than reported. Current: **84.55% lines, 84.00% branches, 82.14%
-functions**, floors set at **80** for all three.
+the floors are real rather than reported. Current: **95.59% lines, 87.26% branches, 96.03%
+functions**, floors at **92 / 82 / 92**.
 
-The floors are deliberately four points below actual. A floor set at the current number fails on
-every new uncovered line, which trains people to ignore it; a floor four points down catches
-collapse without failing on normal variation. **The ratchet is to raise the floor, never to lower
-it** — and the floors are defined once, in `test:cov`, with the chain calling it, because two
-copies of a threshold is two places for it to drift.
+The floors sit a few points below actual on purpose. A floor set at the current number fails on
+every new uncovered line, which trains people to ignore it; a few points down catches collapse
+without failing on normal variation. **The ratchet is to raise the floor, never to lower it** — and
+the floors are defined once, in `test:cov`, with the chain calling it, because two copies of a
+threshold is two places for it to drift.
+
+**The first version of this measured the machine instead of the project, and CI is what exposed
+it.** Locally the report read **84.55%**; the same command on the runner read **95.59%**. The
+difference was two files belonging to *this development environment* — `node-language-shim.cjs` and
+`node-safe-delete-shim.cjs`, loaded into the Node process by the tooling that runs the agent, at 43%
+line coverage between them — which the runner does not have. A floor of 80 would have passed
+locally for the wrong reason and could have failed for a reason having nothing to do with this
+repository.
+
+The fix is to **scope the measurement rather than the floor**: `--test-coverage-include` on `src`,
+`scripts` and `data`, so coverage counts this project's files and nothing else. Local and CI now
+report the same three numbers to two decimal places. This is the same failure as the timezone bug
+in v0.41.0 — **a local measurement is not a CI measurement** — and it is the second time in two
+releases that the difference was the environment rather than the code.
 
 ### Fixed — a known HIGH vulnerability, which the audit had flagged as never reviewed
 

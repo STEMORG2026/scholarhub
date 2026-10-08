@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "preview": "vite preview --host 0.0.0.0",
     "test": "npm run lint && npm run test:cov && node scripts/validate-catalog.mjs && node scripts/validate-requirements.mjs && node scripts/render-smoke.mjs",
-    "test:cov": "node --test --experimental-test-coverage --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80",
+    "test:cov": "node --test --experimental-test-coverage --test-coverage-include='src/**' --test-coverage-include='scripts/**' --test-coverage-include='data/**' --test-coverage-lines=92 --test-coverage-branches=82 --test-coverage-functions=92",
     "test:render": "node scripts/render-smoke.mjs",
     "validate": "node scripts/validate-catalog.mjs && node scripts/validate-requirements.mjs"
   },

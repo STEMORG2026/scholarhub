@@ -112,10 +112,18 @@ inline in the boundary's own JSX happens *above* it. React catches errors in **d
 is why the probe has to be a component.
 
 **Coverage floors gate, and the ratchet only goes up.** `npm run test:cov` carries
-`--test-coverage-lines/branches/functions=80`, and Node exits non-zero when a floor is missed. The
-floors sit a few points below actual on purpose: a floor at the current number fails on every new
-uncovered line, which teaches people to ignore it. **Raise the floor, never lower it**, and keep it
-defined in one place — the `test` chain calls `test:cov` rather than repeating the numbers.
+`--test-coverage-lines=92 --test-coverage-branches=82 --test-coverage-functions=92`, and Node exits
+non-zero when a floor is missed. The floors sit a few points below actual on purpose: a floor at the
+current number fails on every new uncovered line, which teaches people to ignore it. **Raise the
+floor, never lower it**, and keep it defined in one place — the `test` chain calls `test:cov` rather
+than repeating the numbers.
+
+**Coverage must be scoped to this repository, or it measures the machine.** The first version of
+`test:cov` reported **84.55%** locally and **95.59%** on CI, because this development environment
+injects two shim files into every Node process (`node-language-shim.cjs`, `node-safe-delete-shim.cjs`
+— the delete guard) and they are counted at 43%. `--test-coverage-include='src/**'` (plus `scripts`
+and `data`) is therefore **load-bearing, not cosmetic**. Before trusting any local measurement, ask
+what else the environment put in the process — the same question as the timezone bug in v0.41.0.
 
 **A file listing is not a coverage measurement.** I concluded that `src/compare.js` "had no tests"
 because `ls src/*.test.js` showed no `compare.test.js` — while `src/ingest.test.js` already carried
