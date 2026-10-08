@@ -32,8 +32,8 @@ const URL_PATTERN = /^https:\/\//;
 
 // The closed sets. Both are schema, not data: adding a member changes what the
 // comparison engine has to handle, so it is a code change rather than an edit.
-const REQUIREMENT_KINDS = new Set(['gpa', 'language']);
-const RULE_KINDS = new Set(['numeric', 'branches', 'percentile', 'rank', 'prose', 'none-stated', 'unstated']);
+const REQUIREMENT_KINDS = new Set(['gpa', 'language', 'credits']);
+const RULE_KINDS = new Set(['numeric', 'branches', 'percentile', 'rank', 'count', 'prose', 'none-stated', 'unstated']);
 // Kinds whose whole content is a number, and which therefore must carry one.
 const NUMERIC_RULE_KINDS = new Set(['numeric', 'percentile', 'rank']);
 // Kinds that state a figure a comparison can actually run on. Used for the
@@ -150,6 +150,39 @@ function checkRule(where, rule) {
     }
     if (rule.text !== undefined) {
       error(where, 'rule.kind "' + rule.kind + '" must not carry text (that is the "prose" kind)');
+    }
+  }
+
+  if (rule.kind === 'count') {
+    // A quantity, not a reading on a bounded scale. The sourcing pass hit this
+    // immediately: the Erasmus Mundus programmes publish almost no GPA figure,
+    // and the one numeric academic gate most of them do publish is a credit
+    // load — "a minimum of 240 ECTS-credit points". 240 is not 240 *of*
+    // anything and not 240 *on* a 4.0 scale; a graduate can hold 300. Forcing
+    // it into `numeric` would have needed a fake scale, and a fake scale is
+    // exactly what this file exists to prevent.
+    //
+    // The unit is mandatory for the mirror-image reason the scale is on a GPA:
+    // 240 credits means four different things in ECTS, US semester hours and
+    // the Nepali credit system. `count` with no unit is as uncomparable as
+    // `numeric` with no scale.
+    if (typeof rule.minimum !== 'number' || !Number.isFinite(rule.minimum)) {
+      error(where, 'rule.kind "count" needs a numeric minimum');
+    }
+    if (typeof rule.unit !== 'string' || rule.unit.trim() === '') {
+      error(where, 'rule.kind "count" needs a unit — "240" means four different things in ECTS, US credit hours and the Nepali system');
+    }
+    if (rule.scale !== undefined) {
+      error(where, 'rule.kind "count" must not carry "scale" — a quantity is not a reading on a bounded scale');
+    }
+    if (rule.of !== undefined) {
+      error(where, 'rule.kind "count" must not carry "of" — that is the "percentile" and "rank" kind');
+    }
+    if (rule.branches !== undefined) {
+      error(where, 'rule.kind "count" must not carry branches — where the load differs by route, say so in text and varies_by');
+    }
+    if (rule.text !== undefined) {
+      error(where, 'rule.kind "count" must not carry text (that is the "prose" kind)');
     }
   }
 
@@ -285,8 +318,8 @@ for (const recordId of ids) {
     // `text` on a prose-bearing rule was already required by checkRule; require it
     // here too for any rule whose numbers a reader should be able to check against
     // the provider's own wording.
-    if (NUMERIC_RULE_KINDS.has(req.of && req.of.kind) && !req.text && !req.quote) {
-      warn(where, 'a numeric rule should carry the provider\'s own wording in text, so the reader can check it');
+    if ((NUMERIC_RULE_KINDS.has(req.of && req.of.kind) || (req.of && req.of.kind) === 'count') && !req.text && !req.quote) {
+      warn(where, 'a rule carrying a figure should carry the provider\'s own wording in text, so the reader can check it');
     }
   });
 

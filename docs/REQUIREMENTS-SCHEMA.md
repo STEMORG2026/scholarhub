@@ -93,13 +93,14 @@ into `unstated`, which the current scalar cannot avoid:
 | `branches` | `branches[]` of `{minimum, scale}`, optional `alternatives[]` | the reader picks their branch — the provider states several |
 | `percentile` | `minimum` + `of` | a percentile bar, e.g. top 20% |
 | `rank` | `minimum` + `of` | a class-rank bar |
+| `count` | `minimum` + **`unit`** (both mandatory) | a quantity with no ceiling — 240 ECTS |
 | `prose` | `text` only, optional `varies_by` | stated, but with no single scalar form |
 | `none-stated` | `quote` | **the provider states there is no threshold** |
 | `unstated` | nothing | **the catalog has not looked** — the honest default |
 
 `prose`, `none-stated` and `unstated` are three *different facts*. `numeric`, `branches`,
-`percentile` and `rank` are four different *comparison procedures*. All seven are one closed
-set, and the validator rejects an eighth.
+`percentile`, `rank` and `count` are five different *comparison procedures*. All eight are one
+closed set, and the validator rejects a ninth.
 
 ### 3.1 The dominant case is a criterion, not a threshold
 
@@ -142,6 +143,45 @@ all three, which contradicted both this document and its own `alternatives` path
 `of`), making a `rank` legal as an alternative and illegal at the top level. Fixed in
 v0.32.0: the denominator field follows the kind, and a leftover `scale` on a portion is now
 an error rather than being silently ignored.
+
+### 3.4 `credits` is its own requirement, and a count is not a scale
+
+The Erasmus Mundus programmes publish almost no GPA figure — but most publish a **credit
+load**, and it is the only numeric academic gate they do state: *"a higher education degree
+with a minimum of 240 ECTS-credit points"* (TERRA, NORISK, FRP++), *"a Bachelor's Degree
+(180 ECTS)"* (MaMaSELF). Dropping that because it is not a grade would have meant discarding
+the one enforceable threshold in the family.
+
+It is its own **requirement** kind (`credits`, alongside `gpa` and `language`) because it is a
+different thing being required: 240 ECTS is a statement about the *length and shape* of a
+prior degree, not about grades earned in it.
+
+It is its own **rule** kind (`count`) because it is a quantity, not a reading:
+
+- it has **no ceiling** — 240 is not 240 *of* anything, and a graduate can hold 300;
+- so it carries **neither `scale` nor `of`**, both of which would be fabrications;
+- and it carries a mandatory **`unit`**, for the mirror-image reason a GPA carries a scale:
+  240 credits means four different things in ECTS, US semester credit hours and the Nepali
+  system. A `count` with no unit is as uncomparable as a `numeric` with no scale.
+
+Where the required load differs by route — FRP++ needs 300 for tracks including UNINA, 240
+otherwise — the lower figure goes in `minimum` and the difference is stated in `text` with
+`varies_by`. A per-route `branches` was considered and rejected: two figures that depend on a
+mobility track the reader has not chosen yet is not a branch the reader can pick from their
+own profile.
+
+### 3.5 Open item — a scale that runs downward
+
+MS² states its bar three ways: *"an average grade higher or equal to B according to the ECTS
+grading system, i.e. the best 35% of students (corresponding to a grade of up to 2.8 in the
+German grading scale)"*. The 35% is recorded as `rank`; the German 2.8 is quoted in `text` and
+**not** recorded as a figure, because the German scale runs *downward* — 1.0 is best — and
+every numeric rule in this schema assumes higher is better. `compare.js` compares with `>=`
+and the validator rejects a `minimum` above its own `scale` on that assumption.
+
+Recording 2.8 as a `numeric` minimum would have produced the opposite verdict from the one
+the provider means. A `direction` field (`higher-is-better` / `lower-is-better`) is the fix
+and it is **not yet built**; until it is, an inverted-scale threshold is quoted, not encoded.
 
 ### Mapping to `src/compare.js` — every reason code already exists
 

@@ -107,6 +107,60 @@ test('a numeric rule with "of" but no scale is still rejected', () => {
   assert.notEqual(status, 0);
 });
 
+// --- credits: a quantity is not a reading on a scale (v0.33.0) --------------
+
+const withCredits = (of, kind = 'credits') => ({
+  probe: {
+    requirements: [
+      {
+        kind,
+        of,
+        text: 'a minimum of 240 ECTS-credit points',
+        source: 'https://example.org/rule',
+        last_verified: '2026-10-08',
+      },
+    ],
+  },
+});
+
+test('a count with a unit is legal', () => {
+  const { status, output } = run(withCredits({ kind: 'count', minimum: 240, unit: 'ECTS' }));
+  assert.equal(status, 0, output);
+});
+
+test('a count with no unit is rejected', () => {
+  // 240 means four different things in ECTS, US credit hours and the Nepali system.
+  const { status, output } = run(withCredits({ kind: 'count', minimum: 240 }));
+  assert.notEqual(status, 0);
+  assert.match(output, /needs a unit/);
+});
+
+test('a count carrying a scale is rejected', () => {
+  // 240 is not 240 of anything and not 240 on a 4.0 scale; a graduate can hold 300.
+  const { status, output } = run(withCredits({ kind: 'count', minimum: 240, unit: 'ECTS', scale: 240 }));
+  assert.notEqual(status, 0);
+  assert.match(output, /must not carry "scale"/);
+});
+
+test('a count carrying "of" is rejected', () => {
+  const { status, output } = run(withCredits({ kind: 'count', minimum: 240, unit: 'ECTS', of: 240 }));
+  assert.notEqual(status, 0);
+  assert.match(output, /must not carry "of"/);
+});
+
+test('a count with no minimum is rejected', () => {
+  const { status } = run(withCredits({ kind: 'count', unit: 'ECTS' }));
+  assert.notEqual(status, 0);
+});
+
+test('a ninth requirement kind is rejected', () => {
+  // The requirement kind is a closed set: adding one changes what the comparison
+  // engine has to handle, so it is a code change rather than a data edit.
+  const { status, output } = run(withCredits({ kind: 'count', minimum: 240, unit: 'ECTS' }, 'vibes'));
+  assert.notEqual(status, 0);
+  assert.match(output, /kind must be one of/);
+});
+
 // --- the divergence warning stays sharp -------------------------------------
 
 test('a comparable figure with a null catalog gpa_minimum warns', () => {
