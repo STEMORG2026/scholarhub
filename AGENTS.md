@@ -25,13 +25,15 @@ ScholarHub is a static, client-side scholarship discovery application. There is 
 ```sh
 npm install          # install dependencies (uses .npm-cache locally if needed)
 npm run dev          # start Vite dev server
-npm test             # the canonical gate: node --test, then catalog validation, then the render smoke test
+npm test             # the canonical gate: node --test, catalog validation, requirements validation, then the render smoke test
 npm run test:render  # just the render smoke test (every view, empty + populated browser)
 npm run check:links  # catalog validation plus a liveness probe of every official link (needs network)
 npm run build        # production build to dist/
 npm run preview      # preview production build
 node scripts/validate-catalog.mjs  # standalone catalog validation
 node scripts/validate-catalog.mjs --links --catalog=<path>  # validate a fixture catalog
+node scripts/validate-requirements.mjs  # standalone requirements validation
+node scripts/validate-requirements.mjs --requirements=<path> --catalog=<path>  # validate a fixture pair
 ```
 
 **`npm test` is the canonical gate, and it is a chain.** Run it whole, not the
@@ -52,6 +54,13 @@ workflow file. Keep it simple.
 - Official sources take precedence over this repository. Link them directly.
 - Records are human-reviewed proposals. AI-generated content is not canonical until a human commits it.
 
+**Requirements are a separate file, and a separate honesty rule.** `data/requirements.json` holds the machine-comparable form of a requirement, keyed by record id, and is validated against `docs/REQUIREMENTS-SCHEMA.md` by `scripts/validate-requirements.mjs`.
+
+- **A requirement carries a `kind`, and the `kind` is the point.** `none-stated` ("the provider states there is no threshold") and `unstated` ("the catalog has not looked") are **opposite claims** and must never collapse into one shape. A rule that has more than one figure (`branches`), or none that a single number can hold (`prose`), is recorded as such rather than reduced to a number — **reducing it would be inventing one.**
+- **`source` and `last_verified` are mandatory on every requirement.** A requirement is the thing that goes stale fastest: providers change a threshold without changing the page, so there is no diff to notice. An unsourced requirement is an assertion, not a record.
+- **A numeric requirement must carry its `scale`.** `3.0` means four different things on `/4.0`, `/4.3`, `/4.5` and `/5.0`. The comparison engine refuses to assume one, and so does the validator.
+- **Context is not a requirement.** `kaust-fellowship` prints "typically 90% of admitted applicants have a GPA above 3.3" — that is a description of who was admitted, not a threshold, and comparing against it would be a defect. Put it in `text` or `not_a_requirement`, never in `minimum`.
+
 ## File boundaries
 
 | Path | Purpose |
@@ -71,7 +80,9 @@ workflow file. Keep it simple.
 | `src/IngestPanel.jsx` | The document-reading surface on the profile page. Lazily loaded; the smoke test renders it directly. |
 | `data/scholarships.json` | Canonical scholarship catalog |
 | `data/scholarships.test.js` | Catalog validation tests |
+| `data/requirements.json` | Machine-comparable requirements, keyed by record id — 5 records as the schema proof, not the full pass |
 | `scripts/validate-catalog.mjs` | Standalone validation script |
+| `scripts/validate-requirements.mjs` | Validates `data/requirements.json` against `docs/REQUIREMENTS-SCHEMA.md` |
 | `scripts/render-smoke.mjs` | Renders every view (empty + populated) to catch runtime errors |
 | `docs/` | Architecture, schema, API notes, roadmap |
 | `.github/` | Issue templates, PR template, and `workflows/ci.yml` |
