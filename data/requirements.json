@@ -6,14 +6,36 @@
         "of": {
           "kind": "branches",
           "branches": [
-            { "minimum": 2.64, "scale": 4.0 },
-            { "minimum": 2.80, "scale": 4.3 },
-            { "minimum": 2.91, "scale": 4.5 },
-            { "minimum": 3.23, "scale": 5.0 }
+            {
+              "minimum": 2.64,
+              "scale": 4.0
+            },
+            {
+              "minimum": 2.8,
+              "scale": 4.3
+            },
+            {
+              "minimum": 2.91,
+              "scale": 4.5
+            },
+            {
+              "minimum": 3.23,
+              "scale": 5.0
+            }
           ],
           "alternatives": [
-            { "kind": "percentile", "minimum": 80, "of": 100, "applies_to": "score percentile on a 100-point scale" },
-            { "kind": "rank", "minimum": 20, "of": 100, "applies_to": "top 20% of the class" }
+            {
+              "kind": "percentile",
+              "minimum": 80,
+              "of": 100,
+              "applies_to": "score percentile on a 100-point scale"
+            },
+            {
+              "kind": "rank",
+              "minimum": 20,
+              "of": 100,
+              "applies_to": "top 20% of the class"
+            }
           ]
         },
         "text": "A cumulative GPA of at least 2.64/4.0, 2.80/4.3, 2.91/4.5 or 3.23/5.0 — or a score percentile of 80% or above on a 100-point scale, or a rank in the top 20% of the class",
@@ -29,8 +51,28 @@
         "of": {
           "kind": "branches",
           "branches": [
-            { "minimum": 3.1, "scale": 4.0, "applies_to": "Natural Sciences (70% marks)", "equivalences": [{ "kind": "percent", "minimum": 70 }] },
-            { "minimum": 2.5, "scale": 4.0, "applies_to": "Humanities and Social Sciences (60% marks)", "equivalences": [{ "kind": "percent", "minimum": 60 }] }
+            {
+              "minimum": 3.1,
+              "scale": 4.0,
+              "applies_to": "Natural Sciences (70% marks)",
+              "equivalences": [
+                {
+                  "kind": "percent",
+                  "minimum": 70
+                }
+              ]
+            },
+            {
+              "minimum": 2.5,
+              "scale": 4.0,
+              "applies_to": "Humanities and Social Sciences (60% marks)",
+              "equivalences": [
+                {
+                  "kind": "percent",
+                  "minimum": 60
+                }
+              ]
+            }
           ]
         },
         "text": "The Embassy of Japan in Nepal requires 70% marks (CGPA 3.1) for Natural Sciences and 60% marks (CGPA 2.5) for Humanities and Social Sciences, averaged across the +2 and above degree. This is a Nepal-specific bar set by the mission, not a MEXT-wide rule.",
@@ -82,6 +124,118 @@
         },
         "source": "https://www.gov.br/capes/pt-br/centrais-de-conteudo/editais/04072025_Edital_2630513_SEI_2630221_Edital_n__12_2025.pdf/@@display-file/file",
         "last_verified": "2026-10-07"
+      }
+    ]
+  },
+  "tu-delft-van-effen": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "rank",
+          "minimum": 10,
+          "of": 100,
+          "applies_to": "top 10% of graduates in the previous study programme"
+        },
+        "text": "Students must have achieved excellent academic results in their previous study programme(s), which must be relevant to the Master's programme for which they are applying. As an indication, the student is amongst the top 10% of graduates in his/her previous study programme. Note that proof of ranking is not required – this information is purely to indicate the level of competitiveness.",
+        "not_a_requirement": "TU Delft states the 10% figure “as an indication” and says proof of ranking is not required. It is a statement of the competitive level, not a gate the reader is asked to evidence.",
+        "source": "https://www.tudelft.nl/en/education/programmes/practical-matters/scholarships",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "knight-hennessy-scholars": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "none-stated",
+          "quote": "There is no formula for admission, and there are no scores, achievements, or stories that automatically qualify you for admission.",
+          "text": "Knight-Hennessy publishes two baseline eligibility requirements — admission to a full-time Stanford graduate degree programme, and a first bachelor's degree earned in January 2020 or later — and no academic threshold. The admission page states there is no formula for admission and no score that automatically qualifies an applicant."
+        },
+        "source": "https://knight-hennessy.stanford.edu/admission",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "kth-scholarship": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "KTH names four scholarship selection criteria, the first of which is “the applicant's grades (GPA or equivalent)”, alongside the ranking of the university that awarded the bachelor's degree, relevant extracurricular research or work experience, and the applicant's motivation on sustainable development. No minimum grade, GPA or class threshold is published.",
+          "varies_by": "no published threshold — grades are one of four weighted criteria"
+        },
+        "source": "https://www.kth.se/en/studies/master/admissions/scholarships/kth-scholarship-1.72827",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "melbourne-graduate-research": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "Stipend-bearing Graduate Research Scholarships are “offered to eligibile candidates ranked highest by relevant selection panels based on their academic results for prior study and their research potential in their field of study”. No minimum GPA, WAM or honours class is published; the only stated eligibility is having applied for, or being enrolled in, a graduate research degree.",
+          "varies_by": "no published threshold — candidates are ranked against each other"
+        },
+        "source": "https://scholarships.unimelb.edu.au/awards/graduate-research-scholarships",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "chevening-scholarship": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "Chevening's published eligibility requires an undergraduate degree “that qualifies you for a UK master's programme” and an unconditional offer from at least one of the three courses applied to. No degree classification, GPA or grade threshold is published by Chevening itself — the academic bar is set by the university making the offer, not by the scheme.",
+          "varies_by": "the admitting university, not Chevening — no classification published by the scheme"
+        },
+        "not_a_requirement": "A 2:1 (upper second-class) is widely repeated as a Chevening requirement in third-party guides. It does not appear in Chevening's own published eligibility criteria, which delegate the academic bar to the unconditional offer. It is recorded here as absent from the source, not as a threshold to meet.",
+        "source": "https://chevening.org/resource-hub/guidance/eligibility/",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "si-global-professionals": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "SI publishes no academic threshold for the Scholarship for Global Professionals. The documents it requires are a CV, proof of work and leadership experience, two references, a passport copy and a motivation statement — no transcript or record of grades is requested. Admission, and with it the academic entry requirement, is handled by University Admissions rather than by SI.",
+          "varies_by": "the admitting university via University Admissions — SI assesses no academic criterion"
+        },
+        "source": "https://si.se/en/apply/scholarships/swedish-institute-scholarships-for-global-professionals/",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "gates-cambridge": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "unstated"
+        },
+        "source": "https://www.gatescambridge.org/apply/eligibility",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "eiffel-excellence-scholarship": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "unstated"
+        },
+        "source": "https://www.campusfrance.org/en/the-france-excellence-eiffel-scholarship-program",
+        "last_verified": "2026-10-08"
       }
     ]
   }

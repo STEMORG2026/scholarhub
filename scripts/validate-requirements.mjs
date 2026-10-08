@@ -36,6 +36,9 @@ const REQUIREMENT_KINDS = new Set(['gpa', 'language']);
 const RULE_KINDS = new Set(['numeric', 'branches', 'percentile', 'rank', 'prose', 'none-stated', 'unstated']);
 // Kinds whose whole content is a number, and which therefore must carry one.
 const NUMERIC_RULE_KINDS = new Set(['numeric', 'percentile', 'rank']);
+// Kinds that state a figure a comparison can actually run on. Used for the
+// catalog-divergence warning, which is about numbers a reader could see.
+const FIGURE_RULE_KINDS = new Set(['numeric', 'branches', 'percentile', 'rank']);
 // Kinds that are their own text, and must say so.
 const TEXT_RULE_KINDS = new Set(['prose', 'none-stated']);
 
@@ -104,17 +107,43 @@ function checkRule(where, rule) {
   }
 
   if (NUMERIC_RULE_KINDS.has(rule.kind)) {
-    // The scale is mandatory. This is the same rule the profile side enforces on
-    // a GPA, and for the same reason: 3.0 means four different things on /4.0,
-    // /4.3, /4.5 and /5.0, and the comparison engine will refuse to guess.
+    // The denominator is mandatory. This is the same rule the profile side
+    // enforces on a GPA, and for the same reason: 3.0 means four different
+    // things on /4.0, /4.3, /4.5 and /5.0, and the comparison engine will
+    // refuse to guess.
+    //
+    // But *which* field holds it depends on the kind. `numeric` is a point on a
+    // grade scale, so its denominator is `scale`. A `percentile` and a `rank`
+    // are portions *of* something — top 20% of 100, of a class — so theirs is
+    // `of`. Requiring `scale` for all three contradicted both the schema
+    // (REQUIREMENTS-SCHEMA.md §3 gives percentile/rank "minimum + of") and this
+    // file's own `alternatives` path below, which reads `of`. Same kind, two
+    // required fields depending on nesting, is a bug: it made a rank legal as an
+    // alternative and illegal at the top level.
+    const isPortion = rule.kind === 'percentile' || rule.kind === 'rank';
+    const field = isPortion ? 'of' : 'scale';
+    const denominator = rule[field];
+
     if (typeof rule.minimum !== 'number' || !Number.isFinite(rule.minimum)) {
       error(where, 'rule.kind "' + rule.kind + '" needs a numeric minimum');
     }
-    if (typeof rule.scale !== 'number' || !Number.isFinite(rule.scale)) {
-      error(where, 'rule.kind "' + rule.kind + '" needs a numeric scale — a threshold with no scale cannot be compared against anything');
+    if (typeof denominator !== 'number' || !Number.isFinite(denominator)) {
+      error(
+        where,
+        'rule.kind "' + rule.kind + '" needs a numeric ' + field + ' — ' +
+          (isPortion
+            ? 'a threshold with nothing to be a portion of cannot be compared against anything'
+            : 'a threshold with no scale cannot be compared against anything'),
+      );
     }
-    if (typeof rule.minimum === 'number' && typeof rule.scale === 'number' && rule.minimum > rule.scale && rule.kind !== 'percentile' && rule.kind !== 'rank') {
-      error(where, 'rule minimum ' + rule.minimum + ' is above its own scale ' + rule.scale + ' — not a reading');
+    if (typeof rule.minimum === 'number' && typeof denominator === 'number' && rule.minimum > denominator && !isPortion) {
+      error(where, 'rule minimum ' + rule.minimum + ' is above its own scale ' + denominator + ' — not a reading');
+    }
+    // A percentile or rank legitimately carries `scale` nowhere — but a leftover
+    // `scale` on one is a symptom of the bug above, so it is named rather than
+    // silently ignored.
+    if (isPortion && rule.scale !== undefined) {
+      error(where, 'rule.kind "' + rule.kind + '" must not carry "scale" — a portion is written as minimum + "of"');
     }
     if (rule.branches !== undefined) {
       error(where, 'rule.kind "' + rule.kind + '" must not carry branches (that is the "branches" kind)');
@@ -263,11 +292,22 @@ for (const recordId of ids) {
 
   // A record that carries requirements should still say so on the record itself,
   // or the two files can disagree about whether a requirement exists at all.
+  //
+  // Only a *figure* counts for this warning. `src/compare.js` reads the catalog's
+  // `eligibility.gpa_minimum` scalar, which can hold null, a number or a prose
+  // string — so a number here with `null` there is a divergence a reader can
+  // actually see. A `prose`, `none-stated` or `unstated` finding cannot be
+  // written into that scalar in any shape that renders differently, and the
+  // sourcing pass is going to produce dozens of them: warning on all of them
+  // would bury the few that matter. A warning nobody can act on teaches people
+  // to ignore warnings.
   const catalogEntry = catalogById.get(recordId);
   if (catalogEntry && catalogEntry.eligibility && catalogEntry.eligibility.gpa_minimum === null) {
-    const hasGpa = entry.requirements.some((r) => r && r.kind === 'gpa');
-    if (hasGpa) {
-      warn(recordId, 'now carries a GPA requirement here, but the catalog record still has eligibility.gpa_minimum = null — the two disagree');
+    const hasGpaFigure = entry.requirements.some(
+      (r) => r && r.kind === 'gpa' && r.of && FIGURE_RULE_KINDS.has(r.of.kind),
+    );
+    if (hasGpaFigure) {
+      warn(recordId, 'now carries a comparable GPA figure here, but the catalog record still has eligibility.gpa_minimum = null — the two disagree');
     }
   }
 }

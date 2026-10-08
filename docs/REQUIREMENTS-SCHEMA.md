@@ -1,9 +1,13 @@
 # Schema — the requirement entity
 
-**Status:** proposal, written 2026-10-08. The schema and the five worked examples are real;
-the **data file holds only the 5 hardest records** (`data/requirements.json`), as the proof
-that the schema can hold what providers actually publish. The remaining 45 are a sourcing
-pass and are the owner's call.
+**Status:** in use, written 2026-10-08. The schema and the five worked examples are real.
+The data file now holds **13 records** — the 5 hardest, plus sourcing batch 1 (8 records,
+v0.32.0). The remaining 37 are an ongoing sourcing pass.
+
+**Two corrections landed during batch 1** and are recorded in §3.1 and §3.2: the validator
+demanded `scale` on a `rank` where the schema says `of`, and the sourcing pass turned out to
+be dominated by a case the seven kinds did not name — a *criterion* with no published
+threshold.
 
 This is the companion to `SCHEMA-PERSONAL-PROFILE.md`. That document defines the *applicant*
 side; this one defines the *requirement* side. A comparison needs both, and they meet only in
@@ -96,6 +100,48 @@ into `unstated`, which the current scalar cannot avoid:
 `prose`, `none-stated` and `unstated` are three *different facts*. `numeric`, `branches`,
 `percentile` and `rank` are four different *comparison procedures*. All seven are one closed
 set, and the validator rejects an eighth.
+
+### 3.1 The dominant case is a criterion, not a threshold
+
+The five worked examples were chosen to be the *hardest*, which made them unrepresentative:
+four of them carry a real figure. The sourcing pass is mostly the opposite. Of the first
+eight records sourced, **five publish no academic figure at all**. Three distinct situations
+fell out, and the kind used for each is a decision, not an accident:
+
+| What the provider publishes | Kind | Why |
+|---|---|---|
+| A figure (3.0/4.0, top 10%, percentile 80) | `numeric` / `rank` / `percentile` / `branches` | the comparison runs |
+| **A rule with no single scalar** — several grading systems, or "excellent" | `prose` | stated, but no number holds it |
+| **Grades are a selection criterion, no bar published** (KTH: grades are 1 of 4 criteria; Melbourne: candidates are *ranked* on academic results) | `prose` | something *is* stated — that grades count — and it has no scalar form |
+| **Nothing about academic standards published on the page** | `unstated` | nothing is stated, so `prose` would be a claim |
+| The provider affirmatively says there is no threshold (Knight-Hennessy) | `none-stated` | the distinct fact |
+
+**The third row is the one that needed a decision.** `unstated` was tempting and would have
+been wrong: it renders as *"the catalog does not record a GPA requirement — check the
+provider"*, which would **throw away the finding** that the provider does weigh grades. That
+is the `pec-pg-brazil` lesson again — a finding must survive as a finding. `prose` keeps it,
+at the cost of a sentence in `compare.js` that currently says "more than one scale or
+branch", which does not describe a ranked field. **That sentence needs a variant when Phase
+3 wires this file to the UI; it is an open item, not a shipped defect**, because nothing in
+the app reads `requirements.json` yet.
+
+### 3.2 `unstated` means "checked, nothing published" — not "nobody looked"
+
+`source` and `last_verified` are **mandatory on every requirement**, so an `unstated` entry
+necessarily carries the URL that was checked and the date it was checked on. That makes the
+schema's own gloss — "the catalog has not looked" — imprecise. What it actually means is
+*"the provider's published material was read and states no threshold"*, which is a different
+claim from `none-stated` (*"the provider states there is no threshold"*). Both remain
+distinct, both remain honest, and neither may collapse into the other.
+
+### 3.3 A portion is `of`, a point on a scale is `scale`
+
+`numeric` carries `minimum` + `scale`. `percentile` and `rank` carry `minimum` + **`of`** —
+top 10% is 10 *of* 100, not 10 on a 4.0 scale. The validator originally required `scale` for
+all three, which contradicted both this document and its own `alternatives` path (which reads
+`of`), making a `rank` legal as an alternative and illegal at the top level. Fixed in
+v0.32.0: the denominator field follows the kind, and a leftover `scale` on a portion is now
+an error rather than being silently ignored.
 
 ### Mapping to `src/compare.js` — every reason code already exists
 
