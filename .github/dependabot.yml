@@ -1,0 +1,62 @@
+version: 2
+updates:
+  # WHY THIS EXISTS
+  # The repository has no dependency-update automation, so the one advisory it
+  # carries (source-map-js, reached transitively through vite → postcss) will
+  # never be surfaced by anything. `npm audit` in CI reports it on every run and
+  # nothing acts on that report. This file is what turns a finding into a pull
+  # request that goes through the same gate as any other change.
+  #
+  # WHAT IT DELIBERATELY DOES NOT DO
+  # No auto-merge. Every change in this repository goes through a pull request
+  # and a passing `verify`, including a one-line version bump — an automated
+  # dependency bump is not exempt from that rule, and a bot that merges itself
+  # would be the one actor the branch protection does not actually constrain.
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Asia/Kathmandu
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: 'chore(deps)'
+    labels:
+      - dependencies
+    # Patch and minor updates are grouped into one pull request so the queue
+    # stays readable — five separate "bump the patch version" PRs is how people
+    # learn to close them unread. A major bump stays separate, because a major
+    # is the one that needs a human to read the changelog.
+    groups:
+      patch-and-minor:
+        applies-to: version-updates
+        update-types:
+          - patch
+          - minor
+    ignore:
+      # This project pins the runtime deliberately (see .github/workflows/ci.yml)
+      # and depends on Vite's major for its build output shape. A major bump of
+      # either is a decision, not maintenance, so it is not opened automatically.
+      - dependency-name: vite
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@vitejs/plugin-react'
+        update-types: ['version-update:semver-major']
+
+  # The workflow file is itself a dependency: an action major that stops
+  # targeting the pinned Node runtime is exactly the drift that produced the
+  # Node 20 deprecation warning. Nothing watched for that. This does.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Asia/Kathmandu
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: 'chore(ci)'
+    labels:
+      - dependencies
+      - ci

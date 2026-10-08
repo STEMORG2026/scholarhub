@@ -1,8 +1,8 @@
 name: CI
 
 # WHY THIS EXISTS
-# Until now the only gates in this repository were the ones a developer chose to
-# run: `npm test` and `npm run build`, both manual. Nothing ran them on a pull
+# Until v0.25.0 the only gates in this repository were the ones a developer chose
+# to run: `npm test` and `npm run build`, both manual. Nothing ran them on a pull
 # request, so nothing stopped a change from landing on `main` with them failing
 # — and a runtime error inside a view (`ReferenceError: FLAG is not defined`,
 # which blanked the shortlist for six versions) was invisible to every check
@@ -13,7 +13,14 @@ name: CI
 # No bespoke set of checks: a CI job that runs its own private list drifts from
 # what a developer can reproduce, and a green local run stops predicting a green
 # pipeline. `npm test` is itself a chain (unit tests → catalog validation →
-# render smoke test), so adding a stage to it automatically adds it here.
+# requirements validation → render smoke test), so adding a stage to it
+# automatically adds it here.
+#
+# WHY THE RUNTIME IS PINNED
+# Node is pinned to the major the project is developed on, and the action majors
+# are pinned to the ones that target that runtime. A floating `lts/*` or `@v4`
+# lets the CI runtime drift away from the developer's, which quietly invalidates
+# every local prediction — that is how the Node 20 deprecation warning arrived.
 #
 # NOT INCLUDED, ON PURPOSE
 # `npm run check:links` is deliberately absent. It probes every official link
@@ -28,30 +35,53 @@ on:
   push:
     branches: [main]
 
-# Least privilege: the job only needs to read the repository. A workflow with no
-# `permissions:` block inherits the repository default, which can be read/write.
+# Least privilege: every job here only reads the repository. A workflow with no
+# `permissions:` block inherits the repository default, which can be read/write —
+# so this is a ceiling, declared once, that each job narrows further if it can.
 permissions:
   contents: read
+
+# A second push to the same branch makes the first run's answer worthless, and
+# the queue is finite. Cancel the superseded run rather than paying for it.
+# `main` is exempt: a push there is the merge itself, and its result is the
+# record of what is deployed, so it must finish even if another push follows.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   verify:
     name: verify
     runs-on: ubuntu-latest
+    # A hung job is worse than a failed one: it blocks the queue and reports
+    # nothing. Ten minutes is roughly twenty times the observed duration of this
+    # chain (~15s), so it only ever fires on a genuine hang — a network stall in
+    # `npm ci`, or an `await` that never settles in a test.
+    timeout-minutes: 10
     steps:
-      # v5 is the major that targets the Node 24 runtime. v4 targets Node 20,
-      # which GitHub is now force-running on 24 and warning about on every run
-      # ("Node.js 20 is deprecated … actions/checkout@v4 … being forced to run on
-      # Node.js 24"). The warning was observed in run 37584032698.
+      # `persist-credentials: false` — this job only reads, so it has no reason
+      # to leave a token in `.git/config` where a later step's script could use
+      # it. The checkout is also shallow by default, which is all this needs;
+      # full history buys nothing when no step inspects it.
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
-      # Pinned to the major version this project is developed on (local Node is
-      # 24). A floating `lts/*` would let the CI runtime drift away from the
-      # developer's, which quietly invalidates local predictions.
+      # v5 is the major that targets the Node 24 runtime. v4 targets Node 20,
+      # which GitHub force-runs on 24 and warns about on every run ("Node.js 20
+      # is deprecated … actions/checkout@v4 … being forced to run on Node.js
+      # 24"). The warning was observed in run 37584032698.
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
           cache: npm
 
+      # `npm ci` runs `prepublish`/`prepare` scripts from the lockfile's
+      # packages. `--ignore-scripts` is deliberately NOT used here: this project
+      # has no build-time codegen, and disabling scripts would break the day it
+      # does. The lockfile is the trust boundary instead — `npm ci` fails on a
+      # lockfile that disagrees with `package.json`, which is the reproducibility
+      # property this job actually depends on.
       - run: npm ci
 
       # The canonical command. If this line and the local `npm test` ever
@@ -59,3 +89,32 @@ jobs:
       - run: npm test
 
       - run: npm run build
+
+      # The build must actually produce the app. A `vite build` that exits 0 with
+      # an empty `dist/` is a real failure mode (an entry point not in the
+      # bundle, a base-path mistake) and it looks exactly like success. Assert
+      # the two artifacts a deploy needs, and cap the main bundle at the ceiling
+      # the project has held all along rather than a raised
+      # `chunkSizeWarningLimit`. 500 kB is the documented limit; the check is
+      # slightly above it so a rounding wobble does not fail a good build.
+      - name: Assert the build produced a deployable bundle
+        run: |
+          test -s dist/index.html || { echo "dist/index.html is missing or empty"; exit 1; }
+          js=$(find dist/assets -name 'index-*.js' | head -1)
+          test -n "$js" || { echo "no main JS bundle in dist/assets"; exit 1; }
+          size=$(wc -c < "$js")
+          echo "main bundle: $js ($size bytes)"
+          if [ "$size" -gt 512000 ]; then
+            echo "main bundle is $size bytes, over the 500 kB ceiling"
+            exit 1
+          fi
+
+      # A dependency advisory is not a build failure — this project's one
+      # known advisory is transitive and cannot be fixed without a lockfile
+      # decision the owner has deliberately deferred. So it is reported, not
+      # enforced: the same asymmetry the catalog uses for links that return
+      # 401/403, where the honest answer is "unverified", not "broken".
+      # `|| true` keeps the job green while still putting the finding in the log
+      # where it is greppable and impossible to have never seen.
+      - name: Report dependency advisories (non-blocking)
+        run: npm audit --audit-level=high || true
