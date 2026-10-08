@@ -77,22 +77,25 @@ workflow file. Keep it simple.
 | `src/assistant.js` | What the assistant may send and may claim: the per-question profile gate, the assessor guard, and the egress disclosure (pure, unit-tested). Never lazily loaded — a decision about what leaves the browser should not be code the reader has to trigger. |
 | `src/AiSettings.jsx` | The AI settings view. Lazily loaded; the smoke test renders it directly. |
 | `src/ingest.js` | Reading the reader's documents: a zero-dependency DOCX/ZIP reader, the deterministic extractor, and the refusal paths (pure, unit-tested). Lazily loaded. |
-| `src/compare.js` | The three-valued requirement comparison — `meets` / `fails` / `unknown`, with `unknown` as the default (pure, unit-tested). |
+| `src/compare.js` | The three-valued requirement comparison — `meets` / `fails` / `unknown`, with `unknown` as the default (pure, unit-tested). Reads `data/requirements.json` when an index is passed and falls back to the catalog scalar when not. |
+| `src/requirements.js` | Maps one requirement from `data/requirements.json` onto the shape `compare.js` consumes (pure, unit-tested). Does no I/O: the dynamic `import()` of the JSON lives in `IngestPanel.jsx`, so this module stays runnable under `node --test`. |
 | `src/IngestPanel.jsx` | The document-reading surface on the profile page. Lazily loaded; the smoke test renders it directly. |
 | `data/scholarships.json` | Canonical scholarship catalog |
 | `data/scholarships.test.js` | Catalog validation tests |
-| `data/requirements.json` | Machine-comparable requirements, keyed by record id — 36 of 50 records as of v0.36.0; the sourcing pass is in progress, not finished |
+| `data/requirements.json` | Machine-comparable requirements, keyed by record id — 36 of 50 records as of v0.37.0, **and read by the app since v0.37.0**. 42 kB, so it is a lazy chunk and must stay one: a dynamic `import()` in `IngestPanel.jsx`, gated on a confirmed GPA. |
 | `scripts/validate-catalog.mjs` | Standalone validation script |
 | `scripts/validate-requirements.mjs` | Validates `data/requirements.json` against `docs/REQUIREMENTS-SCHEMA.md` |
 | `scripts/render-smoke.mjs` | Renders every view (empty + populated) to catch runtime errors |
 | `docs/` | Architecture, schema, API notes, roadmap |
 | `.github/` | Issue templates, PR template, and `workflows/ci.yml` |
 
-**Keep decision logic in the pure modules, not in the component.** `eligibility.js`, `tracker.js`, `ingest.js`, `compare.js` and `assistant.js` exist so that the parts most likely to be subtly wrong — nationality rules, date arithmetic, whether a document actually yielded a value, and what a request is allowed to carry — can be unit-tested offline. Anything a test could pin down belongs there.
+**Keep decision logic in the pure modules, not in the component.** `eligibility.js`, `tracker.js`, `ingest.js`, `compare.js`, `requirements.js` and `assistant.js` exist so that the parts most likely to be subtly wrong — nationality rules, date arithmetic, whether a document actually yielded a value, and what a request is allowed to carry — can be unit-tested offline. Anything a test could pin down belongs there.
 
 **Document reading: a refusal is a result.** `readDocument` never returns a blank document. An unreadable file, a scanned PDF, a binary named `.txt` and an empty extraction each produce an explicit outcome with a reason, because a blank profile reads as "this applicant has no GPA" — a different and false claim. Likewise `compareGpa` never defaults to `meets`: its default is `unknown`, and *"the provider states there is no threshold"* must never share a sentence with *"the catalog does not record one"*. Both rules are enforced by negative-control tests, and a test that only asserts a value is *absent* is not enough — it can pass with the guard removed.
 
 **Never add mount-time DOM access to `src/App.jsx`.** A module-level `createRoot(document.getElementById('root'))` is what made the component unloadable anywhere but a browser, and that is exactly why a `ReferenceError` in one view shipped undetected for six versions. `scripts/render-smoke.mjs` renders all six views against both an empty and a populated browser; `npm test` runs it. Note that `node --test` still reads only the catalog and the pure modules, and a successful build still proves only that an identifier is *referenced* — the render smoke test is the only thing that executes a view's branches.
+
+**A render smoke test cannot cover a dynamic import.** `renderToStaticMarkup` is synchronous, so a `useEffect` that lazy-loads a chunk never runs under it — the panel renders against the *fallback* path and looks healthy either way. The wiring in `IngestPanel.jsx` was therefore verified against a real dev server with `agent-browser`, on both render sites. **Anything reached only through a lazy `import()` needs a browser check, not a smoke render**, and that gap is real for `data/requirements.json`.
 
 Do not create new top-level directories without documenting the reason. Country subdirectories under `data/scholarships/` are reserved for a future split-loader; the current app reads only the flat JSON file.
 

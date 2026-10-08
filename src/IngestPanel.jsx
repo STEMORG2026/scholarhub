@@ -20,6 +20,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FileText, ShieldCheck, AlertTriangle, Check, X } from 'lucide-react';
 import { compareAllGpa } from './compare.js';
+import { indexRequirements, summarise } from './requirements.js';
 
 /** The human label for a proposal's field. */
 const FIELD_LABEL = { gpa: 'GPA', english: 'English test', classification: 'Degree classification' };
@@ -88,9 +89,29 @@ export default function IngestPanel({ onConfirm, currentGpa, currentLanguage, cu
   // is the same reason the ingest reader is lazy. The per-record sentence in
   // the detail dialog is the one piece `App` renders itself, from a small
   // lookup that is passed down rather than recomputed.
+  // The sourced requirements, loaded only when a comparison will actually run.
+  //
+  // `data/requirements.json` is 42 kB — three times the main bundle's remaining
+  // headroom — so it must never be on the first-load path. It is fetched by a
+  // dynamic import, which Vite turns into its own chunk, and only once a reader
+  // has confirmed a GPA. A reader who never attaches a document downloads none
+  // of it, which is the same discipline as the extractor next door.
+  const [requirements, setRequirements] = useState(null);
+  useEffect(() => {
+    if (!currentGpa || requirements) return undefined;
+    let alive = true;
+    import('../data/requirements.json')
+      .then((mod) => { if (alive) setRequirements(indexRequirements(mod.default)); })
+      // A failed load falls back to the catalog scalar rather than breaking the
+      // comparison: an offline chunk should degrade to fewer answers, never to
+      // an error or to a wrong one.
+      .catch(() => { if (alive) setRequirements(new Map()); });
+    return () => { alive = false; };
+  }, [currentGpa, requirements]);
+
   const comparison = React.useMemo(
-    () => (currentGpa ? compareAllGpa(records || [], currentGpa) : null),
-    [currentGpa, records],
+    () => (currentGpa ? compareAllGpa(records || [], currentGpa, requirements) : null),
+    [currentGpa, records, requirements],
   );
   // The detail dialog lives in `App`, and it needs the per-record sentence. It
   // cannot import `compare.js` without putting that module back on the
@@ -99,10 +120,13 @@ export default function IngestPanel({ onConfirm, currentGpa, currentLanguage, cu
   useEffect(() => {
     if (onComparison) onComparison(comparison);
   }, [comparison, onComparison]);
-  const meets = comparison ? Object.values(comparison).filter((c) => c.verdict === 'meets').length : 0;
-  const fails = comparison ? Object.values(comparison).filter((c) => c.verdict === 'fails').length : 0;
-  const unknown = comparison ? Object.values(comparison).filter((c) => c.verdict === 'unknown').length : 0;
-  const notRecorded = comparison ? Object.values(comparison).filter((c) => c.reason === 'not-recorded').length : 0;
+  const tally = comparison ? summarise(comparison) : null;
+  const meets = tally ? tally.meets : 0;
+  const fails = tally ? tally.fails : 0;
+  const unknown = tally ? tally.unknown : 0;
+  const notRecorded = tally ? tally.byReason['not-recorded'] || 0 : 0;
+  const notPublished = tally ? tally.byReason['not-published'] || 0 : 0;
+  const delegated = tally ? tally.byReason.delegated || 0 : 0;
 
   return (
     <div className="form-card ingest-card">
@@ -159,7 +183,18 @@ export default function IngestPanel({ onConfirm, currentGpa, currentLanguage, cu
           </div>
           <p className="gpa-compare-lede">
             A requirement ScholarHub cannot read is reported as <em>not checkable</em>, never as a pass.{' '}
-            {notRecorded} of {(records || []).length} records here do not record a GPA requirement at all — check those with the provider.
+            {/* The four reasons are separated because they are four different
+                facts, and lumping them into one "not checkable" count would
+                throw away the most useful thing the sourced file knows: which
+                of these records have no bar at all, which have one that
+                somebody else sets, and which nobody has looked at yet. */}
+            {notPublished > 0 && (
+              <>{notPublished} state no GPA threshold of their own. </>
+            )}
+            {delegated > 0 && (
+              <>{delegated} set no bar themselves and name who does — open the record to see who. </>
+            )}
+            {notRecorded} of {(records || []).length} records here have not been sourced at all — check those with the provider.
           </p>
         </div>
       )}

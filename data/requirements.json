@@ -192,7 +192,8 @@
         "kind": "gpa",
         "of": {
           "kind": "prose",
-          "varies_by": "the admitting university, not Chevening — no classification published by the scheme"
+          "varies_by": "the admitting university, not Chevening — no classification published by the scheme",
+          "delegated_to": "the UK university making the unconditional offer"
         },
         "not_a_requirement": "A 2:1 (upper second-class) is widely repeated as a Chevening requirement in third-party guides. It does not appear in Chevening's own published eligibility criteria, which delegate the academic bar to the unconditional offer. It is recorded here as absent from the source, not as a threshold to meet.",
         "source": "https://chevening.org/resource-hub/guidance/eligibility/",
@@ -207,7 +208,8 @@
         "kind": "gpa",
         "of": {
           "kind": "prose",
-          "varies_by": "the admitting university via University Admissions — SI assesses no academic criterion"
+          "varies_by": "the admitting university via University Admissions — SI assesses no academic criterion",
+          "delegated_to": "University Admissions, not the Swedish Institute"
         },
         "source": "https://si.se/en/apply/scholarships/swedish-institute-scholarships-for-global-professionals/",
         "last_verified": "2026-10-08",
@@ -373,7 +375,8 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose"
+          "kind": "prose",
+          "delegated_to": "each consortium's own programme"
         },
         "text": "This record is the European Commission's catalogue of the 218 Erasmus Mundus Joint Master programmes currently supported by the EU, not a programme itself, and it publishes no admission criteria. It directs applicants to \"visit the program's official website and directly contact the consortium for information on courses, application procedures, and scholarship availability\". The academic requirement belongs to each consortium's own programme, and ScholarHub records it there — TERRA, NORISK, FRP++, MaMaSELF+, MS² and Flood Risk Management each carry their own entry in this file.",
         "source": "https://www.eacea.ec.europa.eu/scholarships/erasmus-mundus-catalogue_en",
@@ -498,7 +501,8 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose"
+          "kind": "prose",
+          "delegated_to": "the master's programme's own admission decision"
         },
         "text": "The scholarship itself publishes no academic threshold whatsoever. Its eligibility criteria are: foreign nationality; admission to a master's degree at Universite Paris-Saclay; first-time enrolment in France; under 30 during the year of application; and no other funding above 600 EUR per month. The jury evaluates \"academic background, personal project, motivation for pursuing a PhD thesis at Universite Paris-Saclay (M2 candidates)\", and the page states plainly that \"the jury being discretionary, its decisions are confidential and cannot lead to appeal\". Any academic bar therefore lives in the master's programme's own admission decision, not here — the same delegated bar as Chevening, whose 2:1 is set by the university's unconditional offer rather than by the scholarship.",
         "source": "https://www.universite-paris-saclay.fr/en/admission/bourses-et-aides-financieres/international-masters-scholarships-program",
@@ -511,7 +515,8 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose"
+          "kind": "prose",
+          "delegated_to": "each participating Dutch institution"
         },
         "text": "The NL Scholarship (formerly the Holland Scholarship) publishes no academic threshold of its own. Its application criteria are: nationality outside the EEA; applying for a full-time bachelor's or master's programme at a participating Dutch institution; not already holding a degree from an institution in the Netherlands; and, in the programme's own words, \"You meet the specific requirements of the institution of your choice. You can find these on the website of the institution.\" The academic bar is therefore set separately by each of the 34 participating research universities and universities of applied sciences, and the central page publishes none of them. The award is EUR 5,000 for the first year and is explicitly not a full-tuition scholarship.",
         "source": "https://www.studyinnl.org/finances/nl-scholarship",
@@ -524,7 +529,8 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose"
+          "kind": "prose",
+          "delegated_to": "each funded consortium, per EURAXESS vacancy"
         },
         "text": "MSCA Doctoral Networks publish no academic threshold, and this is structural rather than an omission: the funding goes to consortia, and each beneficiary recruits its own doctoral candidates. \"Candidates wishing to apply for PhD positions under Doctoral Networks should apply to funded Doctoral Network projects by consulting their open vacancies advertised internationally, including on the EURAXESS portal\", and EURAXESS is where the full requirements of a given position live. The individual eligibility conditions the central page does state are not academic: researchers \"must not have a doctoral degree at the date of their recruitment\", \"can be of any nationality\", \"should be enrolled in a doctoral programme during the project\", and must satisfy the mobility rule — \"they must not have resided or carried out their main activity (work, studies, etc.) in the country of the recruiting organisation for more than 12 months in the 36 months immediately before their recruitment date\". Note also that these are salaried positions rather than scholarships.",
         "source": "https://marie-sklodowska-curie-actions.ec.europa.eu/actions/doctoral-networks",
@@ -537,7 +543,8 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose"
+          "kind": "prose",
+          "delegated_to": "the applicant's preferred education institution"
         },
         "text": "Manaaki New Zealand Scholarships publish no academic threshold of their own, and say so explicitly: \"Successful scholarship applicants must meet both the academic entry requirements and the English language requirements determined by the applicant's preferred education institutions\", and \"Each university or education institution sets the minimum level of English required, so check their websites for information.\" The programme's own eligibility criteria are non-academic but strict: citizenship of an eligible country; residence in the home country for the two years before applying; at least 18 years old at signing the offer (\"There is no upper age limit for applicants. However, we do prefer applicants who are under 40 years of age\"); for postgraduate applicants, relevant work experience of one year full-time or two years part-time; and no disqualifying previous Manaaki award. It publishes indicative English levels as a guide only — for postgraduate study, generally IELTS 6.5 overall with no band below 6.0, or TOEFL iBT 90 with a writing score of 21 — and states \"The information above is a guide only. Some courses have higher minimum English level entry requirements than those outlined.\"",
         "source": "https://www.nzscholarships.govt.nz/check-eligibility-criteria/",
@@ -550,7 +557,8 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose"
+          "kind": "prose",
+          "delegated_to": "USTC/UCAS admission criteria for international students"
         },
         "text": "No GPA, grade average, marks percentage, degree classification or class-rank threshold is published. The academic bar is delegated: \"Eligible applicants should meet the admission criteria for international students of USTC/UCAS\" — the two host universities — and the scholarship page does not restate them. Its own eligibility criteria are citizenship, nationality on the TWAS developing-country list, proficiency in English or Chinese, and age: \"For PhD program applicants: you should be born after 1st January 1991 (inclusive)\", with the page's structured age-limit field reading 35. The minimum degree held is an MSc, and the level is PhD. Up to 40 PhD students are selected each year from developing countries, 10 of them prioritised for climate-related research, with special (non-exclusive) consideration for Least Developed Countries and for women. The page publishes no scoring rubric for the application stage; the qualification test it mentions is a post-award condition, not an entry requirement.",
         "source": "https://twas.org/opportunity/anso-cas-twasunesco-phd-scholarship",
@@ -576,7 +584,8 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose"
+          "kind": "prose",
+          "delegated_to": "the participating master's programme, which must admit the applicant unconditionally"
         },
         "text": "JJ/WBGSP publishes no GPA, grade average, marks percentage or class-rank threshold. It publishes something rarer: the weights of its scoring rubric. Two assessors independently score each eligible application out of 10 on four factors — quality of professional experience (30%), quality of professional recommendations (30%), quality of commitment to the home country (30%), and quality of education background (10%). Academic record is therefore the smallest of four components, and a reader optimising for this award should not optimise for grades. The eligibility gates are non-academic and hard: nationality of a World Bank member developing country, no dual citizenship of a developed country, a bachelor's degree earned at least 3 years before the deadline, at least 3 years of paid development-related employment acquired within the past 6 years, and unconditional admission (except for funding) to one of the 44 participating master's programmes. \"All eligibility criteria are strictly adhered to. No exceptions are made.\"",
         "source": "https://www.worldbank.org/en/programs/scholarships/jj-wbgsp",

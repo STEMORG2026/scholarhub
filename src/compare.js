@@ -26,13 +26,17 @@
 // provider's GPA threshold" are opposite claims, and collapsing them would be
 // a lie in one direction or the other.
 
+import { requirementFor } from './requirements.js';
+
 /** The three verdicts. There is no fourth. */
 export const VERDICTS = ['meets', 'fails', 'unknown'];
 
 /** Why a comparison came back `unknown`. Machine-readable, for tests. */
 export const UNKNOWN_REASONS = [
   'no-requirement', // the provider states there is none
-  'not-recorded', // the catalog does not carry one
+  'not-published', // the provider's page was checked and publishes no threshold
+  'not-recorded', // nobody has looked — the catalog does not carry one
+  'delegated', // the award sets no bar; a named body does
   'unresolvable', // recorded as prose that has no single scalar form
   'no-value', // the reader has not confirmed a value to compare
   'no-scale', // a value with no scale cannot be compared against a scaled rule
@@ -87,13 +91,23 @@ export function gpaRequirement(record) {
 export function compareGpa(record, value, requirement) {
   const req = requirement || gpaRequirement(record);
 
-  // 5. Nothing recorded at all.
+  // 5. No figure — and this is where two facts that used to share a sentence
+  //    come apart. `checked: true` means the provider's own page was read and
+  //    publishes no threshold; the plain case means nobody has looked. Both are
+  //    `unknown`, and saying "we have not recorded one" to a reader whose
+  //    provider has been read and has none is a different claim from the truth.
   if (req.kind === 'absent') {
-    return {
-      verdict: 'unknown',
-      reason: 'not-recorded',
-      sentence: 'The catalog does not record a GPA requirement for this programme. Check the provider.',
-    };
+    return req.checked
+      ? {
+          verdict: 'unknown',
+          reason: 'not-published',
+          sentence: 'This provider\u2019s page has been checked and it publishes no GPA threshold. There is no bar to compare against.',
+        }
+      : {
+          verdict: 'unknown',
+          reason: 'not-recorded',
+          sentence: 'The catalog does not record a GPA requirement for this programme. Check the provider.',
+        };
   }
 
   // 3. The provider explicitly states there is no threshold.
@@ -103,6 +117,66 @@ export function compareGpa(record, value, requirement) {
       reason: 'no-requirement',
       sentence: 'The provider states there is no GPA threshold for this programme, so there is nothing to compare.',
       quote: req.text,
+    };
+  }
+
+  // 3b. The award sets no bar of its own and names who does. This is a
+  //     *definite* answer, and rendering it as "we could not work this out"
+  //     would understate what is known: the reader now knows which document to
+  //     open. Nine of the sourced records are this shape.
+  if (req.kind === 'delegated') {
+    return {
+      verdict: 'unknown',
+      reason: 'delegated',
+      sentence: `This award sets no academic bar of its own. It is set by ${req.to}.`,
+      quote: req.text,
+    };
+  }
+
+  // 3c. A rank or a percentile is a real bar, but the reader's confirmed values
+  //     are a GPA and an English score. Neither is a class rank, so the honest
+  //     answer names what would be needed.
+  if (req.kind === 'rank' || req.kind === 'percentile') {
+    const what = req.kind === 'rank' ? 'class rank' : 'percentile';
+    const band = req.applies_to ? ` (${req.applies_to})` : '';
+    return {
+      verdict: 'unknown',
+      reason: 'unresolvable',
+      sentence: `This programme requires a ${what} — top ${req.value} of ${req.of}${band}. Your profile has no confirmed ${what}, so this cannot be checked.`,
+      quote: req.text,
+    };
+  }
+
+  // 3d. One figure per scale, and the reader's own transcript decides which.
+  //     Picking for them would be the silent default this module exists to stop.
+  if (req.kind === 'branches') {
+    const branches = Array.isArray(req.branches) ? req.branches : [];
+    if (!value || typeof value.value !== 'number' || typeof value.scale !== 'number') {
+      return {
+        verdict: 'unknown',
+        reason: 'no-value',
+        sentence: 'This programme states a threshold on more than one scale, so it can only be checked against a confirmed GPA with its scale.',
+        quote: req.text,
+      };
+    }
+    const match = branches.find((b) => b.scale === value.scale);
+    if (!match) {
+      const scales = branches.map((b) => b.scale).filter((s) => s != null).join(', ');
+      return {
+        verdict: 'unknown',
+        reason: 'unresolvable',
+        sentence: `This programme states its threshold on the ${scales} scale(s); your GPA is on a ${value.scale}-point scale. Convert one, or read the provider's own conversion rule.`,
+        quote: req.text,
+      };
+    }
+    const meets = value.value >= match.value;
+    return {
+      verdict: meets ? 'meets' : 'fails',
+      reason: null,
+      sentence: meets
+        ? `Your confirmed ${value.value}/${value.scale} is at or above the recorded requirement of ${match.value}/${match.scale}.`
+        : `Your confirmed ${value.value}/${value.scale} is below the recorded requirement of ${match.value}/${match.scale}.`,
+      quote: null,
     };
   }
 
@@ -185,10 +259,17 @@ export const VERDICT_LABEL = {
  * lookup keyed by record id. Records are passed in so this stays pure and the
  * caller (the component) owns the catalog read.
  */
-export function compareAllGpa(records, value) {
+export function compareAllGpa(records, value, requirementsIndex) {
   const out = {};
   for (const record of records || []) {
-    const requirement = gpaRequirement(record);
+    // The sourced file wins when it has an entry, and the catalog scalar is the
+    // fallback. `requirementFor` returns `null` for a record the file covers but
+    // which carries no `gpa` requirement — a record can state a credit load and
+    // no grade rule — so the fallback is `gpaRequirement` rather than a guess.
+    const fromFile = requirementsIndex && requirementsIndex.get
+      ? requirementFor(requirementsIndex.get(record.id))
+      : null;
+    const requirement = fromFile || gpaRequirement(record);
     out[record.id] = {
       requirement,
       ...compareGpa(record, value, requirement),

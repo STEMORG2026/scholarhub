@@ -1,5 +1,120 @@
 # Changelog
 
+## [0.37.0] - 2026-10-08
+
+### The sourced file is wired in — five releases of data finally reach a reader
+
+`data/requirements.json` had been written, validated and released five times without **anything
+reading it**. `src/compare.js` still read the catalog's `eligibility.gpa_minimum` scalar, which is
+non-null on **5 of 50** records. So the comparison answered `unknown` for 45 of them and would
+have gone on doing so however many records were sourced, because it never opened the new file.
+
+Measured with a confirmed `3.62/4`, against the real catalog and the real file:
+
+| | meets | fails | unknown | how the unknowns are explained |
+|---|---|---|---|---|
+| **Before** | 0 | 0 | 50 | `not-recorded` 45 · `unresolvable` 4 · `no-requirement` 1 |
+| **After** | **3** | 0 | 47 | `unresolvable` 20 · `not-recorded` **14** · `delegated` **9** · `not-published` **2** · `no-requirement` 2 |
+
+`not-recorded` falls from 45 to 14 — exactly the unsourced records — and the 31 that moved now
+carry a real explanation instead of one generic sentence.
+
+**A correction to the estimate I gave before building this.** I said 5 records could answer
+`meets`/`fails`. The true number is **3**: two of the five figures are class ranks
+(TU Delft's top 10%, MS²'s best 35%), and a reader's profile carries no class rank, so they are
+honestly `unresolvable`. Five figures do not mean five comparable answers.
+
+### Added — `delegated`, and the mechanism behind it
+
+Nine records state that the academic bar is set by somebody else. The first plan was to detect
+that by matching phrases in `text` — *"set by the university"*, *"each beneficiary recruits its
+own"*. **That is not a mechanism**: it breaks the moment a provider words it differently, it
+fails silently when it does, and it puts a regex on the read path. Delegation is now a field:
+
+```jsonc
+{ "kind": "prose", "delegated_to": "the UK university making the unconditional offer" }
+```
+
+Only legal on a `prose` rule — a rule carrying a figure is not delegated, because a figure is
+already the answer — and forbidden on `unstated`. The comparison can then say something definite:
+*"This award sets no academic bar of its own. It is set by the UK university making the
+unconditional offer."* Verified in a browser on the Chevening record.
+
+### Added — `not-published`, and the distinction the file was built for
+
+`unstated` means *"the provider's page was read and publishes nothing"*. The catalog's `null`
+means *"nobody has looked"*. Both are `unknown`, and until now they shared a sentence. They no
+longer do:
+
+- checked, nothing published → **`not-published`** — *"This provider's page has been checked and it publishes no GPA threshold."*
+- never sourced → **`not-recorded`** — *"The catalog does not record a GPA requirement for this programme."*
+
+That distinction is the reason `data/requirements.json` exists at all. Collapsing it at the last
+step — in the renderer — would have discarded the whole point of five releases.
+
+### Added — the rule kinds that had no comparison path
+
+`src/compare.js` handled four of the eight rule kinds. It now also handles:
+
+- **`branches`** — one figure per scale, and the reader's own transcript picks the branch. If the
+  reader's scale matches none of them, it refuses to pick, and names the scales it saw.
+- **`rank`** / **`percentile`** — a real bar, but the reader's confirmed values are a GPA and an
+  English score. Neither is a class rank, so the sentence says what would be needed.
+
+### Added — `src/compare.js` now has tests. It had none.
+
+The module that decides whether an applicant qualifies had **zero unit tests** while 50 records
+depended on it. v0.37.0 adds **24**, written as negative controls: they assert the *reason*, not
+merely `unknown`, because five different facts produce `unknown` and collapsing them is the
+failure the module exists to prevent. One of them asserts that the emitted reason vocabulary
+**equals** the declared one, both directions — a declared reason that no path can produce is a
+documented answer the app cannot give.
+
+`src/requirements.test.js` adds **15** more for the mapper. `npm test` **214 → 253**.
+
+### Added — the lazy split, and proof it worked
+
+`data/requirements.json` is 42 kB — 3.4× the main bundle's remaining headroom — so it is fetched
+by a dynamic `import()` and lands in its own chunk:
+
+```
+dist/assets/index-*.js          499,763 bytes   (unchanged, byte for byte)
+dist/assets/requirements-*.js    35,820 bytes   (loaded only once a GPA is confirmed)
+```
+
+The main bundle is **identical to the previous release**, which is the evidence that the split is
+real rather than assumed. The load is also gated on `currentGpa`: a reader who never confirms one
+downloads none of it. A failed load falls back to the catalog scalar — an offline chunk should
+degrade to *fewer answers*, never to an error or a wrong one.
+
+### Verified in a browser, not just in Node
+
+The render smoke test renders synchronously, so the lazy `import()` never resolves under it — it
+exercises the *fallback* path, not the wiring. So the wiring was verified against a real dev
+server with `agent-browser`, on both render sites:
+
+- the comparison strip reads **"3 met · 0 not met · 47 not checkable"**, with the reasons
+  separated: *"2 state no GPA threshold of their own. 9 set no bar themselves and name who does."*
+- the detail dialog for Chevening shows **"Not checkable — This award sets no academic bar of its
+  own. It is set by the UK university making the unconditional offer."**
+
+### Fixed — a test that asserted a rejection happening for another reason
+
+`delegated_to` on an `unstated` rule trips **two** guards. The test asserted only a non-zero exit,
+so deleting the bare-rule clause changed nothing and the test still passed — the clause was
+uncovered dead weight. It now asserts the specific message. Found by planting the defect and
+watching the suite *not* fail, which is the only way this class of defect is ever found.
+
+### Known gap, recorded rather than papered over
+
+The smoke test cannot cover the wired path, for the reason above. The wiring's own logic is
+covered by unit tests on both sides (mapper and comparison) plus the browser check; what remains
+untested in CI is the eight lines of `useEffect` that join them. Closing that properly means a
+component-level test harness, which the repo does not have yet.
+
+**No behaviour change for a reader who has confirmed no GPA.** `npm test` 253 pass, 0 fail.
+Requirements validation 0 errors, 2 warnings, both real and both pre-existing.
+
 ## [0.36.0] - 2026-10-08
 
 ### Added — five more records, and 36 of 50

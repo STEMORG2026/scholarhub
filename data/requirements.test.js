@@ -255,6 +255,43 @@ test('a future last_verified is rejected', () => {
   assert.match(output, /last_verified/);
 });
 
+// --- a delegated bar is named, not inferred (v0.37.0) -----------------------
+
+test('a prose rule may name who sets the bar', () => {
+  const { status, output } = run(withRule({ kind: 'prose', delegated_to: 'the admitting university' }));
+  assert.equal(status, 0, output);
+});
+
+test('delegated_to on a rule that carries a figure is rejected', () => {
+  // A figure is not delegated — if a number is recorded, it is the answer.
+  const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4, delegated_to: 'somebody' }));
+  assert.notEqual(status, 0);
+  assert.match(output, /only meaningful on a "prose" rule/);
+});
+
+test('an empty delegated_to is rejected', () => {
+  const { status, output } = run(withRule({ kind: 'prose', delegated_to: '   ' }));
+  assert.notEqual(status, 0);
+  assert.match(output, /delegated_to must be a non-empty string/);
+});
+
+test('unstated may not name a delegate either', () => {
+  // The message is asserted, not just the exit status. `delegated_to` on an
+  // `unstated` rule trips TWO guards — the bare-rule check and the prose-only
+  // check — so asserting only `status !== 0` left the bare-rule clause
+  // uncovered: deleting it changed nothing and the test still passed. It did,
+  // until this assertion was added.
+  const { status, output } = run({
+    probe: {
+      requirements: [
+        { kind: 'gpa', of: { kind: 'unstated', delegated_to: 'somebody' }, source: 'https://example.org/rule', last_verified: '2026-10-08' },
+      ],
+    },
+  });
+  assert.notEqual(status, 0);
+  assert.match(output, /must be bare/);
+});
+
 // --- the wording has exactly one home (v0.35.0) -----------------------------
 
 test('text on the rule is rejected — the wording lives on the requirement', () => {
