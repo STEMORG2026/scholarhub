@@ -386,5 +386,136 @@
         "last_verified": "2026-10-08"
       }
     ]
+  },
+  "swiss-government-excellence": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "The Federal Commission for Scholarships for Foreign Students (FCS) assesses scholarship applications according to three criteria: candidate profile; quality of the research project or artistic work; synergies and potential for future research cooperation. No GPA, grade average, marks percentage, class rank or credit threshold is published as a bar — the only stated prerequisites are a Master's degree and an academic supervisor in Switzerland willing to direct the proposed research. Switzerland's own 1-6 grading scale is never mentioned on the page."
+        },
+        "text": "The Federal Commission for Scholarships for Foreign Students (FCS) assesses scholarship applications according to three criteria: candidate profile; quality of the research project or artistic work; synergies and potential for future research cooperation. No GPA, grade average, marks percentage, class rank or credit threshold is published as a bar — the only stated prerequisites are a Master's degree and an academic supervisor in Switzerland willing to direct the proposed research. Switzerland's own 1-6 grading scale is never mentioned on the page.",
+        "source": "https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "cgrs-doctoral": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "No GPA, grade average, first-class average, letter grade or marks percentage is published as an eligibility requirement. Academic record appears only as one indicator inside the second of two weighted selection criteria — \"Relevant experience and achievements obtained within and beyond academia\" (50%), whose academic-record indicators are: transcripts; duration of previous studies; program requirements and courses pursued; course load; relative standing in program (if available). The remaining 50% is research potential. The only numeric academic threshold is temporal, not grade-based: no more than 36 months of full-time equivalent doctoral study by 31 December of the application year — and that is a ceiling, not a floor, so it is quoted here rather than encoded (see REQUIREMENTS-SCHEMA.md §3.5)."
+        },
+        "text": "No GPA, grade average, first-class average, letter grade or marks percentage is published as an eligibility requirement. Academic record appears only as one indicator inside the second of two weighted selection criteria — \"Relevant experience and achievements obtained within and beyond academia\" (50%), whose academic-record indicators are: transcripts; duration of previous studies; program requirements and courses pursued; course load; relative standing in program (if available). The remaining 50% is research potential. The only numeric academic threshold is temporal, not grade-based: no more than 36 months of full-time equivalent doctoral study by 31 December of the application year — and that is a ceiling, not a floor, so it is quoted here rather than encoded (see REQUIREMENTS-SCHEMA.md §3.5).",
+        "source": "https://nserc-crsng.canada.ca/en/funding-opportunity/canada-graduate-research-scholarship-doctoral-program",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "eesic-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "Selection runs on four weighted criteria — academic merit, motivation, recommendation letters, and previous experience and other skills — plus an interview, with a final score summed across them. Academic merit is scored on: Grades/GPA; \"Student's ranking, if available\"; and quality and ranking of the university of origin. No GPA, marks percentage or class-rank threshold is published as a bar. The page also states that places without scholarships go to applicants \"whose ranking exceeds a minimum eligibility threshold\", and does not publish that threshold — the same shape as Flood Risk Management: a bar that exists and is not stated. NOTE ON WHAT COULD NOT BE READ: this page's \"Academic requirements\" block (degree and credit prerequisites) renders as a collapsed accordion and was not readable, so no credit or degree figure is claimed for this record in either direction — its absence here is not a finding that none exists."
+        },
+        "text": "Selection runs on four weighted criteria — academic merit, motivation, recommendation letters, and previous experience and other skills — plus an interview, with a final score summed across them. Academic merit is scored on: Grades/GPA; \"Student's ranking, if available\"; and quality and ranking of the university of origin. No GPA, marks percentage or class-rank threshold is published as a bar. The page also states that places without scholarships go to applicants \"whose ranking exceeds a minimum eligibility threshold\", and does not publish that threshold — the same shape as Flood Risk Management: a bar that exists and is not stated. NOTE ON WHAT COULD NOT BE READ: this page's \"Academic requirements\" block (degree and credit prerequisites) renders as a collapsed accordion and was not readable, so no credit or degree figure is claimed for this record in either direction — its absence here is not a finding that none exists.",
+        "source": "https://eesic.eu/admission",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "emerald-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "Selection is carried out as a cooperative process between the academic partner universities, with the final selection based on consensus, and is \"based on academic qualifications, with a focus on qualitative and quantitative indicators of the applicants\": academic background; motivation letter and video; language skills; work experience. Applicants are rated and the 40 highest-rated are invited to interview. No GPA, grade average, marks percentage or class-rank threshold is published as a bar."
+        },
+        "text": "Selection is carried out as a cooperative process between the academic partner universities, with the final selection based on consensus, and is \"based on academic qualifications, with a focus on qualitative and quantitative indicators of the applicants\": academic background; motivation letter and video; language skills; work experience. Applicants are rated and the 40 highest-rated are invited to interview. No GPA, grade average, marks percentage or class-rank threshold is published as a bar.",
+        "source": "https://www.emerald.uliege.be/apply-3/admission-criteria/",
+        "last_verified": "2026-10-08"
+      },
+      {
+        "kind": "credits",
+        "of": {
+          "kind": "count",
+          "minimum": 180,
+          "unit": "ECTS"
+        },
+        "text": "Candidates must have a Bachelor's degree in Engineering with basic knowledge in Geology (minimum 3 years of study or 180 ECTS credits), or a Bachelor's degree in Minerals Engineering, Mining Engineering, Chemical Engineering, Geological Engineering, Metallurgical Engineering, or Materials Engineering (if oriented towards metals extraction and processing), or a Master's degree in Geology.",
+        "source": "https://www.emerald.uliege.be/apply-3/admission-criteria/",
+        "last_verified": "2026-10-08"
+      },
+      {
+        "kind": "credits",
+        "of": {
+          "kind": "count",
+          "minimum": 22.5,
+          "unit": "ECTS",
+          "applies_to": "university-level mathematics"
+        },
+        "text": "The EMerald Master Programme provides an engineering diploma, therefore at least 22.5 ECTS in university level mathematics is required for application eligibility.",
+        "source": "https://www.emerald.uliege.be/apply-3/admission-criteria/",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "biopham-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "BIOPHAM publishes no GPA, grade average, marks percentage or class-rank threshold, and no ranked list of selection criteria. What it does publish is that academic preparation is judged on subject background: \"all applicants from eligible fields should possess sufficient background in physics and mathematics related topics usually a minimum 18 ECTS each during the Bachelor studies. This background will be assessed by the Selection Committee during the selection procedure.\" It also restricts eligible fields to five (Physics, Materials Science, Chemistry, Nanoscience, Bioengineering) and publishes an explicit list of fields it will not consider."
+        },
+        "text": "BIOPHAM publishes no GPA, grade average, marks percentage or class-rank threshold, and no ranked list of selection criteria. What it does publish is that academic preparation is judged on subject background: \"all applicants from eligible fields should possess sufficient background in physics and mathematics related topics usually a minimum 18 ECTS each during the Bachelor studies. This background will be assessed by the Selection Committee during the selection procedure.\" It also restricts eligible fields to five (Physics, Materials Science, Chemistry, Nanoscience, Bioengineering) and publishes an explicit list of fields it will not consider.",
+        "source": "https://www.master-biopham.eu/apply/",
+        "last_verified": "2026-10-08"
+      },
+      {
+        "kind": "credits",
+        "of": {
+          "kind": "count",
+          "minimum": 180,
+          "unit": "ECTS"
+        },
+        "text": "Applicants should hold, or be in the process of obtaining, a first higher education degree in science (e.g., Bachelor, Licence, or equivalent to 180 credits or 180 ECTS) at the time of application.",
+        "source": "https://www.master-biopham.eu/apply/",
+        "last_verified": "2026-10-08"
+      },
+      {
+        "kind": "credits",
+        "of": {
+          "kind": "count",
+          "minimum": 18,
+          "unit": "ECTS",
+          "applies_to": "physics and mathematics — 18 ECTS in each"
+        },
+        "text": "All applicants from eligible fields should possess sufficient background in physics and mathematics related topics usually a minimum 18 ECTS each during the Bachelor studies. This background will be assessed by the Selection Committee during the selection procedure.",
+        "source": "https://www.master-biopham.eu/apply/",
+        "last_verified": "2026-10-08",
+        "not_a_requirement": "BIOPHAM words this as \"should possess ... usually a minimum\" and says the background \"will be assessed by the Selection Committee\", not that it is an eligibility gate. It is an expectation weighed in selection, and is recorded separately from the 180-ECTS degree requirement precisely so the two are not read as the same kind of bar."
+      }
+    ]
+  },
+  "paris-saclay-international-masters": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "text": "The scholarship itself publishes no academic threshold whatsoever. Its eligibility criteria are: foreign nationality; admission to a master's degree at Universite Paris-Saclay; first-time enrolment in France; under 30 during the year of application; and no other funding above 600 EUR per month. The jury evaluates \"academic background, personal project, motivation for pursuing a PhD thesis at Universite Paris-Saclay (M2 candidates)\", and the page states plainly that \"the jury being discretionary, its decisions are confidential and cannot lead to appeal\". Any academic bar therefore lives in the master's programme's own admission decision, not here — the same delegated bar as Chevening, whose 2:1 is set by the university's unconditional offer rather than by the scholarship."
+        },
+        "text": "The scholarship itself publishes no academic threshold whatsoever. Its eligibility criteria are: foreign nationality; admission to a master's degree at Universite Paris-Saclay; first-time enrolment in France; under 30 during the year of application; and no other funding above 600 EUR per month. The jury evaluates \"academic background, personal project, motivation for pursuing a PhD thesis at Universite Paris-Saclay (M2 candidates)\", and the page states plainly that \"the jury being discretionary, its decisions are confidential and cannot lead to appeal\". Any academic bar therefore lives in the master's programme's own admission decision, not here — the same delegated bar as Chevening, whose 2:1 is set by the university's unconditional offer rather than by the scholarship.",
+        "source": "https://www.universite-paris-saclay.fr/en/admission/bourses-et-aides-financieres/international-masters-scholarships-program",
+        "last_verified": "2026-10-08"
+      }
+    ]
   }
 }
