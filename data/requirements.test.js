@@ -34,7 +34,7 @@ const CATALOG = [{ id: 'probe', name: 'Probe', eligibility: { gpa_minimum: null 
  * if only stdout were read — which is exactly the case the divergence test below
  * asserts on.
  */
-function run(requirements) {
+function run(requirements, env) {
   const dir = mkdtempSync(join(tmpdir(), 'reqval-'));
   const reqPath = join(dir, 'requirements.json');
   const catPath = join(dir, 'scholarships.json');
@@ -44,7 +44,7 @@ function run(requirements) {
     const result = spawnSync(
       process.execPath,
       [SCRIPT, '--requirements=' + reqPath, '--catalog=' + catPath],
-      { encoding: 'utf8' },
+      { encoding: 'utf8', env: env ? { ...process.env, ...env } : process.env },
     );
     return { status: result.status ?? 1, output: (result.stdout || '') + (result.stderr || '') };
   } finally {
@@ -253,6 +253,52 @@ test('a future last_verified is rejected', () => {
   });
   assert.notEqual(status, 0);
   assert.match(output, /last_verified/);
+});
+
+// --- a date is not an instant (v0.41.0) --------------------------------------
+
+// Every fixture below is computed in UTC, and the validator is spawned with a TZ,
+// because the first version of these tests had the very bug they exist to catch:
+// it computed "tomorrow" in the *host's* timezone while the validator compared
+// against UTC, so the test passed under UTC and failed in Nepal. A timezone test
+// that is itself timezone-dependent is worse than no test.
+const utcDate = (offsetDays) =>
+  new Date(Date.now() + offsetDays * 86_400_000).toISOString().slice(0, 10);
+
+test('a date one day ahead validates in EVERY timezone the validator might run in', () => {
+  // `last_verified` is written in the author's timezone and checked in the
+  // validator's, and two timezones differ by just under a day. A record dated
+  // "tomorrow" by the validator's clock is a date written somewhere else, not a
+  // future date. Spawning across the full range — UTC-12 to UTC+14 — asserts the
+  // invariance rather than one lucky pairing.
+  const tomorrow = utcDate(1);
+  for (const TZ of ['UTC', 'Pacific/Kiritimati', 'Etc/GMT+12', 'Asia/Kathmandu']) {
+    const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4 }, { last_verified: tomorrow }), { TZ });
+    assert.equal(status, 0, `a date one day ahead must validate with TZ=${TZ}:\n` + output);
+  }
+});
+
+test('a date two days ahead is rejected', () => {
+  // The tolerance is exactly one day and no more: the widest two timezones can
+  // diverge is one calendar day, so two days ahead cannot be a correct date.
+  const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4 }, { last_verified: utcDate(2) }), { TZ: 'UTC' });
+  assert.notEqual(status, 0);
+  assert.match(output, /in the future/);
+});
+
+test('a genuinely future date is still rejected', () => {
+  // The tolerance must not turn the check off. 2099 is future everywhere.
+  const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4 }, { last_verified: '2099-01-01' }));
+  assert.notEqual(status, 0);
+  assert.match(output, /in the future/);
+});
+
+test("today's date validates everywhere too", () => {
+  const today = utcDate(0);
+  for (const TZ of ['UTC', 'Pacific/Kiritimati', 'Etc/GMT+12']) {
+    const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4 }, { last_verified: today }), { TZ });
+    assert.equal(status, 0, `today must validate with TZ=${TZ}:\n` + output);
+  }
 });
 
 // --- a delegated bar is named, not inferred (v0.37.0) -----------------------

@@ -1,5 +1,106 @@
 # Changelog
 
+## [0.41.0] - 2026-10-09
+
+### Fixed — a date is not an instant, so the future-date check carries a tolerance
+
+Sourcing three records just after midnight local time produced three errors:
+
+```
+ERROR [nz-thematic-short-term[0]] last_verified is in the future: 2026-10-09
+```
+
+The dates were correct. **The validator was wrong**, and it took two attempts to fix properly.
+
+**Attempt 1 was wrong.** The validator compared `last_verified` against
+`new Date().toISOString()` — which is **UTC** — and Nepal is UTC+05:45, so between 00:00 and
+05:45 local the local date is a day ahead of UTC and every correctly-dated record is rejected as
+future-dated. The obvious fix was to use the *local* date instead.
+
+**CI rejected that fix**, and it was right to. The runner's clock read `2026-10-08 23:15 UTC`, so
+its local date was still the 8th and the records dated the 9th — correctly, in Nepal — were
+"future" to it. **A timezone bug cannot be caught by testing in the author's own timezone.**
+That is what CI is for, and it caught this one. Locally the suite was green; on the runner it
+failed on the same three records.
+
+**The real fix is a tolerance, because a date is not an instant.** `last_verified` is written in
+the author's timezone and checked in the validator's, and two timezones differ by just under a
+day (UTC−12 to UTC+14). A record dated "tomorrow" by the validator's clock is not a future date —
+it is a date written somewhere else. **One day is exactly the widest a correct date can be
+ahead**, so the tolerance is arithmetic rather than a fudge, and `2099-01-01` is still rejected.
+
+With the tolerance in place the timezone stops mattering, and that was **checked rather than
+assumed**: swapping the comparison back to UTC changes no outcome for any date, and the suite
+reports that correctly by *not* failing. So the local-date helper was **deleted** rather than
+kept — code whose only justification is a preference that provably cannot affect the result is
+worse than no code.
+
+**The tests are timezone-independent, because the first version was not.** The first attempt at
+these tests computed "tomorrow" in the *host's* timezone while the validator compared against
+UTC, so it passed under UTC and failed in Nepal — the same bug it existed to catch. Every fixture
+is now computed in UTC and the validator is spawned across the full range of zones
+(`UTC`, `Asia/Kathmandu`, `Pacific/Kiritimati`, `Etc/GMT+12`), asserting the **invariance**
+rather than one lucky pairing.
+
+The tolerance is protected in both directions: dropping it fails 1 test, widening it to two days
+fails 1 test — in **both** UTC and Kathmandu. `npm test` **256 → 260**.
+
+**This is the fourth time in this pass that a sourced record was right and the rule was wrong** —
+after the rank denominator, the divergence-warning scope, and the credit-load shape. The pattern
+is worth naming: the data is the only thing here that has been checked against the outside world.
+
+### Added — three more records, and 44 of 50
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `nz-thematic-short-term` | no academic bar; **and it is not an open competition** | `prose` + `delegated_to` |
+| `nz-vocational-short-term` | no academic bar; transcripts required, no grade stated | `prose` + `delegated_to` |
+| `daad-study-scholarships` | no bar at all — three qualitative pillars | `prose` |
+
+`not-recorded` in the app falls **9 → 6**; `delegated` rises **10 → 12**.
+
+### Found — one of these awards cannot be applied for
+
+The Thematic Short Term Training Scholarships are selected by **embassy nomination**, and the
+provider says so plainly: *"The New Zealand Embassy or High Commission promotes the course and may
+ask the government sector and/or local organisations in each eligible country for sustainable
+scholarship nominations"*, guiding nominees through *"a closed application and selection
+process"*. A reader cannot apply; they can only be nominated. That is a different thing from a
+hard threshold and it belongs on the record — the same class of fact as Chevening's 2:1 being set
+by somebody else.
+
+### Found — the funder is not the unit of comparison
+
+DAAD publishes **no** grade threshold for Study Scholarships (three qualitative pillars:
+academic qualification, quality of the study project, potential of the applicant) and a real
+**cohort-position** bar for EPOS (*"far above average results (upper third)"*). Same funder, same
+year, opposite specificity. Recorded in both records, because a reader who learns "DAAD wants the
+upper third" from one programme will carry it to the wrong one.
+
+### Not recorded — and now with a definite reason rather than a shrug
+
+Six records remain, and each is blocked for a different, now-documented cause:
+
+- **`eth-excellence-scholarship`** — **three** official pages were checked (the ESOP page, the
+  scholarships index, and the ETH Foundation's own ESOP page). The eligibility and selection text
+  exists only in a client-rendered accordion that no fetch can read; the Foundation page is about
+  donating. Third-party aggregators carry the criteria and are **not acceptable sources** for this
+  file. This is a stronger statement than "couldn't read it": the criteria are not published
+  anywhere static.
+- **`nsf-grfp`** — `nsf.gov` **and** `nsfgrfp.org` both return *"Request blocked: this resource is
+  not available in your region."* That is a deliberate regional block, not a rendering problem,
+  and it is not something to route around. Recorded as blocked-by-region.
+- **`csc-government-scholarship`** — `campuschina.org` returns no readable content; the catalog
+  already records CSC as HTTP-412-blocked.
+- **`uc-international-first-year`** — content rendered by a client-side `PageAssist` component.
+- **`resco-emjm`** — Cloudflare interstitial, three attempts.
+- **`fulbright-foreign-student`** — the programme-information page carries no criteria and the
+  eligibility page is not at the path the Humphrey grant uses; the Nepal commission's URL
+  structure would need to be walked further.
+
+`npm test` **256 → 260**. Requirements validation 0 errors, 3 warnings, all real. Bundle
+unchanged at **499,985 bytes**.
+
 ## [0.40.0] - 2026-10-09
 
 ### Fixed — the app could fail to save and never say so

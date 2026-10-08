@@ -82,7 +82,31 @@ if (!requirements || typeof requirements !== 'object' || Array.isArray(requireme
 }
 
 const catalogById = new Map(catalog.map((r) => [r.id, r]));
+// A date is not an instant, so the future-date check carries a one-day tolerance.
+//
+// `last_verified` is a date a human wrote down after reading a provider's page, in
+// their own timezone. The validator may run in a different one, and two timezones can
+// differ by just under a day (UTC-12 to UTC+14). A record dated "tomorrow" by the
+// validator's clock is therefore not a future date — it is a date written somewhere
+// else. One day is the widest a correct date can be ahead, so the tolerance is exact
+// rather than a fudge; more than that is a real error and 2099 is still rejected.
+//
+// This was got wrong twice before the tolerance was introduced, and the second attempt
+// is the instructive one:
+//
+//   1. comparing against `toISOString()` (UTC) rejected a correctly-dated record on the
+//      author's machine in Nepal (UTC+05:45) between 00:00 and 05:45 local;
+//   2. comparing against the *local* date fixed that and then rejected the same records
+//      on CI, whose runner was still on the previous UTC date. **A timezone bug cannot
+//      be caught by testing in the author's own timezone** — that is what CI is for,
+//      and it caught this one.
+//
+// The tolerance subsumes the question, which was checked rather than assumed: with it
+// in place, swapping back to the UTC comparison changes no outcome for any date, and
+// the test suite reports that correctly by *not* failing. The timezone is deliberately
+// not load-bearing here, so no helper is kept to express a preference that cannot matter.
 const todayIso = new Date().toISOString().slice(0, 10);
+const tomorrowIso = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
 const ids = Object.keys(requirements);
 
 console.log('Found ' + ids.length + ' record(s) carrying requirements, against ' + catalog.length + ' catalog records.\n');
@@ -340,8 +364,8 @@ for (const recordId of ids) {
     }
     if (!isRealDate(req.last_verified)) {
       error(where, 'last_verified must be a real ISO date (YYYY-MM-DD) — got ' + JSON.stringify(req.last_verified));
-    } else if (req.last_verified > todayIso) {
-      error(where, 'last_verified is in the future: ' + req.last_verified);
+    } else if (req.last_verified > tomorrowIso) {
+      error(where, 'last_verified is more than a day in the future: ' + req.last_verified + ' (today is ' + todayIso + ')');
     } else {
       const months = Math.round((Date.parse(todayIso) - Date.parse(req.last_verified)) / 2_592_000_000);
       if (months >= 12) {
