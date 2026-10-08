@@ -190,6 +190,35 @@ test('a provider with no address tells the reader to set one', () => {
   assert.match(egressSummary(providerById('custom-openai'), ''), /set a base url/i);
 });
 
+test('the egress line still names the host when a profile is passed', () => {
+  // Naming the destination is the first half of the honesty; the profile is the
+  // second. Adding the second must not lose the first.
+  const line = egressSummary(providerById('openai'), '', { field: 'Civil Engineering', degree: 'Master', nationality: 'Nepal' });
+  assert.match(line, /api\.openai\.com/);
+  assert.match(line, /carries your profile/i);
+  assert.match(line, /nationality/);
+});
+
+test('the egress line says what is sent, not that it is safe', () => {
+  for (const provider of PROVIDERS) {
+    const line = egressSummary(provider, '', { field: 'Civil Engineering', degree: 'Master', nationality: 'Nepal' });
+    assert.doesNotMatch(line, /\b(secure|private|safe|encrypted)\b/i, `${provider.id} makes a security claim: ${line}`);
+  }
+});
+
+test('the egress line omits nationality when there is none to send', () => {
+  const line = egressSummary(providerById('openai'), '', { field: 'Civil Engineering', degree: 'Master' });
+  assert.match(line, /field, degree/i);
+  assert.doesNotMatch(line, /nationality/);
+});
+
+test('the egress line carries no profile sentence when there is no profile', () => {
+  for (const empty of [undefined, null, {}, { field: '  ' }]) {
+    const line = egressSummary(providerById('openai'), '', empty);
+    assert.doesNotMatch(line, /carries your profile/i, `an empty profile produced a claim: ${line}`);
+  }
+});
+
 // --- key handling -----------------------------------------------------------
 
 test('a masked key never reveals the whole key', () => {
