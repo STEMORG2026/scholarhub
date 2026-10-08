@@ -2,7 +2,7 @@
 
 ## [0.41.0] - 2026-10-09
 
-### Fixed — the validator judged a date in the wrong timezone
+### Fixed — a date is not an instant, so the future-date check carries a tolerance
 
 Sourcing three records just after midnight local time produced three errors:
 
@@ -10,24 +10,44 @@ Sourcing three records just after midnight local time produced three errors:
 ERROR [nz-thematic-short-term[0]] last_verified is in the future: 2026-10-09
 ```
 
-The dates were correct. **The validator was wrong.** It compared `last_verified` against
-`new Date().toISOString()`, which is **UTC** — and Nepal is UTC+05:45, so between 00:00 and 05:45
-local time the local date is a day ahead of UTC and every correctly-dated record is rejected as
-future-dated.
+The dates were correct. **The validator was wrong**, and it took two attempts to fix properly.
 
-`last_verified` is a date a human writes down after reading a provider's page, **in their own
-timezone**. Judging it in another one is the defect. It now uses the local date, and the
-"months old" warning is computed from the same value rather than from UTC.
+**Attempt 1 was wrong.** The validator compared `last_verified` against
+`new Date().toISOString()` — which is **UTC** — and Nepal is UTC+05:45, so between 00:00 and
+05:45 local the local date is a day ahead of UTC and every correctly-dated record is rejected as
+future-dated. The obvious fix was to use the *local* date instead.
 
-Two tests, and the timezone is forced rather than left to chance: one spawns the validator with
-`TZ=Pacific/Kiritimati` (UTC+14) and asserts that a record dated *today there* validates, so the
-test does not pass or fail depending on the hour the suite runs. The other asserts that
-`2099-01-01` is still rejected — the fix must not turn the check off. Reverting to the UTC
-comparison fails **1 test**.
+**CI rejected that fix**, and it was right to. The runner's clock read `2026-10-08 23:15 UTC`, so
+its local date was still the 8th and the records dated the 9th — correctly, in Nepal — were
+"future" to it. **A timezone bug cannot be caught by testing in the author's own timezone.**
+That is what CI is for, and it caught this one. Locally the suite was green; on the runner it
+failed on the same three records.
+
+**The real fix is a tolerance, because a date is not an instant.** `last_verified` is written in
+the author's timezone and checked in the validator's, and two timezones differ by just under a
+day (UTC−12 to UTC+14). A record dated "tomorrow" by the validator's clock is not a future date —
+it is a date written somewhere else. **One day is exactly the widest a correct date can be
+ahead**, so the tolerance is arithmetic rather than a fudge, and `2099-01-01` is still rejected.
+
+With the tolerance in place the timezone stops mattering, and that was **checked rather than
+assumed**: swapping the comparison back to UTC changes no outcome for any date, and the suite
+reports that correctly by *not* failing. So the local-date helper was **deleted** rather than
+kept — code whose only justification is a preference that provably cannot affect the result is
+worse than no code.
+
+**The tests are timezone-independent, because the first version was not.** The first attempt at
+these tests computed "tomorrow" in the *host's* timezone while the validator compared against
+UTC, so it passed under UTC and failed in Nepal — the same bug it existed to catch. Every fixture
+is now computed in UTC and the validator is spawned across the full range of zones
+(`UTC`, `Asia/Kathmandu`, `Pacific/Kiritimati`, `Etc/GMT+12`), asserting the **invariance**
+rather than one lucky pairing.
+
+The tolerance is protected in both directions: dropping it fails 1 test, widening it to two days
+fails 1 test — in **both** UTC and Kathmandu. `npm test` **256 → 260**.
 
 **This is the fourth time in this pass that a sourced record was right and the rule was wrong** —
 after the rank denominator, the divergence-warning scope, and the credit-load shape. The pattern
-is worth naming: the data is the only thing here that was checked against the outside world.
+is worth naming: the data is the only thing here that has been checked against the outside world.
 
 ### Added — three more records, and 44 of 50
 
@@ -78,7 +98,7 @@ Six records remain, and each is blocked for a different, now-documented cause:
   eligibility page is not at the path the Humphrey grant uses; the Nepal commission's URL
   structure would need to be walked further.
 
-`npm test` **256 → 258**. Requirements validation 0 errors, 3 warnings, all real. Bundle
+`npm test` **256 → 260**. Requirements validation 0 errors, 3 warnings, all real. Bundle
 unchanged at **499,985 bytes**.
 
 ## [0.40.0] - 2026-10-09

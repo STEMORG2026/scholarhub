@@ -255,26 +255,50 @@ test('a future last_verified is rejected', () => {
   assert.match(output, /last_verified/);
 });
 
-// --- dates are judged in the reader's timezone (v0.41.0) ---------------------
+// --- a date is not an instant (v0.41.0) --------------------------------------
 
-test('a date that is today LOCALLY is not "in the future"', () => {
-  // The validator compared `last_verified` against `toISOString()`, which is UTC.
-  // In Nepal (UTC+05:45) that rejects a correctly-dated record every day between
-  // midnight and 05:45 — and it did, on three records sourced just after midnight.
-  //
-  // The timezone is forced to one that is ahead of UTC so this is deterministic
-  // rather than passing or failing depending on the hour the suite happens to run.
-  const TZ = 'Pacific/Kiritimati'; // UTC+14, the furthest ahead of any inhabited zone
-  const localToday = new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date());
-  const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4 }, { last_verified: localToday }), { TZ });
-  assert.equal(status, 0, 'a record dated today locally must validate:\n' + output);
+// Every fixture below is computed in UTC, and the validator is spawned with a TZ,
+// because the first version of these tests had the very bug they exist to catch:
+// it computed "tomorrow" in the *host's* timezone while the validator compared
+// against UTC, so the test passed under UTC and failed in Nepal. A timezone test
+// that is itself timezone-dependent is worse than no test.
+const utcDate = (offsetDays) =>
+  new Date(Date.now() + offsetDays * 86_400_000).toISOString().slice(0, 10);
+
+test('a date one day ahead validates in EVERY timezone the validator might run in', () => {
+  // `last_verified` is written in the author's timezone and checked in the
+  // validator's, and two timezones differ by just under a day. A record dated
+  // "tomorrow" by the validator's clock is a date written somewhere else, not a
+  // future date. Spawning across the full range — UTC-12 to UTC+14 — asserts the
+  // invariance rather than one lucky pairing.
+  const tomorrow = utcDate(1);
+  for (const TZ of ['UTC', 'Pacific/Kiritimati', 'Etc/GMT+12', 'Asia/Kathmandu']) {
+    const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4 }, { last_verified: tomorrow }), { TZ });
+    assert.equal(status, 0, `a date one day ahead must validate with TZ=${TZ}:\n` + output);
+  }
+});
+
+test('a date two days ahead is rejected', () => {
+  // The tolerance is exactly one day and no more: the widest two timezones can
+  // diverge is one calendar day, so two days ahead cannot be a correct date.
+  const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4 }, { last_verified: utcDate(2) }), { TZ: 'UTC' });
+  assert.notEqual(status, 0);
+  assert.match(output, /in the future/);
 });
 
 test('a genuinely future date is still rejected', () => {
-  // The fix must not turn the check off. 2099 is future in every timezone.
+  // The tolerance must not turn the check off. 2099 is future everywhere.
   const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4 }, { last_verified: '2099-01-01' }));
   assert.notEqual(status, 0);
   assert.match(output, /in the future/);
+});
+
+test("today's date validates everywhere too", () => {
+  const today = utcDate(0);
+  for (const TZ of ['UTC', 'Pacific/Kiritimati', 'Etc/GMT+12']) {
+    const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4 }, { last_verified: today }), { TZ });
+    assert.equal(status, 0, `today must validate with TZ=${TZ}:\n` + output);
+  }
 });
 
 // --- a delegated bar is named, not inferred (v0.37.0) -----------------------
