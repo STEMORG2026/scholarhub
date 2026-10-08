@@ -1,5 +1,86 @@
 # Changelog
 
+## [0.41.0] - 2026-10-09
+
+### Fixed — the validator judged a date in the wrong timezone
+
+Sourcing three records just after midnight local time produced three errors:
+
+```
+ERROR [nz-thematic-short-term[0]] last_verified is in the future: 2026-10-09
+```
+
+The dates were correct. **The validator was wrong.** It compared `last_verified` against
+`new Date().toISOString()`, which is **UTC** — and Nepal is UTC+05:45, so between 00:00 and 05:45
+local time the local date is a day ahead of UTC and every correctly-dated record is rejected as
+future-dated.
+
+`last_verified` is a date a human writes down after reading a provider's page, **in their own
+timezone**. Judging it in another one is the defect. It now uses the local date, and the
+"months old" warning is computed from the same value rather than from UTC.
+
+Two tests, and the timezone is forced rather than left to chance: one spawns the validator with
+`TZ=Pacific/Kiritimati` (UTC+14) and asserts that a record dated *today there* validates, so the
+test does not pass or fail depending on the hour the suite runs. The other asserts that
+`2099-01-01` is still rejected — the fix must not turn the check off. Reverting to the UTC
+comparison fails **1 test**.
+
+**This is the fourth time in this pass that a sourced record was right and the rule was wrong** —
+after the rank denominator, the divergence-warning scope, and the credit-load shape. The pattern
+is worth naming: the data is the only thing here that was checked against the outside world.
+
+### Added — three more records, and 44 of 50
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `nz-thematic-short-term` | no academic bar; **and it is not an open competition** | `prose` + `delegated_to` |
+| `nz-vocational-short-term` | no academic bar; transcripts required, no grade stated | `prose` + `delegated_to` |
+| `daad-study-scholarships` | no bar at all — three qualitative pillars | `prose` |
+
+`not-recorded` in the app falls **9 → 6**; `delegated` rises **10 → 12**.
+
+### Found — one of these awards cannot be applied for
+
+The Thematic Short Term Training Scholarships are selected by **embassy nomination**, and the
+provider says so plainly: *"The New Zealand Embassy or High Commission promotes the course and may
+ask the government sector and/or local organisations in each eligible country for sustainable
+scholarship nominations"*, guiding nominees through *"a closed application and selection
+process"*. A reader cannot apply; they can only be nominated. That is a different thing from a
+hard threshold and it belongs on the record — the same class of fact as Chevening's 2:1 being set
+by somebody else.
+
+### Found — the funder is not the unit of comparison
+
+DAAD publishes **no** grade threshold for Study Scholarships (three qualitative pillars:
+academic qualification, quality of the study project, potential of the applicant) and a real
+**cohort-position** bar for EPOS (*"far above average results (upper third)"*). Same funder, same
+year, opposite specificity. Recorded in both records, because a reader who learns "DAAD wants the
+upper third" from one programme will carry it to the wrong one.
+
+### Not recorded — and now with a definite reason rather than a shrug
+
+Six records remain, and each is blocked for a different, now-documented cause:
+
+- **`eth-excellence-scholarship`** — **three** official pages were checked (the ESOP page, the
+  scholarships index, and the ETH Foundation's own ESOP page). The eligibility and selection text
+  exists only in a client-rendered accordion that no fetch can read; the Foundation page is about
+  donating. Third-party aggregators carry the criteria and are **not acceptable sources** for this
+  file. This is a stronger statement than "couldn't read it": the criteria are not published
+  anywhere static.
+- **`nsf-grfp`** — `nsf.gov` **and** `nsfgrfp.org` both return *"Request blocked: this resource is
+  not available in your region."* That is a deliberate regional block, not a rendering problem,
+  and it is not something to route around. Recorded as blocked-by-region.
+- **`csc-government-scholarship`** — `campuschina.org` returns no readable content; the catalog
+  already records CSC as HTTP-412-blocked.
+- **`uc-international-first-year`** — content rendered by a client-side `PageAssist` component.
+- **`resco-emjm`** — Cloudflare interstitial, three attempts.
+- **`fulbright-foreign-student`** — the programme-information page carries no criteria and the
+  eligibility page is not at the path the Humphrey grant uses; the Nepal commission's URL
+  structure would need to be walked further.
+
+`npm test` **256 → 258**. Requirements validation 0 errors, 3 warnings, all real. Bundle
+unchanged at **499,985 bytes**.
+
 ## [0.40.0] - 2026-10-09
 
 ### Fixed — the app could fail to save and never say so

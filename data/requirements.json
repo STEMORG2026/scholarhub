@@ -742,5 +742,46 @@
         "last_verified": "2026-10-08"
       }
     ]
+  },
+  "nz-thematic-short-term": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "delegated_to": "the New Zealand institution delivering the training course"
+        },
+        "text": "No academic threshold is published. Applicants must \"expect to meet the academic entry requirements (including English Language requirement) for their planned training course\" — the bar is the course provider's, and the scheme does not restate it. Its own eligibility is citizenship of a named country list (Pacific, ASEAN, African and Latin American countries — Nepal is not on it), residence in the country of citizenship for the last two years, being at least 18 when the scholarship starts, not currently serving in the military, and no Manaaki scholarship terminated in the last five years. NOTE ON SELECTION: this is not an open competition. \"The New Zealand Embassy or High Commission promotes the course and may ask the government sector and/or local organisations in each eligible country for sustainable scholarship nominations\", and guides nominees through \"a closed application and selection process\" — so a reader cannot apply without being nominated.",
+        "source": "https://www.nzscholarships.govt.nz/thematic-short-term-training-scholarships/",
+        "last_verified": "2026-10-09"
+      }
+    ]
+  },
+  "nz-vocational-short-term": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "delegated_to": "the New Zealand certified training provider"
+        },
+        "text": "No academic threshold is published. Applicants must \"expect to meet the academic entry requirement (including English language requirements) for the planned training programme\" — the bar belongs to the New Zealand certified training provider. Certified academic transcripts and completion certificates are required as supporting documents, \"including the grade assessment schedule used at each institution\", but no minimum grade is stated. The scheme's own eligibility is citizenship of a narrower Pacific-only list, two years' residence, being at least 18, not serving in the military, no Manaaki scholarship terminated in the last five years, and at least one year of full-time or two years of part-time work experience related to the career or proposed training. English can be shown by a test within 18 months, or by evidence of schooling in English rather than a score.",
+        "source": "https://www.nzscholarships.govt.nz/vocational-short-term-scholarships/",
+        "last_verified": "2026-10-09"
+      }
+    ]
+  },
+  "daad-study-scholarships": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "DAAD publishes no GPA, grade average, marks percentage, degree classification or class-rank threshold for this programme, and no minimum work experience. An independent selection committee of specialist scientists reviews applications against three pillars: academic qualification; quality of the study project; and potential of the applicant. \"Academic achievements\" is one bullet inside the first pillar, with no rubric, weighting or cutoff published for it. Applicants must submit transcripts with individual grades and a degree certificate showing the final grade, but no minimum grade is stated for either. The only numeric criteria are non-academic: the most recent degree should not date back more than six years, and residence in Germany for longer than 15 months at the deadline disqualifies. Note the contrast with DAAD EPOS, recorded separately in this file: the same funder publishes a real cohort-position bar for one programme and none for another, so the funder is not the unit of comparison.",
+        "source": "https://www2.daad.de/deutschland/stipendium/datenbank/en/21148-scholarship-database/?detail=50026200",
+        "last_verified": "2026-10-09"
+      }
+    ]
   }
 }
