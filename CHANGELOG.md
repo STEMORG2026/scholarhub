@@ -1,5 +1,69 @@
 # Changelog
 
+## [0.33.0] - 2026-10-08
+
+### Added — seven more records, all from the Erasmus Mundus family
+
+`data/requirements.json` goes from **13 to 20 of 50**. Everything here was read off the
+consortium's own page and dated `2026-10-08`.
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `terra-emjm` | no GPA bar; assessed "solely on academic merit" against six curriculum criteria | `prose` + `credits` 240 ECTS |
+| `norisk-emjm` | "assessed on the basis of their previous academic record"; same six criteria | `prose` + `credits` 240 ECTS |
+| `frp-plus-plus-emjm` | "assessed on the basis of their previous academic records" | `prose` + `credits` 240 ECTS |
+| `mamaself-emjm` | ranked on academic level, university of last degree, English, motivation, references | `prose` + `credits` 180 ECTS |
+| `flux-emjm` | **a minimum GPA exists and is set per country of study — but no figure is published for any country** | `prose`, `varies_by` |
+| `ms2-emjm` | **top 35% of students** (ECTS grade B or better, "corresponding to a grade of up to 2.8" German) | `rank` 35/100 |
+| `erasmus-mundus-joint-masters` | the EU catalogue publishes no criteria of its own; each consortium sets its own | `prose` |
+
+**Six of the seven publish no GPA figure at all.** Batch 1 found five of eight; batch 2 finds
+six of seven. That is now 11 of 15 across the pass, and it is the shape of the whole catalog
+rather than a run of bad luck. The honest consequence: a comparison engine wired to this data
+will answer `unknown` for grades on most records and will be *right* to.
+
+### Added — the gate this family does publish is credits, which is why `credits` exists
+
+Four of the seven publish a **credit load** — 240 ECTS (TERRA, NORISK, FRP++), 180 ECTS
+(MaMaSELF) — and it is the only numeric academic requirement most of them state. It could not
+be written as `numeric`: 240 is not 240 *of* anything and not 240 *on* a bounded scale, and a
+graduate can hold 300. Recording it needed a fake scale, and a fake scale is the one defect the
+validator exists to stop. `credits` / `count` were added for it, with a mandatory `unit`
+because 240 credits means four different things in ECTS, US semester hours and the Nepali
+system. Full reasoning in `REQUIREMENTS-SCHEMA.md` §3.4.
+
+### Added — MS² is the second real academic threshold in the whole catalog
+
+The first was KAUST's `3.0`/`4.0`. MS² is the second, and the first expressed as a rank: the
+qualifying degree must be in **the best 35% of students**. Its German equivalent — *"up to
+2.8"* — is quoted in `text` and deliberately **not** encoded, because the German scale runs
+downward and every numeric rule here assumes higher is better. Recording 2.8 as a `minimum`
+would have produced the opposite verdict from the one the provider means. The `direction` field
+that would fix this is an open item (§3.5), not a shipped defect — nothing reads the file yet.
+
+### Not recorded, and why
+
+Two candidates were dropped rather than guessed, because the pass's whole value is that a
+recorded requirement means it was read:
+
+- **`eth-excellence-scholarship`** — the ETH page renders its eligibility and selection text
+  inside JavaScript-driven accordions; two fetches returned the section headings and nothing
+  else. Writing `unstated` here would have asserted *"the provider publishes no threshold"*
+  about a page that was never actually read, which is the exact claim this file exists to avoid.
+  It stays unsourced until the page can be read.
+- **`fulbright-foreign-student`** — the landing page carries no eligibility criteria at all,
+  because the programme is administered by roughly fifty country commissions. Sourcing it means
+  sourcing a commission, not a programme; deferred rather than flattened.
+
+### Changed
+
+`npm test` **198 → 204**. Requirements validation now reports **0 errors and 2 warnings**, both
+of them real: `tu-delft-van-effen` and `ms2-emjm` each carry a comparable GPA figure while the
+catalog record still has `eligibility.gpa_minimum = null`. `AGENTS.md`'s file-boundaries row for
+`data/requirements.json` corrected from "5 records as the schema proof" to 20 of 50.
+
+**No user-visible behaviour changes.** Nothing in the app reads `data/requirements.json` yet.
+
 ## [0.32.0] - 2026-10-08
 
 ### Added — eight more records carry a sourced academic requirement
