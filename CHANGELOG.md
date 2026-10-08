@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.42.1] - 2026-10-09
+
+### Fixed — the comment matched the pattern it was explaining
+
+v0.42.0's explanation of the empty `catch` in `validate-catalog.mjs` quoted the pattern itself, and
+the next audit run reported the comment as an empty catch:
+
+```
+CQ-005  Errors are handled, not swallowed
+Where:  scripts/validate-catalog.mjs:274
+Why:    1 occurrence(s): `// `no-empty` reads the block, not the comment: an empty `catch {}` with a`
+```
+
+The scanner matches on text and cannot tell code from a comment about the code. **The explanation
+of why a block is empty is not the block.** Reworded to describe the pattern rather than quote it,
+with a note saying the wording is deliberate so the next person tempted to write it naturally does
+not recreate the false positive.
+
+This is the **third** false positive in this project's short audit history that came from a *true*
+statement rather than a mistake — the smoke test's leak canary, the `type="password"` API-key field,
+and now a comment about a catch. All three are in `USA-AUDIT-TRIAGE.md`, and all three are why the
+triage step exists: a scanner finding is a claim, not a fact.
+
+Audit re-run: **73.6 → 74.8/100**, high-severity findings **4 → 3**. The three that remain are the
+ones already triaged as not applicable to a static client-side app with no server. **No critical
+has been reported since v0.40.0.**
+
 ## [0.42.0] - 2026-10-09
 
 The audit's deferred recommendations, finished. The four I had listed as "deliberately not
