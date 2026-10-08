@@ -1,5 +1,77 @@
 # Changelog
 
+## [0.38.0] - 2026-10-08
+
+### Fixed — 18 of 36 records were rendering a sentence that was false about them
+
+Wiring the file in turned a recorded open item into a live defect. `REQUIREMENTS-SCHEMA.md` §3.1
+had said the prose `unresolvable` sentence — *"states its requirement in a form that has more than
+one scale or branch"* — "needs a variant when Phase 3 wires this file to the UI". Phase 3 shipped
+in v0.37.0. The sentence was written for the GKS `branches` case and had become the catch-all for
+every prose finding, so **18 of 36 records** were telling the reader they had *more than one scale
+or branch*. KTH does not. Nor do Melbourne, Australia Awards, TERRA, BIOPHAM, or the other
+thirteen. Not one of them has a scale or a branch.
+
+**A confident sentence that is false about the record it is attached to is the exact failure this
+module exists to prevent — arriving through the copy rather than the logic.** No test could see
+it, because every test asserted a *reason code*, and the reason code was right.
+
+### Added — `criterion-only`, and the provenance that separates the two prose cases
+
+The fix is not a new sentence for `prose`. There are **two** prose findings and they differ by
+provenance, which only the mapper knows:
+
+| Where it came from | What it means | Reason |
+|---|---|---|
+| a **file** `prose` rule | the provider weighs academic performance and publishes no bar | **`criterion-only`** |
+| a **catalog** `prose` `gpa_minimum` | an unparsed string that may list several scales | `unresolvable` |
+
+`src/requirements.js` now maps a sourced prose rule to `criterion-only`, and `compare.js` gives it
+its own sentence: *"This programme records how academic performance is weighed but publishes no
+threshold, so there is no figure to compare against."* The catalog sentence stays exactly as it
+was, because **it is correct there** — and that distinction is load-bearing rather than
+cosmetic: the first attempt at this fix renamed the sentence for *both* cases, which would have
+made the catalog case wrong instead.
+
+`criterion-only` is now the **largest single group in the app at 18 of 36 records**, and it is the
+finding the whole sourcing pass kept producing: the usual case is a criterion that is *weighed*,
+not a threshold that is *enforced*. The comparison strip now says so in one line.
+
+Measured with a confirmed `3.62/4`:
+
+| | meets | `not-recorded` | `delegated` | `criterion-only` | `not-published` | `unresolvable` | `no-requirement` |
+|---|---|---|---|---|---|---|---|
+| catalog only | 0 | 45 | — | — | — | 4 | 1 |
+| wired, before this fix | 3 | 14 | 9 | — | 2 | 20 | 2 |
+| **wired, after** | **3** | **14** | **9** | **18** | **2** | **2** | **2** |
+
+### Corrected — a false claim I published about test coverage
+
+v0.37.0's entry, commit message and pull request all said `src/compare.js` "had no tests" and had
+"**zero unit tests** while 50 records depended on it". **Both were false.** `src/ingest.test.js`
+already carried a substantial block on `compare.js` — 26 references, including the
+`none-stated`-versus-`not-recorded` distinction and the branch-handback case.
+
+I inferred an absence from the absence of a **filename**: I listed `src/*.test.js`, saw no
+`compare.test.js`, and concluded no coverage existed. **A file listing is not a coverage
+measurement.**
+
+What caught it was the pre-existing test failing when this release changed the prose sentence —
+the suite knew something I had claimed it did not, and it was right. The v0.37.0 entry is
+corrected in place rather than deleted, so the record of the error survives with the fix. The
+standing rule is now in `AGENTS.md`: **count the references, not the filenames.**
+
+### Added — three tests that would have caught this
+
+- the `criterion-only` sentence **must not** mention a scale or a branch — a negative control,
+  because the defect was a false claim and only asserting its absence catches it returning
+- the two prose cases **must not** share a sentence or a reason
+- a branch mismatch **must still** talk about scales and keep the old reason, so the correct use
+  is not deleted along with the misuse
+
+Both defect classes planted and observed to fail (3 and 1 tests). Files verified byte-identical
+after restore. `npm test` **253 → 256**.
+
 ## [0.37.0] - 2026-10-08
 
 ### The sourced file is wired in — five releases of data finally reach a reader
@@ -61,14 +133,24 @@ step — in the renderer — would have discarded the whole point of five releas
 - **`rank`** / **`percentile`** — a real bar, but the reader's confirmed values are a GPA and an
   English score. Neither is a class rank, so the sentence says what would be needed.
 
-### Added — `src/compare.js` now has tests. It had none.
+### Added — `src/compare.js` gets a test file of its own
 
-The module that decides whether an applicant qualifies had **zero unit tests** while 50 records
-depended on it. v0.37.0 adds **24**, written as negative controls: they assert the *reason*, not
-merely `unknown`, because five different facts produce `unknown` and collapsing them is the
-failure the module exists to prevent. One of them asserts that the emitted reason vocabulary
-**equals** the declared one, both directions — a declared reason that no path can produce is a
-documented answer the app cannot give.
+> **Correction, added in v0.38.0.** This entry originally said the module "had none", and that
+> the comparison "had **zero unit tests** while 50 records depended on it". **Both were false.**
+> `src/ingest.test.js` already carried a substantial block on `compare.js` — 26 references,
+> including the `none-stated`-versus-`not-recorded` distinction and the branch-handback case.
+> I inferred an absence from the absence of a *filename*, having listed `src/*.test.js` and seen
+> no `compare.test.js`. **A file listing is not a coverage measurement.**
+>
+> The false claim was published in a commit message, in this entry, and in the pull request body
+> before anything caught it. What caught it was the pre-existing test failing when v0.38.0
+> changed the prose sentence — the suite knew something I had claimed it did not.
+
+`src/compare.test.js` is new: **24 tests**, written as negative controls that assert the *reason*,
+not merely `unknown`, because five different facts produce `unknown` and collapsing them is the
+failure the module exists to prevent. One asserts that the emitted reason vocabulary **equals**
+the declared one, both directions — a declared reason that no path can produce is a documented
+answer the app cannot give.
 
 `src/requirements.test.js` adds **15** more for the mapper. `npm test` **214 → 253**.
 

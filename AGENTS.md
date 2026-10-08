@@ -95,6 +95,20 @@ workflow file. Keep it simple.
 
 **Never add mount-time DOM access to `src/App.jsx`.** A module-level `createRoot(document.getElementById('root'))` is what made the component unloadable anywhere but a browser, and that is exactly why a `ReferenceError` in one view shipped undetected for six versions. `scripts/render-smoke.mjs` renders all six views against both an empty and a populated browser; `npm test` runs it. Note that `node --test` still reads only the catalog and the pure modules, and a successful build still proves only that an identifier is *referenced* — the render smoke test is the only thing that executes a view's branches.
 
+**A file listing is not a coverage measurement.** I concluded that `src/compare.js` "had no tests"
+because `ls src/*.test.js` showed no `compare.test.js` — while `src/ingest.test.js` already carried
+26 references on it, including the two distinctions that module exists to make. The false claim
+reached a commit message, a CHANGELOG entry and a pull request before the pre-existing test failed
+and exposed it. **Count the references (`grep -c 'compareGpa\|compareAllGpa' src/*.test.js`), not
+the filenames**, and never state that something is untested without searching for the thing itself
+rather than for its expected location.
+
+**A sentence is part of the answer, and needs its own test.** 18 of 36 records rendered "states its
+requirement in a form that has more than one scale or branch" — false about every one of them —
+while every test passed, because the tests asserted *reason codes* and the reason code was right.
+Where a verdict has reader-facing copy, assert the copy: at minimum that it does not contain a
+claim the record contradicts.
+
 **A render smoke test cannot cover a dynamic import.** `renderToStaticMarkup` is synchronous, so a `useEffect` that lazy-loads a chunk never runs under it — the panel renders against the *fallback* path and looks healthy either way. The wiring in `IngestPanel.jsx` was therefore verified against a real dev server with `agent-browser`, on both render sites. **Anything reached only through a lazy `import()` needs a browser check, not a smoke render**, and that gap is real for `data/requirements.json`.
 
 Do not create new top-level directories without documenting the reason. Country subdirectories under `data/scholarships/` are reserved for a future split-loader; the current app reads only the flat JSON file.
