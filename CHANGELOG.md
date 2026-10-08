@@ -1,5 +1,130 @@
 # Changelog
 
+## [0.42.0] - 2026-10-09
+
+The audit's deferred recommendations, finished. The four I had listed as "deliberately not
+done" were a linter, git tags, an ErrorBoundary, and the infrastructure items I judged not
+applicable — plus several smaller ones that were cheap once the big one was done.
+
+### Added — a linter, and it found five things on the first run
+
+`eslint.config.mjs` (flat config, ESLint 10, `@eslint/js` recommended sets plus the React hooks
+and refresh plugins). The whole codebase produced **five** findings, which says something good
+about the code and something useful about the rules:
+
+| Finding | What it was |
+|---|---|
+| `AiSettings.jsx:129` | `baseUrl` destructured from the hook and never used — the input binds `state.baseUrl` (the raw, editable value) and the *effective* one was dead |
+| `ingest.test.js:55` | `const local = []` left behind in a test helper |
+| `App.jsx:113,114` | `set-state-in-effect` on the two persistence effects |
+| `validate-catalog.mjs:270` | `no-empty` on the empty `catch` |
+
+**The linter caught the same empty `catch` the audit had flagged** — and it was right to. The
+reason I wrote for it in v0.40.0 was a comment *above* the block, and `no-empty` reads the block.
+An empty `catch {}` with a paragraph over it is still an unexplained swallow to every reader and
+every tool. The reason now lives inside it.
+
+The two `set-state-in-effect` errors get an **inline disable with a reason** rather than a global
+off, and the reason is narrow: `persist` calls `setStorageBlocked` **only on the failure path**, so
+the transition is false → true, happens at most once in a session, and cannot cascade. Satisfying
+the rule instead would mean not reporting a failed write, which is a worse design than an
+annotated exception.
+
+Lint is now the **first stage of `npm test`**, so it gates.
+
+### Added — coverage has a floor, not just a number
+
+`node --test --experimental-test-coverage` supports thresholds, and they gate the exit code — so
+the floors are real rather than reported. Current: **84.55% lines, 84.00% branches, 82.14%
+functions**, floors set at **80** for all three.
+
+The floors are deliberately four points below actual. A floor set at the current number fails on
+every new uncovered line, which trains people to ignore it; a floor four points down catches
+collapse without failing on normal variation. **The ratchet is to raise the floor, never to lower
+it** — and the floors are defined once, in `test:cov`, with the chain calling it, because two
+copies of a threshold is two places for it to drift.
+
+### Fixed — a known HIGH vulnerability, which the audit had flagged as never reviewed
+
+`source-map-js@1.2.1` (from `vite → postcss`) carried a known high-severity advisory. It was
+**pre-existing and build-time only** — postcss runs at build and never ships to a browser — but
+the audit's `DEP-002` asks the question and nothing had answered it. `npm audit fix` moved exactly
+one package, `1.2.1 → 1.2.2`, and `npm audit` now reports **0 vulnerabilities**.
+
+### Added — an ErrorBoundary, and an honest account of how it was verified
+
+`WEB-006`. The case for it is concrete: a `ReferenceError` in one view **shipped undetected for six
+versions**, and a boundary is the control that catches exactly that.
+
+**`renderToStaticMarkup` cannot test it.** The obvious smoke case was written first and watched
+fail: the legacy synchronous renderer does not route render errors to a boundary, the error
+propagates out of the call. So the halves are covered where each can be:
+
+- **`getDerivedStateFromError` and `errorText`** are pure, and tested — `src/errorBoundary.test.js`,
+  11 tests. The layout cannot be unit-tested at all: **Node's test runner refuses `.jsx` outright**,
+  which is why no component in this repository has a unit test. That is the reason the copy lives
+  in a plain `.js` module and the `.jsx` only arranges it, following the rule already in AGENTS.md:
+  decision logic belongs in the pure modules.
+- **The fallback's content** is asserted in the smoke test by rendering it with the error state
+  forced.
+- **Whether React actually catches** is a client-renderer question, and it was verified **in a
+  browser by hand**: a throwing component was planted inside the boundary, the fallback rendered,
+  and the probe was removed with `App.jsx` verified byte-identical afterwards.
+
+**The first probe was wrong, and the failure was informative.** Planting the throw as an inline
+expression inside the boundary's JSX did *not* get caught — because JSX children are evaluated
+eagerly during `App`'s own render, so the throw happened *above* the boundary. React catches errors
+in **descendants**. Re-planting it as a child component worked. A boundary is not a `try` block
+around an expression.
+
+The copy makes three claims, each deliberate and each tested: what happened; that the reader's
+saved work is intact (it is — `localStorage` is untouched by a render error, and that is the most
+useful sentence the component can produce); and **nothing about it was reported anywhere**, because
+there is no server. `FORBIDDEN_CLAIMS` holds the reassuring sentences the component must never
+produce, and a test asserts none of them appear.
+
+### Added — the merge gate is now visible and verifiable
+
+The strongest control in this project has been invisible to anyone reading it: the proof that
+`main` requires a passing `verify` check lived in terminal scrollback. `.github/BRANCH-PROTECTION.md`
+documents it, and **`npm run check:protection` reads the live ruleset and fails if it does not
+match** — because a document describing a control is a claim, and it goes stale the first time
+somebody adjusts a setting.
+
+Four defect classes planted and each observed to fail, each with a message naming the consequence:
+a missing required status check ("CI can be red and a merge still succeed"), a non-empty
+`bypass_actors` ("someone can merge past the gate"), a non-strict status policy, and an inactive
+ruleset.
+
+The document also records what is **deliberately not set**, so it is not re-litigated:
+`required_linear_history` (it forbids merge commits, and this repo merged that way for its first
+20 releases — setting it without changing the merge method is a self-inflicted outage that only
+surfaces at merge time), and `require_code_owner_review` (with one maintainer it would block
+**every** merge, because GitHub does not let an author approve their own PR).
+
+### Added — the smaller ones
+
+- **`.github/CODEOWNERS`** — with the caveat written into the file itself, since enabling code-owner
+  review here would break the repository.
+- **`.editorconfig`** — six settings, no tooling required. Prettier is still not adopted, and that
+  remains deliberate: it means reformatting every file in the repository, which is a change to make
+  on purpose rather than as a footnote, and a formatter config that is not enforced is worse than
+  none.
+- **`npm run lint`**, **`npm run check:protection`**.
+
+### Not done, and now with a reason rather than a shrug
+
+`CICD-006` infrastructure-as-code, `FND-011` Dockerfile, `SUP-022/023/024` SLSA provenance, VSA and
+Sigstore signing. All are real practices; none applies to a static client-side bundle with no
+server, no container, and no release artifact to attest. `CICD-008` error tracking needs a backend
+to receive reports, which this project deliberately does not have — the boundary shows the reader
+the error instead.
+
+`npm test` **260 → 271**, now **five stages** (lint, tests with coverage floors, catalog validation,
+requirements validation, render smoke). Bundle **499,985 → 502,327 bytes**, headroom 9,673 of the
+512,000 assertion — the boundary and its copy are on the first-load path by necessity, and this is
+the largest single-release growth in a while.
+
 ## [0.41.0] - 2026-10-09
 
 ### Fixed — a date is not an instant, so the future-date check carries a tolerance

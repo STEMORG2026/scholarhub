@@ -1,0 +1,16 @@
+# Added in v0.42.0 — the audit's REPO-013. Six settings, no tooling required:
+# editors that support EditorConfig apply these on save, and the CI formatter
+# question stays open without this being a partial answer to it.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.md]
+# Trailing whitespace is significant in Markdown (two spaces is a hard line break).
+trim_trailing_whitespace = false

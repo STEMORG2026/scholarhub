@@ -52,7 +52,6 @@ function makeDocx(documentXml) {
   const raw = new TextEncoder().encode(documentXml);
   const compressed = new Uint8Array(deflateRawSync(Buffer.from(raw)));
 
-  const local = [];
   const push32 = (arr, n) => arr.push(n & 0xff, (n >>> 8) & 0xff, (n >>> 16) & 0xff, (n >>> 24) & 0xff);
   const push16 = (arr, n) => arr.push(n & 0xff, (n >>> 8) & 0xff);
 
