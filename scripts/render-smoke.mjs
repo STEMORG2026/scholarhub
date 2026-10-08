@@ -196,6 +196,16 @@ try {
   process.exit(1);
 }
 
+let ErrorBoundary;
+try {
+  ({ default: ErrorBoundary } = await server.ssrLoadModule('/src/ErrorBoundary.jsx'));
+} catch (error) {
+  console.error('\nRender smoke test could not load the error boundary:\n');
+  console.error(error);
+  await server.close();
+  process.exit(1);
+}
+
 function noop() {}
 
 const INGEST_CASES = [
@@ -340,6 +350,53 @@ for (const scenario of INGEST_CASES) {
   }
 }
 
+// --- the error boundary's fallback ------------------------------------------
+//
+// **This cannot prove the boundary catches anything, and it does not pretend to.**
+// `renderToStaticMarkup` is the legacy synchronous renderer and does not route render
+// errors to a boundary — the error propagates out of the call. That was confirmed by
+// writing the obvious test first and watching it fail with the thrown error rather
+// than the fallback.
+//
+// So the two halves are checked where each can be checked:
+//
+//   * `getDerivedStateFromError` is a pure static function, and it is asserted in
+//     `src/ErrorBoundary.test.js`;
+//   * the fallback's *content* is asserted here, by rendering it directly with the
+//     error state forced — which is what a reader would actually see.
+//
+// Whether React routes a real error into the boundary is a client-renderer question,
+// and the browser is the only place to answer it. That was done once, by hand, and is
+// recorded in the changelog.
+{
+  const instance = new ErrorBoundary({ children: null });
+  instance.state = { error: new Error('deliberate smoke-test explosion') };
+  let html;
+  try {
+    html = renderToStaticMarkup(instance.render());
+  } catch (error) {
+    failures.push(`ErrorBoundary fallback: threw ${error.constructor.name}: ${error.message}`);
+    html = null;
+  }
+
+  if (html !== null) {
+    rendered += 1;
+    const text = decode(html).replace(/\s+/g, ' ');
+    if (!text.includes('could not be drawn')) {
+      failures.push('ErrorBoundary fallback: it does not say what happened');
+    }
+    if (!text.includes('stored in this browser and were not touched')) {
+      failures.push('ErrorBoundary fallback: it does not tell the reader their saved work is intact');
+    }
+    if (/we(?:'ve| have) been notified|has been reported|we were notified/i.test(text)) {
+      failures.push('ErrorBoundary fallback: it claims the error was reported — there is no server to report to');
+    }
+    if (!text.includes('deliberate smoke-test explosion')) {
+      failures.push('ErrorBoundary fallback: it does not show the error text, so a reader reporting it has nothing to quote');
+    }
+  }
+}
+
 // A stored key must reach exactly one place: the password field the reader
 // types into. That field's own `value` is not a leak — a controlled input has to
 // hold it, and it is masked on screen — but the key must never reach visible
@@ -379,5 +436,5 @@ if (failures.length) {
 }
 
 console.log(
-  `Render smoke test passed: ${rendered} renders (${VIEWS.length} views × ${SCENARIOS.length} scenarios, ${AI_CASES.length} AI-settings cases, ${INGEST_CASES.length} document-panel cases, 1 key-leak check), 0 uncaught errors.`,
+  `Render smoke test passed: ${rendered} renders (${VIEWS.length} views × ${SCENARIOS.length} scenarios, ${AI_CASES.length} AI-settings cases, ${INGEST_CASES.length} document-panel cases, 1 error-boundary fallback, 1 key-leak check), 0 uncaught errors.`,
 );

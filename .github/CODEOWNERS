@@ -1,0 +1,27 @@
+# Added in v0.42.0 — the audit's FND-003 and REPO-014.
+#
+# **What this file does NOT do here, and why it matters.** The ruleset has
+# `require_code_owner_review: false`, and turning it on would break this repository:
+# the only code owner is also the only person who opens pull requests, and GitHub does
+# not let an author approve their own PR. Enabling it would block every merge,
+# including this one. So this file documents ownership; it does not gate anything.
+#
+# What it *does* do: GitHub requests the owner as a reviewer on every PR, and the
+# paths below make it visible which changes touch the verification surface. That is
+# worth having even when the answer is always the same person — a reviewer reading a
+# diff that touches `scripts/` or `.github/` should know that is the surface protecting
+# everything else.
+
+# Default: everything.
+*                             @Er-Sajan-PLG
+
+# The verification surface. A change here can weaken the gate that protects
+# everything else, so it is named separately rather than left to the default.
+/.github/                     @Er-Sajan-PLG
+/eslint.config.mjs            @Er-Sajan-PLG
+/package.json                 @Er-Sajan-PLG
+/scripts/                     @Er-Sajan-PLG
+
+# The sourced requirements and the schema they are validated against.
+/data/requirements.json       @Er-Sajan-PLG
+/docs/REQUIREMENTS-SCHEMA.md  @Er-Sajan-PLG

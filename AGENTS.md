@@ -25,7 +25,7 @@ ScholarHub is a static, client-side scholarship discovery application. There is 
 ```sh
 npm install          # install dependencies (uses .npm-cache locally if needed)
 npm run dev          # start Vite dev server
-npm test             # the canonical gate: node --test, catalog validation, requirements validation, then the render smoke test
+npm test             # the canonical gate: lint, tests with coverage floors, catalog validation, requirements validation, then the render smoke test
 npm run test:render  # just the render smoke test (every view, empty + populated browser)
 npm run check:links  # catalog validation plus a liveness probe of every official link (needs network)
 npm run build        # production build to dist/
@@ -94,6 +94,36 @@ workflow file. Keep it simple.
 **Document reading: a refusal is a result.** `readDocument` never returns a blank document. An unreadable file, a scanned PDF, a binary named `.txt` and an empty extraction each produce an explicit outcome with a reason, because a blank profile reads as "this applicant has no GPA" — a different and false claim. Likewise `compareGpa` never defaults to `meets`: its default is `unknown`, and *"the provider states there is no threshold"* must never share a sentence with *"the catalog does not record one"*. Both rules are enforced by negative-control tests, and a test that only asserts a value is *absent* is not enough — it can pass with the guard removed.
 
 **Never add mount-time DOM access to `src/App.jsx`.** A module-level `createRoot(document.getElementById('root'))` is what made the component unloadable anywhere but a browser, and that is exactly why a `ReferenceError` in one view shipped undetected for six versions. `scripts/render-smoke.mjs` renders all six views against both an empty and a populated browser; `npm test` runs it. Note that `node --test` still reads only the catalog and the pure modules, and a successful build still proves only that an identifier is *referenced* — the render smoke test is the only thing that executes a view's branches.
+
+**Node's test runner refuses `.jsx` outright** — `ERR_UNKNOWN_FILE_EXTENSION`, on the extension
+itself. That is why **no component in this repository has a unit test**, and why `App.jsx`,
+`AiSettings.jsx` and `IngestPanel.jsx` are covered only by the render smoke test. It is a hard
+constraint, not an oversight, and it has a design consequence: **put the parts worth testing in a
+plain `.js` module and let the `.jsx` only arrange them.** `errorBoundary.js` holds the fallback
+copy and `ErrorBoundary.jsx` lays it out, for exactly this reason — the words a reader sees when
+the app breaks are the part that can be confidently wrong, and they need to be testable.
+
+**A render smoke test cannot test an error boundary either.** `renderToStaticMarkup` is the legacy
+synchronous renderer and does not route render errors to a boundary — the error propagates out of
+the call. The catch itself is a client-renderer question, so it is verified in a browser by hand,
+and the fallback's content is smoke-tested by forcing the state. **A boundary is not a `try` around
+an expression:** JSX children are evaluated eagerly during the parent's render, so a throw written
+inline in the boundary's own JSX happens *above* it. React catches errors in **descendants**, which
+is why the probe has to be a component.
+
+**Coverage floors gate, and the ratchet only goes up.** `npm run test:cov` carries
+`--test-coverage-lines=92 --test-coverage-branches=82 --test-coverage-functions=92`, and Node exits
+non-zero when a floor is missed. The floors sit a few points below actual on purpose: a floor at the
+current number fails on every new uncovered line, which teaches people to ignore it. **Raise the
+floor, never lower it**, and keep it defined in one place — the `test` chain calls `test:cov` rather
+than repeating the numbers.
+
+**Coverage must be scoped to this repository, or it measures the machine.** The first version of
+`test:cov` reported **84.55%** locally and **95.59%** on CI, because this development environment
+injects two shim files into every Node process (`node-language-shim.cjs`, `node-safe-delete-shim.cjs`
+— the delete guard) and they are counted at 43%. `--test-coverage-include='src/**'` (plus `scripts`
+and `data`) is therefore **load-bearing, not cosmetic**. Before trusting any local measurement, ask
+what else the environment put in the process — the same question as the timezone bug in v0.41.0.
 
 **A file listing is not a coverage measurement.** I concluded that `src/compare.js` "had no tests"
 because `ls src/*.test.js` showed no `compare.test.js` — while `src/ingest.test.js` already carried

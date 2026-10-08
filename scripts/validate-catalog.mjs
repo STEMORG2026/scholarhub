@@ -262,12 +262,19 @@ async function probe(url) {
         headers: { 'user-agent': USER_AGENT, accept: 'text/html,*/*' },
       });
       // We only need the status line; do not buffer whole pages.
-      // An empty catch, deliberately: this is best-effort cleanup of a body we
-      // are not going to read. Cancelling can fail if the stream already ended
-      // or was never opened, and there is nothing to recover — the response
-      // itself is returned either way. Swallowing it here cannot hide a problem
-      // the caller would act on.
-      try { await res.body?.cancel(); } catch {}
+      try {
+        await res.body?.cancel();
+      } catch {
+        // Best-effort cleanup of a body we are not going to read. Cancelling can
+        // fail if the stream already ended or was never opened, and there is
+        // nothing to recover — the response itself is returned either way, so
+        // swallowing it here cannot hide a problem the caller would act on.
+        //
+        // The reason is inside the block rather than above it because
+        // `no-empty` reads the block, not the comment: an empty `catch {}` with a
+        // paragraph over it is still an unexplained swallow to every reader and
+        // every tool.
+      }
       return res;
     } finally {
       clearTimeout(timer);

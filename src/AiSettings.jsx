@@ -126,7 +126,9 @@ export default function AiSettings({ ai, profile }) {
   const {
     ai: state,
     provider,
-    baseUrl,
+    // `baseUrl` from the hook is the *effective* one; the input below binds
+    // `state.baseUrl`, which is the raw value the reader typed and can still edit.
+    // The effective value was destructured and never used.
     chooseProvider,
     setBaseUrl,
     setModel,
