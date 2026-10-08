@@ -153,6 +153,25 @@ test('a count with no minimum is rejected', () => {
   assert.notEqual(status, 0);
 });
 
+test('a count may narrow what it counts with applies_to', () => {
+  // EMerald needs 22.5 ECTS *in university-level mathematics*, not 22.5 ECTS.
+  const { status, output } = run(withCredits({ kind: 'count', minimum: 22.5, unit: 'ECTS', applies_to: 'university-level mathematics' }));
+  assert.equal(status, 0, output);
+});
+
+test('an empty applies_to is rejected, not silently ignored', () => {
+  // A qualifier that does nothing is worse than no qualifier: the record looks
+  // narrowed and is not.
+  const { status, output } = run(withCredits({ kind: 'count', minimum: 240, unit: 'ECTS', applies_to: '   ' }));
+  assert.notEqual(status, 0);
+  assert.match(output, /applies_to must be a non-empty string/);
+});
+
+test('a non-string applies_to is rejected', () => {
+  const { status } = run(withCredits({ kind: 'count', minimum: 240, unit: 'ECTS', applies_to: 5 }));
+  assert.notEqual(status, 0);
+});
+
 test('a ninth requirement kind is rejected', () => {
   // The requirement kind is a closed set: adding one changes what the comparison
   // engine has to handle, so it is a code change rather than a data edit.

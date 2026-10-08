@@ -115,7 +115,15 @@ fell out, and the kind used for each is a decision, not an accident:
 | **A rule with no single scalar** — several grading systems, or "excellent" | `prose` | stated, but no number holds it |
 | **Grades are a selection criterion, no bar published** (KTH: grades are 1 of 4 criteria; Melbourne: candidates are *ranked* on academic results) | `prose` | something *is* stated — that grades count — and it has no scalar form |
 | **Nothing about academic standards published on the page** | `unstated` | nothing is stated, so `prose` would be a claim |
+| **The bar is delegated** — the award requires admission to a programme that sets its own (Chevening's 2:1, Paris-Saclay's master's admission) | `prose` | the award genuinely publishes none; the bar exists elsewhere and is named |
 | The provider affirmatively says there is no threshold (Knight-Hennessy) | `none-stated` | the distinct fact |
+
+**A qualifier the provider itself supplies is part of the finding.** EESIC scores *"Student's
+ranking, **if available**"* and CGRS-D lists *"relative standing in program (**if available**)"*
+among its indicators. Both providers know a class rank often does not exist — which is the same
+fact this schema records as `unstated` on the reader's side, so a `rank` rule must never be
+treated as answerable by default. The phrase is kept verbatim in `text` so the person wiring
+`compare.js` can see that the provider expects `unknown` here too.
 
 **The third row is the one that needed a decision.** `unstated` was tempting and would have
 been wrong: it renders as *"the catalog does not record a GPA requirement — check the
@@ -182,6 +190,15 @@ and the validator rejects a `minimum` above its own `scale` on that assumption.
 Recording 2.8 as a `numeric` minimum would have produced the opposite verdict from the one
 the provider means. A `direction` field (`higher-is-better` / `lower-is-better`) is the fix
 and it is **not yet built**; until it is, an inverted-scale threshold is quoted, not encoded.
+
+Batch 3 produced a **second** instance, which makes this a pattern rather than a curiosity.
+CGRS-D's only numeric academic threshold is a **ceiling**, not a floor: *"no more than 36
+months of full-time equivalent doctoral study"*. A `count` rule compares with `>=`, so 36
+would have been recorded as a minimum you must exceed — the precise opposite of a cap. It is
+quoted in `text` and not encoded, for the same reason as the German 2.8.
+
+Two independent cases in two batches is the point at which an open item stops being an edge
+case. If batch 4 produces a third, build `direction` before continuing rather than after.
 
 ### Mapping to `src/compare.js` — every reason code already exists
 
