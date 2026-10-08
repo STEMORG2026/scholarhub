@@ -1,5 +1,72 @@
 # Changelog
 
+## [0.36.0] - 2026-10-08
+
+### Added — five more records, and 36 of 50
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `jj-wbgsp` | no GPA bar; publishes the **weights** of its rubric — education background is 10% | `prose` |
+| `pan-african-university` | **"at least a second-class upper division or its equivalent"** — a real bar, as a classification | `prose` |
+| `humphrey-fellowship` | no academic threshold at all; a non-degree fellowship gated on 5 years of professional experience | `prose` |
+| `rem-plus-plus-emjm` | **"currently under review … will be published shortly"** | `prose` |
+| `tfmasa-emjm` | no GPA bar; 180 ECTS + real English thresholds | `prose` + `credits` 180 + **`language`** |
+
+### Added — the `language` requirement kind is in use for the first time
+
+TF MASA publishes genuine English thresholds — IELTS 6.5 with no band below 6, TOEFL
+paper 580 / computer 237 / internet 93, CAE and CPE at B/C, or a letter from the applicant's
+university stating the medium of instruction was English — with the test taken no more than
+three years before the course starts. They are recorded as a `language` requirement, the first
+use of that kind since the schema defined it.
+
+The rule is `prose`, not `numeric`, and deliberately: the alternatives sit on **different
+scales** — a band score out of 9, a TOEFL total, a Cambridge letter grade, and a letter with no
+number at all. A `numeric` rule would have had to pick one and silently discard the rest, which
+is the fabricated-scale defect this validator exists to stop, arriving from a fourth direction.
+
+### Added — a sixth shape: the provider says its criteria are not yet published
+
+REM+ 2's entire admission page is a notice that the selection procedure "is currently under
+review by the Joint Programme Board (JPB). The updated procedure will be published on this
+website shortly." That is **not** `unstated`, and the v0.35.0 rule that `unstated` carries no
+`text` is what forced the distinction into the open: the provider states something definite
+about the state of its own procedure, and a finding must be able to hold that sentence. It is
+`prose`. A reader should check back rather than infer that the programme is unselective.
+
+### Measured — the pass, at 36 records
+
+**5 carry a comparable GPA figure. 9 state explicitly that somebody else sets the academic
+bar.** The delegated bar is now a quarter of the file, and it remains the single most useful
+thing the file records.
+
+### Added — a deliberate non-feature
+
+Two records publish selection **weights**: CGRS-D (50/50) and JJ/WBGSP (30/30/30/**10**). The
+JJ/WBGSP rubric is genuinely actionable — it tells a reader that academic record is the smallest
+of four components, so optimising for grades is the wrong strategy for that award. It is
+recorded in `text` and **not** as a schema field, because a weight is not a requirement: this
+file holds gates, and a rubric describes how applicants are ordered *after* they clear the
+gates. Mixing them would make `compare.js` answer "do I meet this?" with a number that means
+"how are you ranked?". Written up in §6 so it is not re-litigated.
+
+### Fixed — the validator caught my own data-writing bug
+
+The helper used to build these records set the wording on the rule *and* on the requirement —
+exactly the duplication v0.35.0 removed. The validator rejected it on the first run
+(`rule.text is not allowed`, 6 errors) before anything was committed. **A rule added one
+release ago paid for itself one release later, on its author.** The helper now moves the
+wording up rather than copying it, and an explicit invariant check confirms 0 violations.
+
+### Not recorded, and why
+
+- **`resco-emjm`** — `resco-master.eu` still serves a Cloudflare interstitial. Blocked for a
+  second batch; it should be treated as unreachable by fetch rather than retried each time.
+- **`nsf-grfp`** — `nsf.gov` remains region-blocked.
+
+`npm test` unchanged at **210** — no new rules this release, only data. Requirements validation
+0 errors, 2 warnings, both real and both pre-existing. **No user-visible behaviour changes.**
+
 ## [0.35.0] - 2026-10-08
 
 ### Added — five more records, and 31 of 50

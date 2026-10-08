@@ -570,5 +570,90 @@
         "last_verified": "2026-10-08"
       }
     ]
+  },
+  "jj-wbgsp": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "JJ/WBGSP publishes no GPA, grade average, marks percentage or class-rank threshold. It publishes something rarer: the weights of its scoring rubric. Two assessors independently score each eligible application out of 10 on four factors — quality of professional experience (30%), quality of professional recommendations (30%), quality of commitment to the home country (30%), and quality of education background (10%). Academic record is therefore the smallest of four components, and a reader optimising for this award should not optimise for grades. The eligibility gates are non-academic and hard: nationality of a World Bank member developing country, no dual citizenship of a developed country, a bachelor's degree earned at least 3 years before the deadline, at least 3 years of paid development-related employment acquired within the past 6 years, and unconditional admission (except for funding) to one of the 44 participating master's programmes. \"All eligibility criteria are strictly adhered to. No exceptions are made.\"",
+        "source": "https://www.worldbank.org/en/programs/scholarships/jj-wbgsp",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "pan-african-university": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "The Pan African University states a real academic bar, and it is a degree classification rather than a number: master's applicants must be a \"Holder of an Undergraduate degree from a recognised university, with at least a second-class upper division or its equivalent, in a relevant field\", and \"Academic Competence must be evidenced in academic transcripts at the bachelors' level.\" The equivalent for a non-UK transcript is left to the university to judge — the provider supplies no conversion — which is why this is recorded as prose and not as a figure. The other requirements are non-academic and unusually specific: age limits of not older than 25 for male and 28 for female master's applicants, and 28 male / 30 female for doctoral applicants, plus a written or oral examination after pre-selection. Doctoral applicants need a master's degree in a relevant field and a 3 to 4 page research concept note.",
+        "source": "https://au.int/en/announcements/20251115/pan-african-university-call-scholarships-applications-academic-year-2026-2027",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "humphrey-fellowship": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "The Humphrey Fellowship publishes no academic threshold at all, and this is a statement about the programme rather than a gap in the record: it is a non-degree fellowship for mid-career professionals, and selection is \"based on excellence in professional and personal qualifications as well as leadership potential\". The gate is professional experience — at least 5 years of progressively responsible professional experience in Nepal by the deadline, at mid-career policy level, with volunteer work, internships and work done for an academic degree explicitly excluded. The one degree-shaped rule is structural rather than graded: professional experience must follow \"a 4-year bachelor's degree, or, if the bachelor's degree is of 2-year/3-year duration, then a master's degree is also required\", and candidates holding two or more short bachelor's degrees without a master's are not eligible. The competition is also closed to recent graduates, to university teachers without management or policy responsibility, and to anyone with substantial recent U.S. experience.",
+        "source": "https://usefnepal.org/fulbright/humphrey/eligibility-requirements/",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "rem-plus-plus-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "REM+ 2 states that its admission criteria are not yet published, which is a finding rather than an absence. The whole of its admission page reads: \"The selection and admission procedure for this EMJM is currently under review by the Joint Programme Board (JPB). The updated procedure will be published on this website shortly. Thank you for your understanding.\" (last update 16 September 2026). No GPA, marks, ECTS, degree-field or English threshold is published anywhere on the page. A reader should check back rather than assume the programme is unselective — and note that this is deliberately NOT recorded as `unstated`: the provider states something definite about the state of its own procedure, and that statement belongs in the record.",
+        "source": "https://master-remplus2.eu/admission/",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "tfmasa-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "TFMASA publishes no GPA, marks percentage, class-rank or degree-classification threshold. Its standard is stated qualitatively and repeatedly — \"a strong academic record and a solid foundation in engineering sciences, applied physics, mathematics, and mechanics are essential\", \"A strong academic profile is expected, as TFMASA is a highly selective programme\" — and the only quantitative academic requirement is the credit load. Note what it asks to be ranked: the CV \"must clearly\" show the ranking of the University or Engineering School, which is the institution's standing rather than the applicant's class rank — the same substitution KTH makes.",
+        "source": "https://tfmasa.com/application/",
+        "last_verified": "2026-10-08"
+      },
+      {
+        "kind": "credits",
+        "of": {
+          "kind": "count",
+          "minimum": 180,
+          "unit": "ECTS"
+        },
+        "text": "Candidates must hold a Bachelor's degree (or equivalent, 180 ECTS) in Mechanics, Physics, or a closely related field before the start of the programme.",
+        "source": "https://tfmasa.com/application/",
+        "last_verified": "2026-10-08"
+      },
+      {
+        "kind": "language",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "IELTS (Academic Test): 6.5 with no score below 6; TOEFL paper-based 580, computer-based 237, internet-based 93; Certificate of Advanced English: B/C; Certificate of Proficiency in English: B/C; or a letter from the applicant's university stating that the medium of instruction was English. Exemptions may apply for native English speakers or those who completed prior education in English. The test must have been completed no more than 3 years before the course starts, and Primary and Secondary Education certificates or 1-year exchange programme documentation are accepted as English certificates.",
+        "source": "https://tfmasa.com/application/",
+        "last_verified": "2026-10-08"
+      }
+    ]
   }
 }
