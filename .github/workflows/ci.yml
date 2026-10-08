@@ -63,7 +63,7 @@ jobs:
       # to leave a token in `.git/config` where a later step's script could use
       # it. The checkout is also shallow by default, which is all this needs;
       # full history buys nothing when no step inspects it.
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
