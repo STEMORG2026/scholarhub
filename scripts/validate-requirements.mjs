@@ -237,12 +237,22 @@ function checkRule(where, rule) {
   }
 
   if (TEXT_RULE_KINDS.has(rule.kind)) {
-    if (typeof rule.text !== 'string' || rule.text.trim() === '') {
-      error(where, 'rule.kind "' + rule.kind + '" needs text — this kind is its own explanation');
-    }
     if (rule.minimum !== undefined || rule.scale !== undefined || rule.branches !== undefined) {
       error(where, 'rule.kind "' + rule.kind + '" must not carry a number — it is recorded precisely because no single number holds it');
     }
+  }
+
+  // The wording belongs to the requirement, not to the rule.
+  //
+  // `req.text` is the one field a reader sees and the one field the comparison
+  // engine will render. A second copy on the rule is a second place for the same
+  // sentence to drift — and by the time this was noticed, 17 records carried the
+  // identical string in both fields (verified byte-identical, not assumed) while
+  // 7 carried it only on the rule, so a consumer reading `req.text` rendered
+  // nothing for those 7. Two shapes, one of them silently empty, is worse than
+  // either shape alone.
+  if (rule.text !== undefined) {
+    error(where, 'rule.text is not allowed — the wording lives on the requirement (text), so there is exactly one copy');
   }
 
   if (rule.kind === 'none-stated') {
@@ -322,14 +332,17 @@ for (const recordId of ids) {
       }
     }
 
-    if (req.text !== undefined && (typeof req.text !== 'string' || req.text.trim() === '')) {
-      error(where, 'text must be a non-empty string when present');
-    }
-    // `text` on a prose-bearing rule was already required by checkRule; require it
-    // here too for any rule whose numbers a reader should be able to check against
-    // the provider's own wording.
-    if ((NUMERIC_RULE_KINDS.has(req.of && req.of.kind) || (req.of && req.of.kind) === 'count') && !req.text && !req.quote) {
-      warn(where, 'a rule carrying a figure should carry the provider\'s own wording in text, so the reader can check it');
+    // `text` is the reader-facing sentence, and it is mandatory on every
+    // requirement except the one kind whose whole meaning is that there is
+    // nothing to say. `unstated` must therefore carry no text at all: a sentence
+    // there would be a claim, and the claim it would make is false.
+    const ruleKind = req.of && req.of.kind;
+    if (ruleKind === 'unstated') {
+      if (req.text !== undefined) {
+        error(where, 'an "unstated" rule must carry no text — nothing was recorded, so any sentence would be a claim');
+      }
+    } else if (typeof req.text !== 'string' || req.text.trim() === '') {
+      error(where, 'text is required on every requirement — it is the one field a reader sees, and an empty one renders as nothing');
     }
   });
 

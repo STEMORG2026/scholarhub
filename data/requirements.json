@@ -89,11 +89,11 @@
         "kind": "gpa",
         "of": {
           "kind": "prose",
-          "varies_by": "grading system",
-          "text": "CGPA of at least B/B+ on the US system, or a 2nd upper classification on the UK system"
+          "varies_by": "grading system"
         },
         "source": "https://www.groundwatermaster.eu/scholarships",
-        "last_verified": "2026-10-07"
+        "last_verified": "2026-10-07",
+        "text": "CGPA of at least B/B+ on the US system, or a 2nd upper classification on the UK system"
       }
     ]
   },
@@ -119,11 +119,11 @@
         "kind": "gpa",
         "of": {
           "kind": "none-stated",
-          "quote": "No minimum GPA is stated in the Edital.",
-          "text": "No minimum GPA is stated in the Edital. Academic admission requirements are set by the individual postgraduate programme the candidate applies to, and the Edital states that CAPES's requirements and the programme's requirements are cumulative."
+          "quote": "No minimum GPA is stated in the Edital."
         },
         "source": "https://www.gov.br/capes/pt-br/centrais-de-conteudo/editais/04072025_Edital_2630513_SEI_2630221_Edital_n__12_2025.pdf/@@display-file/file",
-        "last_verified": "2026-10-07"
+        "last_verified": "2026-10-07",
+        "text": "No minimum GPA is stated in the Edital. Academic admission requirements are set by the individual postgraduate programme the candidate applies to, and the Edital states that CAPES's requirements and the programme's requirements are cumulative."
       }
     ]
   },
@@ -150,11 +150,11 @@
         "kind": "gpa",
         "of": {
           "kind": "none-stated",
-          "quote": "There is no formula for admission, and there are no scores, achievements, or stories that automatically qualify you for admission.",
-          "text": "Knight-Hennessy publishes two baseline eligibility requirements — admission to a full-time Stanford graduate degree programme, and a first bachelor's degree earned in January 2020 or later — and no academic threshold. The admission page states there is no formula for admission and no score that automatically qualifies an applicant."
+          "quote": "There is no formula for admission, and there are no scores, achievements, or stories that automatically qualify you for admission."
         },
         "source": "https://knight-hennessy.stanford.edu/admission",
-        "last_verified": "2026-10-08"
+        "last_verified": "2026-10-08",
+        "text": "Knight-Hennessy publishes two baseline eligibility requirements — admission to a full-time Stanford graduate degree programme, and a first bachelor's degree earned in January 2020 or later — and no academic threshold. The admission page states there is no formula for admission and no score that automatically qualifies an applicant."
       }
     ]
   },
@@ -164,11 +164,11 @@
         "kind": "gpa",
         "of": {
           "kind": "prose",
-          "text": "KTH names four scholarship selection criteria, the first of which is “the applicant's grades (GPA or equivalent)”, alongside the ranking of the university that awarded the bachelor's degree, relevant extracurricular research or work experience, and the applicant's motivation on sustainable development. No minimum grade, GPA or class threshold is published.",
           "varies_by": "no published threshold — grades are one of four weighted criteria"
         },
         "source": "https://www.kth.se/en/studies/master/admissions/scholarships/kth-scholarship-1.72827",
-        "last_verified": "2026-10-08"
+        "last_verified": "2026-10-08",
+        "text": "KTH names four scholarship selection criteria, the first of which is “the applicant's grades (GPA or equivalent)”, alongside the ranking of the university that awarded the bachelor's degree, relevant extracurricular research or work experience, and the applicant's motivation on sustainable development. No minimum grade, GPA or class threshold is published."
       }
     ]
   },
@@ -178,11 +178,11 @@
         "kind": "gpa",
         "of": {
           "kind": "prose",
-          "text": "Stipend-bearing Graduate Research Scholarships are “offered to eligibile candidates ranked highest by relevant selection panels based on their academic results for prior study and their research potential in their field of study”. No minimum GPA, WAM or honours class is published; the only stated eligibility is having applied for, or being enrolled in, a graduate research degree.",
           "varies_by": "no published threshold — candidates are ranked against each other"
         },
         "source": "https://scholarships.unimelb.edu.au/awards/graduate-research-scholarships",
-        "last_verified": "2026-10-08"
+        "last_verified": "2026-10-08",
+        "text": "Stipend-bearing Graduate Research Scholarships are “offered to eligibile candidates ranked highest by relevant selection panels based on their academic results for prior study and their research potential in their field of study”. No minimum GPA, WAM or honours class is published; the only stated eligibility is having applied for, or being enrolled in, a graduate research degree."
       }
     ]
   },
@@ -192,12 +192,12 @@
         "kind": "gpa",
         "of": {
           "kind": "prose",
-          "text": "Chevening's published eligibility requires an undergraduate degree “that qualifies you for a UK master's programme” and an unconditional offer from at least one of the three courses applied to. No degree classification, GPA or grade threshold is published by Chevening itself — the academic bar is set by the university making the offer, not by the scheme.",
           "varies_by": "the admitting university, not Chevening — no classification published by the scheme"
         },
         "not_a_requirement": "A 2:1 (upper second-class) is widely repeated as a Chevening requirement in third-party guides. It does not appear in Chevening's own published eligibility criteria, which delegate the academic bar to the unconditional offer. It is recorded here as absent from the source, not as a threshold to meet.",
         "source": "https://chevening.org/resource-hub/guidance/eligibility/",
-        "last_verified": "2026-10-08"
+        "last_verified": "2026-10-08",
+        "text": "Chevening's published eligibility requires an undergraduate degree “that qualifies you for a UK master's programme” and an unconditional offer from at least one of the three courses applied to. No degree classification, GPA or grade threshold is published by Chevening itself — the academic bar is set by the university making the offer, not by the scheme."
       }
     ]
   },
@@ -207,11 +207,11 @@
         "kind": "gpa",
         "of": {
           "kind": "prose",
-          "text": "SI publishes no academic threshold for the Scholarship for Global Professionals. The documents it requires are a CV, proof of work and leadership experience, two references, a passport copy and a motivation statement — no transcript or record of grades is requested. Admission, and with it the academic entry requirement, is handled by University Admissions rather than by SI.",
           "varies_by": "the admitting university via University Admissions — SI assesses no academic criterion"
         },
         "source": "https://si.se/en/apply/scholarships/swedish-institute-scholarships-for-global-professionals/",
-        "last_verified": "2026-10-08"
+        "last_verified": "2026-10-08",
+        "text": "SI publishes no academic threshold for the Scholarship for Global Professionals. The documents it requires are a CV, proof of work and leadership experience, two references, a passport copy and a motivation statement — no transcript or record of grades is requested. Admission, and with it the academic entry requirement, is handled by University Admissions rather than by SI."
       }
     ]
   },
@@ -244,8 +244,7 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose",
-          "text": "Admission is subject to the approval of the TERRA Managing Board and is based on the applicant's academic ability, motivation, recommendation letters and language proficiency. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar."
+          "kind": "prose"
         },
         "text": "Admission is subject to the approval of the TERRA Managing Board and is based on the applicant's academic ability, motivation, recommendation letters and language proficiency. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar.",
         "source": "https://msc-terra.org/applications/",
@@ -270,8 +269,7 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose",
-          "text": "Admission to NORISK will be decided on a competitive basis; the students are assessed on the basis of their previous academic record. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar."
+          "kind": "prose"
         },
         "text": "Admission to NORISK will be decided on a competitive basis; the students are assessed on the basis of their previous academic record. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar.",
         "source": "https://msc-norisk.org/applications/",
@@ -296,8 +294,7 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose",
-          "text": "Admission is made on a competitive basis; the students are assessed on the basis of their previous academic records. Admission is subjected to the approval of the FRP++ Managing Board and is based upon the applicant's ability and motivation, recommendation letters and language skills. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar."
+          "kind": "prose"
         },
         "text": "Admission is made on a competitive basis; the students are assessed on the basis of their previous academic records. Admission is subjected to the approval of the FRP++ Managing Board and is based upon the applicant's ability and motivation, recommendation letters and language skills. Applications will be assessed solely on academic merit, ability and potential. The academic evaluation of the candidate's curriculum is based on the following criteria: previous higher education studies; content and relevance of prior studies / quality of the awarding institution; relevant professional experience; recommendation letters; motivation letter; additional information (publications, awards, etc.). No GPA, grade average, marks percentage or class rank is published as a bar.",
         "source": "https://msc-frp.org/applications/",
@@ -322,8 +319,7 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose",
-          "text": "Ranking is performed on basis of the following criteria: academic level, University of last degree, English proficiency, motivation, reference letters. Within the eligible candidates selected, the consortium awards scholarships for mobility on basis of the score obtained in the selection ranking. No GPA, marks percentage, degree classification or numeric ranking threshold is published as a bar."
+          "kind": "prose"
         },
         "text": "Ranking is performed on basis of the following criteria: academic level, University of last degree, English proficiency, motivation, reference letters. Within the eligible candidates selected, the consortium awards scholarships for mobility on basis of the score obtained in the selection ranking. No GPA, marks percentage, degree classification or numeric ranking threshold is published as a bar.",
         "source": "https://www.mamaself.eu/admission",
@@ -348,7 +344,6 @@
         "kind": "gpa",
         "of": {
           "kind": "prose",
-          "text": "The minimum GPA (Grade Point Average) depends on the country of study, as defined by IHE Delft (based on a thorough comparative assessment done at a higher level in the Netherlands). In case of doubt, the programme coordinator is contacted. Following the eligibility check, a shortlist of around 50-80 applicants eligible for a scholarship is built by the coordinator of the programme in close collaboration with the student admission office, based on the relevance and grade of the obtained bachelor degree and followed disciplines, relevant work experience, other academic qualifications or activities, the number of applicants per country and the letter of motivation.",
           "varies_by": "country of study — the programme states that a minimum GPA exists and is set per country of study, but publishes no figure for any country"
         },
         "text": "The minimum GPA (Grade Point Average) depends on the country of study, as defined by IHE Delft (based on a thorough comparative assessment done at a higher level in the Netherlands). In case of doubt, the programme coordinator is contacted. Following the eligibility check, a shortlist of around 50-80 applicants eligible for a scholarship is built by the coordinator of the programme in close collaboration with the student admission office, based on the relevance and grade of the obtained bachelor degree and followed disciplines, relevant work experience, other academic qualifications or activities, the number of applicants per country and the letter of motivation.",
@@ -378,8 +373,7 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose",
-          "text": "This record is the European Commission's catalogue of the 218 Erasmus Mundus Joint Master programmes currently supported by the EU, not a programme itself, and it publishes no admission criteria. It directs applicants to \"visit the program's official website and directly contact the consortium for information on courses, application procedures, and scholarship availability\". The academic requirement belongs to each consortium's own programme, and ScholarHub records it there — TERRA, NORISK, FRP++, MaMaSELF+, MS² and Flood Risk Management each carry their own entry in this file."
+          "kind": "prose"
         },
         "text": "This record is the European Commission's catalogue of the 218 Erasmus Mundus Joint Master programmes currently supported by the EU, not a programme itself, and it publishes no admission criteria. It directs applicants to \"visit the program's official website and directly contact the consortium for information on courses, application procedures, and scholarship availability\". The academic requirement belongs to each consortium's own programme, and ScholarHub records it there — TERRA, NORISK, FRP++, MaMaSELF+, MS² and Flood Risk Management each carry their own entry in this file.",
         "source": "https://www.eacea.ec.europa.eu/scholarships/erasmus-mundus-catalogue_en",
@@ -392,8 +386,7 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose",
-          "text": "The Federal Commission for Scholarships for Foreign Students (FCS) assesses scholarship applications according to three criteria: candidate profile; quality of the research project or artistic work; synergies and potential for future research cooperation. No GPA, grade average, marks percentage, class rank or credit threshold is published as a bar — the only stated prerequisites are a Master's degree and an academic supervisor in Switzerland willing to direct the proposed research. Switzerland's own 1-6 grading scale is never mentioned on the page."
+          "kind": "prose"
         },
         "text": "The Federal Commission for Scholarships for Foreign Students (FCS) assesses scholarship applications according to three criteria: candidate profile; quality of the research project or artistic work; synergies and potential for future research cooperation. No GPA, grade average, marks percentage, class rank or credit threshold is published as a bar — the only stated prerequisites are a Master's degree and an academic supervisor in Switzerland willing to direct the proposed research. Switzerland's own 1-6 grading scale is never mentioned on the page.",
         "source": "https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html",
@@ -406,8 +399,7 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose",
-          "text": "No GPA, grade average, first-class average, letter grade or marks percentage is published as an eligibility requirement. Academic record appears only as one indicator inside the second of two weighted selection criteria — \"Relevant experience and achievements obtained within and beyond academia\" (50%), whose academic-record indicators are: transcripts; duration of previous studies; program requirements and courses pursued; course load; relative standing in program (if available). The remaining 50% is research potential. The only numeric academic threshold is temporal, not grade-based: no more than 36 months of full-time equivalent doctoral study by 31 December of the application year — and that is a ceiling, not a floor, so it is quoted here rather than encoded (see REQUIREMENTS-SCHEMA.md §3.5)."
+          "kind": "prose"
         },
         "text": "No GPA, grade average, first-class average, letter grade or marks percentage is published as an eligibility requirement. Academic record appears only as one indicator inside the second of two weighted selection criteria — \"Relevant experience and achievements obtained within and beyond academia\" (50%), whose academic-record indicators are: transcripts; duration of previous studies; program requirements and courses pursued; course load; relative standing in program (if available). The remaining 50% is research potential. The only numeric academic threshold is temporal, not grade-based: no more than 36 months of full-time equivalent doctoral study by 31 December of the application year — and that is a ceiling, not a floor, so it is quoted here rather than encoded (see REQUIREMENTS-SCHEMA.md §3.5).",
         "source": "https://nserc-crsng.canada.ca/en/funding-opportunity/canada-graduate-research-scholarship-doctoral-program",
@@ -420,8 +412,7 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose",
-          "text": "Selection runs on four weighted criteria — academic merit, motivation, recommendation letters, and previous experience and other skills — plus an interview, with a final score summed across them. Academic merit is scored on: Grades/GPA; \"Student's ranking, if available\"; and quality and ranking of the university of origin. No GPA, marks percentage or class-rank threshold is published as a bar. The page also states that places without scholarships go to applicants \"whose ranking exceeds a minimum eligibility threshold\", and does not publish that threshold — the same shape as Flood Risk Management: a bar that exists and is not stated. NOTE ON WHAT COULD NOT BE READ: this page's \"Academic requirements\" block (degree and credit prerequisites) renders as a collapsed accordion and was not readable, so no credit or degree figure is claimed for this record in either direction — its absence here is not a finding that none exists."
+          "kind": "prose"
         },
         "text": "Selection runs on four weighted criteria — academic merit, motivation, recommendation letters, and previous experience and other skills — plus an interview, with a final score summed across them. Academic merit is scored on: Grades/GPA; \"Student's ranking, if available\"; and quality and ranking of the university of origin. No GPA, marks percentage or class-rank threshold is published as a bar. The page also states that places without scholarships go to applicants \"whose ranking exceeds a minimum eligibility threshold\", and does not publish that threshold — the same shape as Flood Risk Management: a bar that exists and is not stated. NOTE ON WHAT COULD NOT BE READ: this page's \"Academic requirements\" block (degree and credit prerequisites) renders as a collapsed accordion and was not readable, so no credit or degree figure is claimed for this record in either direction — its absence here is not a finding that none exists.",
         "source": "https://eesic.eu/admission",
@@ -434,8 +425,7 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose",
-          "text": "Selection is carried out as a cooperative process between the academic partner universities, with the final selection based on consensus, and is \"based on academic qualifications, with a focus on qualitative and quantitative indicators of the applicants\": academic background; motivation letter and video; language skills; work experience. Applicants are rated and the 40 highest-rated are invited to interview. No GPA, grade average, marks percentage or class-rank threshold is published as a bar."
+          "kind": "prose"
         },
         "text": "Selection is carried out as a cooperative process between the academic partner universities, with the final selection based on consensus, and is \"based on academic qualifications, with a focus on qualitative and quantitative indicators of the applicants\": academic background; motivation letter and video; language skills; work experience. Applicants are rated and the 40 highest-rated are invited to interview. No GPA, grade average, marks percentage or class-rank threshold is published as a bar.",
         "source": "https://www.emerald.uliege.be/apply-3/admission-criteria/",
@@ -471,8 +461,7 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose",
-          "text": "BIOPHAM publishes no GPA, grade average, marks percentage or class-rank threshold, and no ranked list of selection criteria. What it does publish is that academic preparation is judged on subject background: \"all applicants from eligible fields should possess sufficient background in physics and mathematics related topics usually a minimum 18 ECTS each during the Bachelor studies. This background will be assessed by the Selection Committee during the selection procedure.\" It also restricts eligible fields to five (Physics, Materials Science, Chemistry, Nanoscience, Bioengineering) and publishes an explicit list of fields it will not consider."
+          "kind": "prose"
         },
         "text": "BIOPHAM publishes no GPA, grade average, marks percentage or class-rank threshold, and no ranked list of selection criteria. What it does publish is that academic preparation is judged on subject background: \"all applicants from eligible fields should possess sufficient background in physics and mathematics related topics usually a minimum 18 ECTS each during the Bachelor studies. This background will be assessed by the Selection Committee during the selection procedure.\" It also restricts eligible fields to five (Physics, Materials Science, Chemistry, Nanoscience, Bioengineering) and publishes an explicit list of fields it will not consider.",
         "source": "https://www.master-biopham.eu/apply/",
@@ -509,11 +498,75 @@
       {
         "kind": "gpa",
         "of": {
-          "kind": "prose",
-          "text": "The scholarship itself publishes no academic threshold whatsoever. Its eligibility criteria are: foreign nationality; admission to a master's degree at Universite Paris-Saclay; first-time enrolment in France; under 30 during the year of application; and no other funding above 600 EUR per month. The jury evaluates \"academic background, personal project, motivation for pursuing a PhD thesis at Universite Paris-Saclay (M2 candidates)\", and the page states plainly that \"the jury being discretionary, its decisions are confidential and cannot lead to appeal\". Any academic bar therefore lives in the master's programme's own admission decision, not here — the same delegated bar as Chevening, whose 2:1 is set by the university's unconditional offer rather than by the scholarship."
+          "kind": "prose"
         },
         "text": "The scholarship itself publishes no academic threshold whatsoever. Its eligibility criteria are: foreign nationality; admission to a master's degree at Universite Paris-Saclay; first-time enrolment in France; under 30 during the year of application; and no other funding above 600 EUR per month. The jury evaluates \"academic background, personal project, motivation for pursuing a PhD thesis at Universite Paris-Saclay (M2 candidates)\", and the page states plainly that \"the jury being discretionary, its decisions are confidential and cannot lead to appeal\". Any academic bar therefore lives in the master's programme's own admission decision, not here — the same delegated bar as Chevening, whose 2:1 is set by the university's unconditional offer rather than by the scholarship.",
         "source": "https://www.universite-paris-saclay.fr/en/admission/bourses-et-aides-financieres/international-masters-scholarships-program",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "holland-scholarship": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "The NL Scholarship (formerly the Holland Scholarship) publishes no academic threshold of its own. Its application criteria are: nationality outside the EEA; applying for a full-time bachelor's or master's programme at a participating Dutch institution; not already holding a degree from an institution in the Netherlands; and, in the programme's own words, \"You meet the specific requirements of the institution of your choice. You can find these on the website of the institution.\" The academic bar is therefore set separately by each of the 34 participating research universities and universities of applied sciences, and the central page publishes none of them. The award is EUR 5,000 for the first year and is explicitly not a full-tuition scholarship.",
+        "source": "https://www.studyinnl.org/finances/nl-scholarship",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "msca-doctoral-networks": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "MSCA Doctoral Networks publish no academic threshold, and this is structural rather than an omission: the funding goes to consortia, and each beneficiary recruits its own doctoral candidates. \"Candidates wishing to apply for PhD positions under Doctoral Networks should apply to funded Doctoral Network projects by consulting their open vacancies advertised internationally, including on the EURAXESS portal\", and EURAXESS is where the full requirements of a given position live. The individual eligibility conditions the central page does state are not academic: researchers \"must not have a doctoral degree at the date of their recruitment\", \"can be of any nationality\", \"should be enrolled in a doctoral programme during the project\", and must satisfy the mobility rule — \"they must not have resided or carried out their main activity (work, studies, etc.) in the country of the recruiting organisation for more than 12 months in the 36 months immediately before their recruitment date\". Note also that these are salaried positions rather than scholarships.",
+        "source": "https://marie-sklodowska-curie-actions.ec.europa.eu/actions/doctoral-networks",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "nz-scholarships": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "Manaaki New Zealand Scholarships publish no academic threshold of their own, and say so explicitly: \"Successful scholarship applicants must meet both the academic entry requirements and the English language requirements determined by the applicant's preferred education institutions\", and \"Each university or education institution sets the minimum level of English required, so check their websites for information.\" The programme's own eligibility criteria are non-academic but strict: citizenship of an eligible country; residence in the home country for the two years before applying; at least 18 years old at signing the offer (\"There is no upper age limit for applicants. However, we do prefer applicants who are under 40 years of age\"); for postgraduate applicants, relevant work experience of one year full-time or two years part-time; and no disqualifying previous Manaaki award. It publishes indicative English levels as a guide only — for postgraduate study, generally IELTS 6.5 overall with no band below 6.0, or TOEFL iBT 90 with a writing score of 21 — and states \"The information above is a guide only. Some courses have higher minimum English level entry requirements than those outlined.\"",
+        "source": "https://www.nzscholarships.govt.nz/check-eligibility-criteria/",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "anso-cas-twas-unesco-phd": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "No GPA, grade average, marks percentage, degree classification or class-rank threshold is published. The academic bar is delegated: \"Eligible applicants should meet the admission criteria for international students of USTC/UCAS\" — the two host universities — and the scholarship page does not restate them. Its own eligibility criteria are citizenship, nationality on the TWAS developing-country list, proficiency in English or Chinese, and age: \"For PhD program applicants: you should be born after 1st January 1991 (inclusive)\", with the page's structured age-limit field reading 35. The minimum degree held is an MSc, and the level is PhD. Up to 40 PhD students are selected each year from developing countries, 10 of them prioritised for climate-related research, with special (non-exclusive) consideration for Least Developed Countries and for women. The page publishes no scoring rubric for the application stage; the qualification test it mentions is a post-award condition, not an entry requirement.",
+        "source": "https://twas.org/opportunity/anso-cas-twasunesco-phd-scholarship",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "australia-awards": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "PARTIAL — read only at the programme level. This page publishes no academic eligibility criterion at all: it describes the award's benefits and conditions, and links out to \"Country information\" covering participating countries and opening and closing dates. The country-level application pages, which are where eligibility is expected to be set, were not read — one fetch of the \"how to apply\" page timed out. So no credit or degree figure is claimed here in either direction, and the absence of an academic threshold on this record is NOT a finding that the programme has none.",
+        "source": "https://www.dfat.gov.au/people-to-people/australia-awards/australia-awards-scholarships",
         "last_verified": "2026-10-08"
       }
     ]

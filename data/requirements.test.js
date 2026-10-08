@@ -190,12 +190,18 @@ test('a comparable figure with a null catalog gpa_minimum warns', () => {
 test('a prose finding with a null catalog gpa_minimum does not warn', () => {
   // The sourcing pass produces dozens of these; warning on all of them would
   // bury the few a reader can act on.
-  const { output } = run(withRule({ kind: 'prose', text: 'grades are one of four criteria' }));
+  //
+  // The status is asserted as well as the silence. Without it this test passed
+  // against a fixture the validator REJECTED — a non-zero exit still emits no
+  // divergence warning, so the assertion held for entirely the wrong reason.
+  const { status, output } = run(withRule({ kind: 'prose' }));
+  assert.equal(status, 0, output);
   assert.doesNotMatch(output, /the two disagree/);
 });
 
 test('unstated does not warn either', () => {
-  const { output } = run({ probe: { requirements: [{ kind: 'gpa', of: { kind: 'unstated' }, source: 'https://example.org/rule', last_verified: '2026-10-08' }] } });
+  const { status, output } = run({ probe: { requirements: [{ kind: 'gpa', of: { kind: 'unstated' }, source: 'https://example.org/rule', last_verified: '2026-10-08' }] } });
+  assert.equal(status, 0, output);
   assert.doesNotMatch(output, /the two disagree/);
 });
 
@@ -247,6 +253,41 @@ test('a future last_verified is rejected', () => {
   });
   assert.notEqual(status, 0);
   assert.match(output, /last_verified/);
+});
+
+// --- the wording has exactly one home (v0.35.0) -----------------------------
+
+test('text on the rule is rejected — the wording lives on the requirement', () => {
+  // 17 records carried the identical string in both fields and 7 carried it only
+  // on the rule, so a consumer reading `text` rendered nothing for those 7.
+  const { status, output } = run(withRule({ kind: 'prose', text: 'a second copy of the sentence' }));
+  assert.notEqual(status, 0);
+  assert.match(output, /rule.text is not allowed/);
+});
+
+test('a requirement with no text is rejected', () => {
+  // Except `unstated`, where the absence is the finding.
+  const { status, output } = run({
+    probe: {
+      requirements: [
+        { kind: 'gpa', of: { kind: 'numeric', minimum: 3, scale: 4 }, source: 'https://example.org/rule', last_verified: '2026-10-08' },
+      ],
+    },
+  });
+  assert.notEqual(status, 0);
+  assert.match(output, /text is required/);
+});
+
+test('an unstated rule carrying text is rejected', () => {
+  const { status, output } = run({
+    probe: {
+      requirements: [
+        { kind: 'gpa', of: { kind: 'unstated' }, text: 'nothing was recorded, but here is a sentence anyway', source: 'https://example.org/rule', last_verified: '2026-10-08' },
+      ],
+    },
+  });
+  assert.notEqual(status, 0);
+  assert.match(output, /must carry no text/);
 });
 
 test('an eighth rule kind is rejected', () => {

@@ -94,9 +94,9 @@ into `unstated`, which the current scalar cannot avoid:
 | `percentile` | `minimum` + `of` | a percentile bar, e.g. top 20% |
 | `rank` | `minimum` + `of` | a class-rank bar |
 | `count` | `minimum` + **`unit`** (both mandatory) | a quantity with no ceiling — 240 ECTS |
-| `prose` | `text` only, optional `varies_by` | stated, but with no single scalar form |
-| `none-stated` | `quote` | **the provider states there is no threshold** |
-| `unstated` | nothing | **the catalog has not looked** — the honest default |
+| `prose` | optional `varies_by` — the wording is the requirement's `text` | stated, but with no single scalar form |
+| `none-stated` | `quote` (the proof) | **the provider states there is no threshold** |
+| `unstated` | nothing, and the requirement carries **no** `text` | **the catalog has not looked** — the honest default |
 
 `prose`, `none-stated` and `unstated` are three *different facts*. `numeric`, `branches`,
 `percentile`, `rank` and `count` are five different *comparison procedures*. All eight are one
@@ -198,7 +198,56 @@ would have been recorded as a minimum you must exceed — the precise opposite o
 quoted in `text` and not encoded, for the same reason as the German 2.8.
 
 Two independent cases in two batches is the point at which an open item stops being an edge
-case. If batch 4 produces a third, build `direction` before continuing rather than after.
+case, so batch 4 was run under a standing trigger: **a third instance gets `direction` built
+before the pass continues.** Batch 4 produced none, so the trigger has not fired and the pass
+continued. The trigger stands for batch 5 — it is not discharged by one quiet batch.
+
+### 3.6 The delegated bar is the dominant shape, not an edge case
+
+Measured across the 31 records sourced so far: **5 carry a comparable GPA figure. 8 state
+explicitly that the academic bar is set by somebody else.** The second number is larger than the
+first, and it is not noise — it is how large programmes are actually administered.
+
+| Record | Who actually sets the academic bar |
+|---|---|
+| `chevening-scholarship` | the UK university making the unconditional offer |
+| `si-global-professionals` | University Admissions, not the Swedish Institute |
+| `erasmus-mundus-joint-masters` | each consortium, per programme |
+| `paris-saclay-international-masters` | the master's programme's own admission decision |
+| `holland-scholarship` | each of 34 participating institutions |
+| `msca-doctoral-networks` | each funded consortium, per EURAXESS vacancy |
+| `nz-scholarships` | the applicant's preferred institution, in its own words |
+| `anso-cas-twas-unesco-phd` | USTC/UCAS admission criteria for international students |
+
+**This reframes what the file is for.** The instinct is that `requirements.json` exists to hold
+thresholds. It mostly does not, and cannot: for a quarter of the records the honest and *useful*
+answer is not a number but a pointer — *"this award has no academic bar of its own; the host
+programme sets it"* is more actionable than any figure would be, because it tells the reader
+which document to open.
+
+The consequence for Phase 3: `unresolvable` is the wrong reason code for these eight. They are
+not unresolvable — they are **delegated**, which is a definite answer, and rendering it as
+"we could not work this out" would understate what is known. A `delegated` reason code is
+therefore an open item alongside `direction`.
+
+### 3.7 The wording has exactly one home
+
+`text` lives on the **requirement**, never on the rule. `of.text` is not permitted.
+
+This was not the original shape — the first five records put a `prose` finding's wording inside
+the rule, on the reasoning that the rule "is its own explanation", and later records duplicated
+it to the requirement. By the time it was measured, **17 records carried the identical string in
+both fields and 7 carried it only on the rule.** Byte-identical was verified, not assumed: every
+duplicate pair matched exactly, so collapsing them lost no wording (37 distinct strings before,
+37 after).
+
+The defect that mattered was not the duplication but the **7 records with no requirement-level
+`text` at all** — a consumer reading `text` renders nothing for those, and a blank requirement
+reads as "no requirement" rather than "not loaded". Two shapes, one of them silently empty, is
+worse than either shape alone.
+
+The rule now: **`text` is required on every requirement, except `unstated`, where it is
+forbidden** — because there the absence *is* the finding, and a sentence would be a claim.
 
 ### Mapping to `src/compare.js` — every reason code already exists
 
@@ -253,18 +302,57 @@ five are transcribed verbatim into `data/requirements.json`.
 
 `scripts/validate-requirements.mjs`, added to the `npm test` chain:
 
-1. `record_id` must exist in `data/scholarships.json` — a requirement for no record is a typo.
-2. `kind` must be one of the seven. An eighth is a schema change, not a data edit.
-3. `numeric` **must** carry both `minimum` and `scale`. A numeric requirement without a scale
-   is rejected — it is the same defect as a GPA without a scale, on the other side.
-4. A non-numeric kind **must not** carry `minimum` or `scale` — those belong inside `branches`.
-5. Every branch must carry both `minimum` and `scale`.
-6. `source` and `last_verified` are **mandatory on every requirement**. A requirement with no
-   source is not verifiable; a requirement with no `last_verified` cannot be aged.
-7. `last_verified` must be a real ISO date, not in the future.
-8. `text` is mandatory on `prose` and `none-stated` — those kinds *are* their text.
+Every rule below is executable and each was observed to fail on a planted defect before it was
+trusted. Kept in step with the code deliberately: this list said "one of the seven" and
+described the old `text` rule for two releases after both had changed.
 
-Rule 6 is the one worth stating plainly: **a requirement is the thing that goes stale
+**Shape of the file**
+
+1. The catalog root must be a JSON array; `requirements.json` must be an object keyed by record id.
+2. `record_id` must exist in `data/scholarships.json` — a requirement for no record is a typo,
+   and a typo means a requirement that silently never gets compared.
+3. Each entry must carry a non-empty `requirements` array.
+4. Requirement `kind` must be one of `gpa`, `language`, `credits`. A fourth is a code change.
+5. `of` must be an object, and its `kind` one of the eight in §3.
+
+**Numbers**
+
+6. `numeric`, `percentile` and `rank` need a numeric `minimum` **and** the denominator that
+   belongs to the kind — `scale` for `numeric`, `of` for a portion. A `minimum` above its own
+   `scale` is rejected as not a reading.
+7. `count` needs a numeric `minimum` **and** a non-empty `unit`, and must carry neither `scale`
+   nor `of` — a quantity is not a portion and not a reading.
+8. `branches` needs at least two branches, each with `minimum` + `scale`, and no top-level
+   `minimum` or `scale`. One branch is the `numeric` kind. `alternatives` may hold
+   `numeric`/`percentile`/`rank` entries, each with `minimum` + `of`.
+9. `prose` and `none-stated` must not carry a number — they are recorded precisely because no
+   single number holds them.
+
+**Meaning**
+
+10. `none-stated` needs a `quote`. It is a claim about what the provider says, so it carries
+    the provider's words.
+11. `unstated` must be bare, and must carry **no** `text` — the absence is the finding, and a
+    sentence there would be a claim.
+12. `rule.text` is never allowed. The wording lives on the requirement (§3.7).
+13. `applies_to` and `varies_by`, when present, must be non-empty strings. A qualifier that
+    silently does nothing is worse than no qualifier.
+
+**Provenance**
+
+14. `source` and `last_verified` are mandatory on every requirement. A requirement with no
+    source is not verifiable; one with no `last_verified` cannot be aged.
+15. `last_verified` must be a real calendar date — `2026-02-30` is rejected — and not in the
+    future. One 12 months old or older raises a warning.
+16. `text` is required on every requirement except `unstated` (§3.7).
+
+**One warning, not an error**
+
+17. A comparable GPA figure in this file while the catalog record still has
+    `eligibility.gpa_minimum = null` means the two files disagree about a number a reader can
+    see. It is a warning rather than an error because the catalog is migrated separately.
+
+Rule 14 is the one worth stating plainly: **a requirement is the thing that goes stale
 fastest.** Providers change a threshold without changing the page, and there is no diff to
 notice. `last_verified` is how the app can eventually say "this was checked 14 months ago"
 rather than presenting a stale figure as current.
@@ -273,10 +361,17 @@ rather than presenting a stale figure as current.
 
 ## 6. What this does not do
 
-- **It does not change `data/scholarships.json`.** The five records keep their prose
-  `gpa_minimum` untouched; the new file sits beside them. Nothing in the app reads it yet.
-- **It does not invent a number.** Every value in the five examples is transcribed from the
-  parent record's own text; none was computed, averaged, or converted.
+- **It does not change `data/scholarships.json`.** The 50 records keep their
+  `eligibility.gpa_minimum` untouched; the new file sits beside them. **Nothing in the app
+  reads it yet**, which is why the two warnings above are warnings and not failures.
+- **It does not invent a number.** Every value is transcribed from the provider's own page and
+  carries the URL and the date it was read. None was computed, averaged, or converted — and
+  where a conversion would be needed (MS²'s German 2.8, the German *up to* reading) the figure
+  is quoted rather than encoded.
+- **It is not finished.** 31 of 50 records carry a requirement. The remaining 19 include two
+  that are deliberately unsourced: `eth-excellence-scholarship`, whose eligibility text sits in
+  JavaScript accordions that could not be read, and `fulbright-foreign-student`, which is
+  administered by roughly fifty country commissions rather than by one programme.
 - **It does not add a language-requirement shape.** The same problem exists for
   `language_requirements` (15 prose dicts), and it needs the same treatment, but the GPA
   case is the one that blocks the comparison engine, so it goes first.
