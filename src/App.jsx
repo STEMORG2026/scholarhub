@@ -84,8 +84,24 @@ function App({ initialView = 'discover' }) {
    if(sort==='Country')return a.country.localeCompare(b.country)||a.name.localeCompare(b.name);
    return (Number(saved.includes(b.id))-Number(saved.includes(a.id)))||a.name.localeCompare(b.name);
  }),[query,country,field,level,sort,saved,onlyEligible,elig]);
- const updateSaved=(id)=>{const next=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];setSaved(next);localStorage.setItem('sh-saved',JSON.stringify(next));setNotice(next.includes(id)?'Added to your saved scholarships':'Removed from saved scholarships');setTimeout(()=>setNotice(''),2400)};
- const saveProfile=()=>{localStorage.setItem('sh-profile',JSON.stringify(profile));setNotice('Your profile is saved on this device');setTimeout(()=>setNotice(''),2400)};
+ // --- persistence ----------------------------------------------------------
+ // Writing to localStorage can fail: the quota is full, or storage is blocked
+ // outright (private mode, a site-data policy, a locked-down profile).
+ //
+ // Three of the four writes in this file called `localStorage.setItem` directly,
+ // so a failure **threw inside a click handler** — the confirmation toast never
+ // appeared and the control simply looked dead. The fourth swallowed it, so the
+ // reader's tracker and document checklist silently stopped being saved while
+ // the UI went on looking saved. Both are the same defect seen from two sides:
+ // the sidebar promises "Your data stays on this device", and nothing checked
+ // that it did.
+ //
+ // The condition persists, so the warning does too. A 2.4-second toast is the
+ // wrong shape for "nothing you do here is being kept".
+ const [storageBlocked,setStorageBlocked]=useState(false);
+ const persist=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));return true}catch{setStorageBlocked(true);return false}};
+ const updateSaved=(id)=>{const next=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];setSaved(next);persist('sh-saved',next);setNotice(next.includes(id)?'Added to your saved scholarships':'Removed from saved scholarships');setTimeout(()=>setNotice(''),2400)};
+ const saveProfile=()=>{persist('sh-profile',profile);setNotice('Your profile is saved on this device');setTimeout(()=>setNotice(''),2400)};
  // --- tracker and documents -------------------------------------------------
  // Every change is persisted, never left behind a Save button: a toggle that
  // still needed saving is a toggle a reader forgets to save. Persisting happens
@@ -93,7 +109,6 @@ function App({ initialView = 'discover' }) {
  // the functional form of setState — two updates in the same tick (a double
  // click, or "track all") would otherwise both build from the same stale value
  // and silently drop one.
- const persist=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch{}};
  const flash=(text)=>{setNotice(text);setTimeout(()=>setNotice(''),2400)};
  useEffect(()=>{persist('sh-tracker',tracker)},[tracker]);
  useEffect(()=>{persist('sh-docs',docs)},[docs]);
@@ -242,7 +257,7 @@ function App({ initialView = 'discover' }) {
  };
  const nav=[['discover','Discover',Compass],['saved','My shortlist',Bookmark],['tracker','Application tracker',ClipboardList],['profile','My profile',UserRound],['assistant','AI assistant',Sparkles],['settings','AI settings',Settings2]];
  return <div className={dark?'app dark':'app'}>
-  <aside className="sidebar"><div className="brand"><span className="brand-mark"><GraduationCap size={21}/></span><span>scholar<span className="brand-accent">hub</span></span></div><div className="workspace-label">YOUR WORKSPACE</div><nav>{nav.map(([key,label,Icon])=><button key={key} className={`nav-item ${view===key?'active':''}`} onClick={()=>go(key)} title={key==='tracker'&&alertCount>0?`${label} — ${alertCount} item${alertCount===1?'':'s'} need attention`:label} aria-current={view===key?'page':undefined}><Icon size={18}/>{label}{key==='saved'&&saved.length>0&&<span className="nav-count">{saved.length}</span>}{key==='tracker'&&alertCount>0&&<span className="nav-count alert">{alertCount}</span>}</button>)}</nav><div className="sidebar-bottom"><div className="help-card"><div className="help-icon"><BookOpen size={17}/></div><div><strong>New to scholarships?</strong><p>Our guide makes it simple.</p><button onClick={()=>setView('assistant')}>Explore the guide <ArrowUpRight size={13}/></button></div></div><button className="theme-toggle" onClick={()=>{const next=!dark;setDark(next);localStorage.setItem('sh-dark',JSON.stringify(next))}}>{dark?<Sun size={17}/>:<Moon size={17}/>}<span>{dark?'Light':'Dark'} appearance</span><span className="toggle-pill"><i/></span></button><div className="privacy"><ShieldCheck size={15}/> Your data stays on this device</div></div></aside>
+  <aside className="sidebar"><div className="brand"><span className="brand-mark"><GraduationCap size={21}/></span><span>scholar<span className="brand-accent">hub</span></span></div><div className="workspace-label">YOUR WORKSPACE</div><nav>{nav.map(([key,label,Icon])=><button key={key} className={`nav-item ${view===key?'active':''}`} onClick={()=>go(key)} title={key==='tracker'&&alertCount>0?`${label} — ${alertCount} item${alertCount===1?'':'s'} need attention`:label} aria-current={view===key?'page':undefined}><Icon size={18}/>{label}{key==='saved'&&saved.length>0&&<span className="nav-count">{saved.length}</span>}{key==='tracker'&&alertCount>0&&<span className="nav-count alert">{alertCount}</span>}</button>)}</nav><div className="sidebar-bottom"><div className="help-card"><div className="help-icon"><BookOpen size={17}/></div><div><strong>New to scholarships?</strong><p>Our guide makes it simple.</p><button onClick={()=>setView('assistant')}>Explore the guide <ArrowUpRight size={13}/></button></div></div><button className="theme-toggle" onClick={()=>{const next=!dark;setDark(next);persist('sh-dark',next)}}>{dark?<Sun size={17}/>:<Moon size={17}/>}<span>{dark?'Light':'Dark'} appearance</span><span className="toggle-pill"><i/></span></button><div className="privacy"><ShieldCheck size={15}/> Your data stays on this device</div></div></aside>
   <main className="main"><header className="topbar"><div className="breadcrumbs">ScholarHub <span>/</span> <b>{nav.find(n=>n[0]===view)?.[1]||'Details'}</b></div><div className="top-actions"><span className="open-label"><i/> Open access · No account needed</span><button className="icon-btn bell-btn" aria-label={alertCount>0?`Notifications — ${alertCount} item${alertCount===1?'':'s'} need attention`:'Notifications — nothing needs attention'} onClick={()=>go('tracker')}><Bell size={18}/>{alertCount>0&&<span className="bell-dot">{alertCount}</span>}</button><div className="avatar">S</div></div></header>
   {view==='discover'&&<><section className="welcome"><div className="eyebrow"><Sparkles size={14}/> YOUR NEXT CHAPTER STARTS HERE</div><h1>Find funding for<br/><em>what moves you.</em></h1><p className="hero-copy">A calmer way to discover scholarships for engineering students around the world.</p><div className="hero-stats"><div><strong>{scholarships.length}</strong><span>curated opportunities</span></div><div className="stat-divider"/><div><strong>{countries.length-1}</strong><span>destinations to explore</span></div><div className="stat-divider"/><div><strong>Free</strong><span>always, no sign-up</span></div></div><div className="hero-art" aria-hidden="true"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="art-sun"/><div className="art-cap"><GraduationCap size={80} strokeWidth={1}/></div><div className="art-leaf leaf-one"/><div className="art-leaf leaf-two"/><span className="sparkle s1">✳</span><span className="sparkle s2">✦</span></div></section>
   <section className="discovery"><div className="section-heading"><div><div className="eyebrow muted">THE OPPORTUNITY BOARD</div><h2>Scholarships worth a look</h2><p>Hand-picked places to start your search. Always confirm details with the provider.</p></div><button className="outline-btn" onClick={()=>go('profile')}><SlidersHorizontal size={15}/> Personalize results</button></div>
@@ -295,7 +310,8 @@ function App({ initialView = 'discover' }) {
        be a per-record "unknown" that says nothing the profile summary has not
        already said. The sentence always names which of the five cases applies. */}
    {confirmedGpa&&gpaComparison&&gpaComparison[selected.id]&&<div><span>Your GPA</span><b className={'gpa-verdict gpa-'+gpaComparison[selected.id].verdict}>{GPA_VERDICT_LABEL[gpaComparison[selected.id].verdict]}</b><em className="elig-note">{gpaComparison[selected.id].sentence}</em>{gpaComparison[selected.id].quote&&<em className="elig-note gpa-quote">The provider writes: “{gpaComparison[selected.id].quote}”</em>}</div>}<div><span>Source last checked</span><b>{selected.last_verified?fmtDate(selected.last_verified):'Not recorded'}</b></div></div><div className="detail-note"><ShieldCheck size={17}/><span>Deadlines and amounts appear only where a contributor recorded them from the official source, together with the date they checked it. Confirm dates, eligibility, and terms directly with the provider.</span></div><div className="modal-actions"><div className="modal-action-group"><button className="outline-btn" onClick={()=>updateSaved(selected.id)}><Bookmark size={15}/>{saved.includes(selected.id)?'Saved':'Save opportunity'}</button><button className={'outline-btn '+(tracker[selected.id]?'tracking':'')} aria-pressed={!!tracker[selected.id]} onClick={()=>toggleTrack(selected)}><CalendarClock size={15}/>{tracker[selected.id]?'Tracking deadline':'Track deadline'}</button></div><a className="primary-btn" href={selected.official_url} target="_blank" rel="noreferrer">Official scholarship page <ExternalLink size={15}/></a></div></section></div>}
-  {notice&&<div className="toast" role="status" aria-live="polite"><Check size={16}/>{notice}</div>}<footer className="footer">Made for curious minds. <span>ScholarHub is an independent discovery tool · Always verify with official sources.</span></footer></main></div>
+  {notice&&<div className="toast" role="status" aria-live="polite"><Check size={16}/>{notice}</div>}
+  {storageBlocked&&<div className="toast warn" role="alert"><AlertTriangle size={16}/><span>This browser is not saving anything — storage is full or blocked. Your tracker, checklist and profile will be lost when you close this tab.</span></div>}<footer className="footer">Made for curious minds. <span>ScholarHub is an independent discovery tool · Always verify with official sources.</span></footer></main></div>
 }
 
 export default App;

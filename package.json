@@ -1,6 +1,6 @@
 {
   "name": "scholarhub",
-  "version": "0.39.0",
+  "version": "0.40.0",
   "private": false,
   "type": "module",
   "scripts": {
@@ -8,16 +8,17 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "node --test && node scripts/validate-catalog.mjs && node scripts/validate-requirements.mjs && node scripts/render-smoke.mjs",
+    "test:cov": "node --test --experimental-test-coverage",
     "test:render": "node scripts/render-smoke.mjs",
     "validate": "node scripts/validate-catalog.mjs && node scripts/validate-requirements.mjs",
     "check:links": "node scripts/validate-catalog.mjs --links"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "vite": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "lucide-react": "latest"
+    "@vitejs/plugin-react": "6.1.1",
+    "vite": "8.3.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "lucide-react": "1.48.0"
   },
   "devDependencies": {}
 }
