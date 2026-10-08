@@ -82,7 +82,23 @@ if (!requirements || typeof requirements !== 'object' || Array.isArray(requireme
 }
 
 const catalogById = new Map(catalog.map((r) => [r.id, r]));
-const todayIso = new Date().toISOString().slice(0, 10);
+// The **local** date, not UTC.
+//
+// `last_verified` is a date a human wrote down after reading a provider's page, in
+// their own timezone. Comparing it against `toISOString()` — which is UTC — rejects a
+// correctly-dated record for the hours in which the local date is ahead of UTC. In
+// Nepal (UTC+05:45) that is every day between 00:00 and 05:45, and it first fired on
+// a batch sourced just after midnight: three records were rejected as
+// "last_verified is in the future" for a date that had already happened.
+//
+// The record was right and the rule was wrong, which is the fourth time in this pass
+// that has been the case. A date the reader typed in their own timezone must be
+// judged in their own timezone.
+const todayIso = (() => {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+})();
 const ids = Object.keys(requirements);
 
 console.log('Found ' + ids.length + ' record(s) carrying requirements, against ' + catalog.length + ' catalog records.\n');

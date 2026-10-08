@@ -34,7 +34,7 @@ const CATALOG = [{ id: 'probe', name: 'Probe', eligibility: { gpa_minimum: null 
  * if only stdout were read — which is exactly the case the divergence test below
  * asserts on.
  */
-function run(requirements) {
+function run(requirements, env) {
   const dir = mkdtempSync(join(tmpdir(), 'reqval-'));
   const reqPath = join(dir, 'requirements.json');
   const catPath = join(dir, 'scholarships.json');
@@ -44,7 +44,7 @@ function run(requirements) {
     const result = spawnSync(
       process.execPath,
       [SCRIPT, '--requirements=' + reqPath, '--catalog=' + catPath],
-      { encoding: 'utf8' },
+      { encoding: 'utf8', env: env ? { ...process.env, ...env } : process.env },
     );
     return { status: result.status ?? 1, output: (result.stdout || '') + (result.stderr || '') };
   } finally {
@@ -253,6 +253,28 @@ test('a future last_verified is rejected', () => {
   });
   assert.notEqual(status, 0);
   assert.match(output, /last_verified/);
+});
+
+// --- dates are judged in the reader's timezone (v0.41.0) ---------------------
+
+test('a date that is today LOCALLY is not "in the future"', () => {
+  // The validator compared `last_verified` against `toISOString()`, which is UTC.
+  // In Nepal (UTC+05:45) that rejects a correctly-dated record every day between
+  // midnight and 05:45 — and it did, on three records sourced just after midnight.
+  //
+  // The timezone is forced to one that is ahead of UTC so this is deterministic
+  // rather than passing or failing depending on the hour the suite happens to run.
+  const TZ = 'Pacific/Kiritimati'; // UTC+14, the furthest ahead of any inhabited zone
+  const localToday = new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date());
+  const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4 }, { last_verified: localToday }), { TZ });
+  assert.equal(status, 0, 'a record dated today locally must validate:\n' + output);
+});
+
+test('a genuinely future date is still rejected', () => {
+  // The fix must not turn the check off. 2099 is future in every timezone.
+  const { status, output } = run(withRule({ kind: 'numeric', minimum: 3, scale: 4 }, { last_verified: '2099-01-01' }));
+  assert.notEqual(status, 0);
+  assert.match(output, /in the future/);
 });
 
 // --- a delegated bar is named, not inferred (v0.37.0) -----------------------
