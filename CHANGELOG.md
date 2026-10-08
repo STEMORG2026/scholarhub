@@ -1,5 +1,69 @@
 # Changelog
 
+## [0.31.0] - 2026-10-08
+
+### Fixed — the AI request carried the reader's profile with *every* question
+
+**A privacy rule that was stated and not enforced.** `AGENTS.md` said "No PII leaves the
+browser." It was false. The assistant's system prompt named the reader unconditionally:
+
+```js
+'The reader: country of origin ' + profile.nationality + ', aiming at a ' + profile.degree + ' in ' + profile.field + '.',
+```
+
+so **field, degree and nationality were attached to every chat request**, including "What is the
+MEXT deadline?" — a question that needs none of them. The guards around that line were all
+honest and all pointed the wrong way: `egressSummary()` names the host, the key never reaches a
+server, a test forbids the word "secure". Each proves *where* a request goes. None proves *what it
+carries*. Two different claims, and only the first was tested.
+
+**The fix is a predicate, not a promise.** `src/assistant.js` is new and pure: `needsProfile()`
+decides from the reader's own words whether the three facts may be attached, and it defaults to
+**not sending**. A missed cue costs one rephrased question; a false positive sends a nationality to
+a cloud provider. Those failures are not symmetric, so the gate stays narrow.
+
+| Question | Before | Now |
+|---|---|---|
+| "What is the deadline for MEXT?" | profile attached | catalog rows only |
+| "Tell me about the DAAD programme." | profile attached | catalog rows only |
+| "Am I eligible for MEXT?" | profile attached | field, degree, nationality |
+
+`readerClause()` returns **`null`** when the profile may not be sent, and the clause is filtered out
+rather than interpolated — an interpolated `null` renders visibly broken, whereas an omitted
+sentence reads as "not given", which is a different and false claim.
+
+### Added — the assistant is not an assessor
+
+The catalog records **zero numeric GPA thresholds across all fifty records** (measured), so a model
+asked "am I eligible?" has nothing to reason from and will produce confident prose over an empty
+table. That is the exact failure `compare.js` refuses in its own domain, arriving by a different
+door. `ASSESSOR_GUARD` now forbids a verdict and names the gap in the prompt itself.
+
+### Changed — egress is disclosed, in both directions
+
+- `egressSummary()` takes the profile and states **where a request goes *and* what it carries**, in
+  the one line the reader already reads before sending anything. Naming only the host understated
+  it.
+- The assistant puts the disclosure **on the reply**, per turn: `profile sent: field, degree,
+  nationality` or `no profile sent`. Not only in a settings panel the reader may never open.
+- `src/AiSettings.jsx` and `src/App.jsx` thread the profile through; the stale `egress`
+  destructure is gone.
+
+### Tests
+
+**21 new tests, 163 → 184.** The profile-egress tests are **negative controls**: they assert the
+profile is *absent* from a programme question, because a test that only asserts the happy path
+would have passed against the broken code too. **Seven defect classes were planted and each was
+observed to fail before the guard was trusted** — unconditional send, substring instead of word
+boundaries, empty string instead of `null`, empty profile treated as sendable, a disclosure that
+always claims a send, a dropped profile sentence, and a reintroduced security claim. Restored file
+verified byte-identical to the pre-plant state.
+
+The cue pattern needed its own correction during the work: bare `\bme\b` matched "**Tell me** about
+the DAAD programme" — the reader addressing the assistant, not a fact about them. The cues are now
+phrases (`my gpa`, `for me`, `am i`) rather than loose pronouns.
+
+
 ## [0.30.0] - 2026-10-08
 
 ### Changed — the merge gate is now real, and the pipeline is hardened
