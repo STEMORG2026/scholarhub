@@ -405,15 +405,34 @@ export function needsKey(provider) {
 /**
  * A short, honest summary of what connecting will do, for the panel header.
  * Deliberately never says "secure" or "private" — it says where the request goes.
+ *
+ * The `profile` argument is the second half of that honesty, added in v0.31.0.
+ * Naming the host was never the whole picture: a request also carries the
+ * reader's profile when the question is about them, and a line that named only
+ * the destination *understated* what left. The summary now says both, in the one
+ * place the reader already looks before sending anything.
+ *
+ * Passing no `profile` keeps the old shape, so a caller that has no profile to
+ * hand still gets a true sentence rather than a claim about one.
  */
-export function egressSummary(provider, override) {
+export function egressSummary(provider, override, profile) {
   if (!provider) return '';
   if (provider.transport === 'agy') {
     return 'Not reachable from a browser. Nothing on this page can sign in to Antigravity.';
   }
   const base = effectiveBaseUrl(provider, override);
+  // Inlined rather than imported: this registry is deliberately dependency-free
+  // (it has no imports at all), and this is three characters of predicate. The
+  // rule itself \u2014 and the tests that hold it \u2014 live in `assistant.js`.
+  const hasProfile = !!profile
+    && ['field', 'degree', 'nationality'].some((key) => typeof profile[key] === 'string' && profile[key].trim());
+  const about = hasProfile
+    ? ' A question about you also carries your profile \u2014 field, degree'
+      + (typeof profile.nationality === 'string' && profile.nationality.trim() ? ', nationality' : '')
+      + '. A question about a programme carries neither.'
+    : '';
   if (provider.category === 'local') {
-    return `Requests go to ${base || 'a local server'} on this device. Nothing is sent to the internet by ScholarHub.`;
+    return `Requests go to ${base || 'a local server'} on this device. Nothing is sent to the internet by ScholarHub.${about}`;
   }
   if (!base) return 'Set a base URL before this can be used.';
   let host = base;
@@ -422,7 +441,7 @@ export function egressSummary(provider, override) {
   } catch {
     /* keep the raw string when it is not a URL yet */
   }
-  return `Requests go directly from this page to ${host}. ScholarHub has no server and never sees your key.`;
+  return `Requests go directly from this page to ${host}. ScholarHub has no server and never sees your key.${about}`;
 }
 
 /** Mask a key for display: enough to recognise, not enough to use. */

@@ -1,9 +1,13 @@
 # Schema — the requirement entity
 
-**Status:** proposal, written 2026-10-08. The schema and the five worked examples are real;
-the **data file holds only the 5 hardest records** (`data/requirements.json`), as the proof
-that the schema can hold what providers actually publish. The remaining 45 are a sourcing
-pass and are the owner's call.
+**Status:** in use, written 2026-10-08. The schema and the five worked examples are real.
+The data file now holds **13 records** — the 5 hardest, plus sourcing batch 1 (8 records,
+v0.32.0). The remaining 37 are an ongoing sourcing pass.
+
+**Two corrections landed during batch 1** and are recorded in §3.1 and §3.2: the validator
+demanded `scale` on a `rank` where the schema says `of`, and the sourcing pass turned out to
+be dominated by a case the seven kinds did not name — a *criterion* with no published
+threshold.
 
 This is the companion to `SCHEMA-PERSONAL-PROFILE.md`. That document defines the *applicant*
 side; this one defines the *requirement* side. A comparison needs both, and they meet only in
@@ -89,13 +93,161 @@ into `unstated`, which the current scalar cannot avoid:
 | `branches` | `branches[]` of `{minimum, scale}`, optional `alternatives[]` | the reader picks their branch — the provider states several |
 | `percentile` | `minimum` + `of` | a percentile bar, e.g. top 20% |
 | `rank` | `minimum` + `of` | a class-rank bar |
-| `prose` | `text` only, optional `varies_by` | stated, but with no single scalar form |
-| `none-stated` | `quote` | **the provider states there is no threshold** |
-| `unstated` | nothing | **the catalog has not looked** — the honest default |
+| `count` | `minimum` + **`unit`** (both mandatory) | a quantity with no ceiling — 240 ECTS |
+| `prose` | optional `varies_by` — the wording is the requirement's `text` | stated, but with no single scalar form |
+| `none-stated` | `quote` (the proof) | **the provider states there is no threshold** |
+| `unstated` | nothing, and the requirement carries **no** `text` | **the catalog has not looked** — the honest default |
 
 `prose`, `none-stated` and `unstated` are three *different facts*. `numeric`, `branches`,
-`percentile` and `rank` are four different *comparison procedures*. All seven are one closed
-set, and the validator rejects an eighth.
+`percentile`, `rank` and `count` are five different *comparison procedures*. All eight are one
+closed set, and the validator rejects a ninth.
+
+### 3.1 The dominant case is a criterion, not a threshold
+
+The five worked examples were chosen to be the *hardest*, which made them unrepresentative:
+four of them carry a real figure. The sourcing pass is mostly the opposite. Of the first
+eight records sourced, **five publish no academic figure at all**. Three distinct situations
+fell out, and the kind used for each is a decision, not an accident:
+
+| What the provider publishes | Kind | Why |
+|---|---|---|
+| A figure (3.0/4.0, top 10%, percentile 80) | `numeric` / `rank` / `percentile` / `branches` | the comparison runs |
+| **A rule with no single scalar** — several grading systems, or "excellent" | `prose` | stated, but no number holds it |
+| **Grades are a selection criterion, no bar published** (KTH: grades are 1 of 4 criteria; Melbourne: candidates are *ranked* on academic results) | `prose` | something *is* stated — that grades count — and it has no scalar form |
+| **Nothing about academic standards published on the page** | `unstated` | nothing is stated, so `prose` would be a claim |
+| **The bar is delegated** — the award requires admission to a programme that sets its own (Chevening's 2:1, Paris-Saclay's master's admission) | `prose` | the award genuinely publishes none; the bar exists elsewhere and is named |
+| The provider affirmatively says there is no threshold (Knight-Hennessy) | `none-stated` | the distinct fact |
+
+**A qualifier the provider itself supplies is part of the finding.** EESIC scores *"Student's
+ranking, **if available**"* and CGRS-D lists *"relative standing in program (**if available**)"*
+among its indicators. Both providers know a class rank often does not exist — which is the same
+fact this schema records as `unstated` on the reader's side, so a `rank` rule must never be
+treated as answerable by default. The phrase is kept verbatim in `text` so the person wiring
+`compare.js` can see that the provider expects `unknown` here too.
+
+**The third row is the one that needed a decision.** `unstated` was tempting and would have
+been wrong: it renders as *"the catalog does not record a GPA requirement — check the
+provider"*, which would **throw away the finding** that the provider does weigh grades. That
+is the `pec-pg-brazil` lesson again — a finding must survive as a finding. `prose` keeps it,
+at the cost of a sentence in `compare.js` that currently says "more than one scale or
+branch", which does not describe a ranked field. **That sentence needs a variant when Phase
+3 wires this file to the UI; it is an open item, not a shipped defect**, because nothing in
+the app reads `requirements.json` yet.
+
+### 3.2 `unstated` means "checked, nothing published" — not "nobody looked"
+
+`source` and `last_verified` are **mandatory on every requirement**, so an `unstated` entry
+necessarily carries the URL that was checked and the date it was checked on. That makes the
+schema's own gloss — "the catalog has not looked" — imprecise. What it actually means is
+*"the provider's published material was read and states no threshold"*, which is a different
+claim from `none-stated` (*"the provider states there is no threshold"*). Both remain
+distinct, both remain honest, and neither may collapse into the other.
+
+### 3.3 A portion is `of`, a point on a scale is `scale`
+
+`numeric` carries `minimum` + `scale`. `percentile` and `rank` carry `minimum` + **`of`** —
+top 10% is 10 *of* 100, not 10 on a 4.0 scale. The validator originally required `scale` for
+all three, which contradicted both this document and its own `alternatives` path (which reads
+`of`), making a `rank` legal as an alternative and illegal at the top level. Fixed in
+v0.32.0: the denominator field follows the kind, and a leftover `scale` on a portion is now
+an error rather than being silently ignored.
+
+### 3.4 `credits` is its own requirement, and a count is not a scale
+
+The Erasmus Mundus programmes publish almost no GPA figure — but most publish a **credit
+load**, and it is the only numeric academic gate they do state: *"a higher education degree
+with a minimum of 240 ECTS-credit points"* (TERRA, NORISK, FRP++), *"a Bachelor's Degree
+(180 ECTS)"* (MaMaSELF). Dropping that because it is not a grade would have meant discarding
+the one enforceable threshold in the family.
+
+It is its own **requirement** kind (`credits`, alongside `gpa` and `language`) because it is a
+different thing being required: 240 ECTS is a statement about the *length and shape* of a
+prior degree, not about grades earned in it.
+
+It is its own **rule** kind (`count`) because it is a quantity, not a reading:
+
+- it has **no ceiling** — 240 is not 240 *of* anything, and a graduate can hold 300;
+- so it carries **neither `scale` nor `of`**, both of which would be fabrications;
+- and it carries a mandatory **`unit`**, for the mirror-image reason a GPA carries a scale:
+  240 credits means four different things in ECTS, US semester credit hours and the Nepali
+  system. A `count` with no unit is as uncomparable as a `numeric` with no scale.
+
+Where the required load differs by route — FRP++ needs 300 for tracks including UNINA, 240
+otherwise — the lower figure goes in `minimum` and the difference is stated in `text` with
+`varies_by`. A per-route `branches` was considered and rejected: two figures that depend on a
+mobility track the reader has not chosen yet is not a branch the reader can pick from their
+own profile.
+
+### 3.5 Open item — a scale that runs downward
+
+MS² states its bar three ways: *"an average grade higher or equal to B according to the ECTS
+grading system, i.e. the best 35% of students (corresponding to a grade of up to 2.8 in the
+German grading scale)"*. The 35% is recorded as `rank`; the German 2.8 is quoted in `text` and
+**not** recorded as a figure, because the German scale runs *downward* — 1.0 is best — and
+every numeric rule in this schema assumes higher is better. `compare.js` compares with `>=`
+and the validator rejects a `minimum` above its own `scale` on that assumption.
+
+Recording 2.8 as a `numeric` minimum would have produced the opposite verdict from the one
+the provider means. A `direction` field (`higher-is-better` / `lower-is-better`) is the fix
+and it is **not yet built**; until it is, an inverted-scale threshold is quoted, not encoded.
+
+Batch 3 produced a **second** instance, which makes this a pattern rather than a curiosity.
+CGRS-D's only numeric academic threshold is a **ceiling**, not a floor: *"no more than 36
+months of full-time equivalent doctoral study"*. A `count` rule compares with `>=`, so 36
+would have been recorded as a minimum you must exceed — the precise opposite of a cap. It is
+quoted in `text` and not encoded, for the same reason as the German 2.8.
+
+Two independent cases in two batches is the point at which an open item stops being an edge
+case, so batch 4 was run under a standing trigger: **a third instance gets `direction` built
+before the pass continues.** Batch 4 produced none, so the trigger has not fired and the pass
+continued. The trigger stands for batch 5 — it is not discharged by one quiet batch.
+
+### 3.6 The delegated bar is the dominant shape, not an edge case
+
+Measured across the 31 records sourced so far: **5 carry a comparable GPA figure. 8 state
+explicitly that the academic bar is set by somebody else.** The second number is larger than the
+first, and it is not noise — it is how large programmes are actually administered.
+
+| Record | Who actually sets the academic bar |
+|---|---|
+| `chevening-scholarship` | the UK university making the unconditional offer |
+| `si-global-professionals` | University Admissions, not the Swedish Institute |
+| `erasmus-mundus-joint-masters` | each consortium, per programme |
+| `paris-saclay-international-masters` | the master's programme's own admission decision |
+| `holland-scholarship` | each of 34 participating institutions |
+| `msca-doctoral-networks` | each funded consortium, per EURAXESS vacancy |
+| `nz-scholarships` | the applicant's preferred institution, in its own words |
+| `anso-cas-twas-unesco-phd` | USTC/UCAS admission criteria for international students |
+
+**This reframes what the file is for.** The instinct is that `requirements.json` exists to hold
+thresholds. It mostly does not, and cannot: for a quarter of the records the honest and *useful*
+answer is not a number but a pointer — *"this award has no academic bar of its own; the host
+programme sets it"* is more actionable than any figure would be, because it tells the reader
+which document to open.
+
+The consequence for Phase 3: `unresolvable` is the wrong reason code for these eight. They are
+not unresolvable — they are **delegated**, which is a definite answer, and rendering it as
+"we could not work this out" would understate what is known. A `delegated` reason code is
+therefore an open item alongside `direction`.
+
+### 3.7 The wording has exactly one home
+
+`text` lives on the **requirement**, never on the rule. `of.text` is not permitted.
+
+This was not the original shape — the first five records put a `prose` finding's wording inside
+the rule, on the reasoning that the rule "is its own explanation", and later records duplicated
+it to the requirement. By the time it was measured, **17 records carried the identical string in
+both fields and 7 carried it only on the rule.** Byte-identical was verified, not assumed: every
+duplicate pair matched exactly, so collapsing them lost no wording (37 distinct strings before,
+37 after).
+
+The defect that mattered was not the duplication but the **7 records with no requirement-level
+`text` at all** — a consumer reading `text` renders nothing for those, and a blank requirement
+reads as "no requirement" rather than "not loaded". Two shapes, one of them silently empty, is
+worse than either shape alone.
+
+The rule now: **`text` is required on every requirement, except `unstated`, where it is
+forbidden** — because there the absence *is* the finding, and a sentence would be a claim.
 
 ### Mapping to `src/compare.js` — every reason code already exists
 
@@ -150,18 +302,57 @@ five are transcribed verbatim into `data/requirements.json`.
 
 `scripts/validate-requirements.mjs`, added to the `npm test` chain:
 
-1. `record_id` must exist in `data/scholarships.json` — a requirement for no record is a typo.
-2. `kind` must be one of the seven. An eighth is a schema change, not a data edit.
-3. `numeric` **must** carry both `minimum` and `scale`. A numeric requirement without a scale
-   is rejected — it is the same defect as a GPA without a scale, on the other side.
-4. A non-numeric kind **must not** carry `minimum` or `scale` — those belong inside `branches`.
-5. Every branch must carry both `minimum` and `scale`.
-6. `source` and `last_verified` are **mandatory on every requirement**. A requirement with no
-   source is not verifiable; a requirement with no `last_verified` cannot be aged.
-7. `last_verified` must be a real ISO date, not in the future.
-8. `text` is mandatory on `prose` and `none-stated` — those kinds *are* their text.
+Every rule below is executable and each was observed to fail on a planted defect before it was
+trusted. Kept in step with the code deliberately: this list said "one of the seven" and
+described the old `text` rule for two releases after both had changed.
 
-Rule 6 is the one worth stating plainly: **a requirement is the thing that goes stale
+**Shape of the file**
+
+1. The catalog root must be a JSON array; `requirements.json` must be an object keyed by record id.
+2. `record_id` must exist in `data/scholarships.json` — a requirement for no record is a typo,
+   and a typo means a requirement that silently never gets compared.
+3. Each entry must carry a non-empty `requirements` array.
+4. Requirement `kind` must be one of `gpa`, `language`, `credits`. A fourth is a code change.
+5. `of` must be an object, and its `kind` one of the eight in §3.
+
+**Numbers**
+
+6. `numeric`, `percentile` and `rank` need a numeric `minimum` **and** the denominator that
+   belongs to the kind — `scale` for `numeric`, `of` for a portion. A `minimum` above its own
+   `scale` is rejected as not a reading.
+7. `count` needs a numeric `minimum` **and** a non-empty `unit`, and must carry neither `scale`
+   nor `of` — a quantity is not a portion and not a reading.
+8. `branches` needs at least two branches, each with `minimum` + `scale`, and no top-level
+   `minimum` or `scale`. One branch is the `numeric` kind. `alternatives` may hold
+   `numeric`/`percentile`/`rank` entries, each with `minimum` + `of`.
+9. `prose` and `none-stated` must not carry a number — they are recorded precisely because no
+   single number holds them.
+
+**Meaning**
+
+10. `none-stated` needs a `quote`. It is a claim about what the provider says, so it carries
+    the provider's words.
+11. `unstated` must be bare, and must carry **no** `text` — the absence is the finding, and a
+    sentence there would be a claim.
+12. `rule.text` is never allowed. The wording lives on the requirement (§3.7).
+13. `applies_to` and `varies_by`, when present, must be non-empty strings. A qualifier that
+    silently does nothing is worse than no qualifier.
+
+**Provenance**
+
+14. `source` and `last_verified` are mandatory on every requirement. A requirement with no
+    source is not verifiable; one with no `last_verified` cannot be aged.
+15. `last_verified` must be a real calendar date — `2026-02-30` is rejected — and not in the
+    future. One 12 months old or older raises a warning.
+16. `text` is required on every requirement except `unstated` (§3.7).
+
+**One warning, not an error**
+
+17. A comparable GPA figure in this file while the catalog record still has
+    `eligibility.gpa_minimum = null` means the two files disagree about a number a reader can
+    see. It is a warning rather than an error because the catalog is migrated separately.
+
+Rule 14 is the one worth stating plainly: **a requirement is the thing that goes stale
 fastest.** Providers change a threshold without changing the page, and there is no diff to
 notice. `last_verified` is how the app can eventually say "this was checked 14 months ago"
 rather than presenting a stale figure as current.
@@ -170,10 +361,17 @@ rather than presenting a stale figure as current.
 
 ## 6. What this does not do
 
-- **It does not change `data/scholarships.json`.** The five records keep their prose
-  `gpa_minimum` untouched; the new file sits beside them. Nothing in the app reads it yet.
-- **It does not invent a number.** Every value in the five examples is transcribed from the
-  parent record's own text; none was computed, averaged, or converted.
+- **It does not change `data/scholarships.json`.** The 50 records keep their
+  `eligibility.gpa_minimum` untouched; the new file sits beside them. **Nothing in the app
+  reads it yet**, which is why the two warnings above are warnings and not failures.
+- **It does not invent a number.** Every value is transcribed from the provider's own page and
+  carries the URL and the date it was read. None was computed, averaged, or converted — and
+  where a conversion would be needed (MS²'s German 2.8, the German *up to* reading) the figure
+  is quoted rather than encoded.
+- **It is not finished.** 31 of 50 records carry a requirement. The remaining 19 include two
+  that are deliberately unsourced: `eth-excellence-scholarship`, whose eligibility text sits in
+  JavaScript accordions that could not be read, and `fulbright-foreign-student`, which is
+  administered by roughly fifty country commissions rather than by one programme.
 - **It does not add a language-requirement shape.** The same problem exists for
   `language_requirements` (15 prose dicts), and it needs the same treatment, but the GPA
   case is the one that blocks the comparison engine, so it goes first.
