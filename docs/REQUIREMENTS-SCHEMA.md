@@ -117,6 +117,7 @@ fell out, and the kind used for each is a decision, not an accident:
 | **Nothing about academic standards published on the page** | `unstated` | nothing is stated, so `prose` would be a claim |
 | **The bar is delegated** — the award requires admission to a programme that sets its own (Chevening's 2:1, Paris-Saclay's master's admission) | `prose` | the award genuinely publishes none; the bar exists elsewhere and is named |
 | **The provider says its criteria are not yet published** (REM+ 2: *"currently under review … will be published shortly"*) | `prose` | the provider states something definite about the state of its own procedure — that is a finding, not an absence |
+| **The page is an index, not one award** (Tsinghua's scholarship page lists four programmes; Tongji's lists eight; the Erasmus Mundus catalogue lists 218) | `prose` | *not* `delegated_to`: a hub is not an award that delegates, it is a page listing several awards, and the reader needs to know which one they are looking at |
 | The provider affirmatively says there is no threshold (Knight-Hennessy) | `none-stated` | the distinct fact |
 
 **A qualifier the provider itself supplies is part of the finding.** EESIC scores *"Student's
@@ -211,7 +212,7 @@ standing.
 
 ### 3.6 The delegated bar is the dominant shape, not an edge case
 
-Measured across the 31 records sourced so far: **5 carry a comparable GPA figure. 8 state
+Measured across the 41 records sourced so far: **6 carry a comparable GPA figure, and 10 state
 explicitly that the academic bar is set by somebody else.** The second number is larger than the
 first, and it is not noise — it is how large programmes are actually administered.
 
@@ -225,6 +226,14 @@ first, and it is not noise — it is how large programmes are actually administe
 | `msca-doctoral-networks` | each funded consortium, per EURAXESS vacancy |
 | `nz-scholarships` | the applicant's preferred institution, in its own words |
 | `anso-cas-twas-unesco-phd` | USTC/UCAS admission criteria for international students |
+| `iccr-sushma-swaraj-scholarship` | the admitting university, per subject |
+
+> **A note on the six figures, because it matters more than the count.** Three of them are a
+> **class rank** — TU Delft's top 10%, MS²'s best 35%, DAAD EPOS's upper third — and a reader's
+> profile carries no class rank. Only **three** (KAUST's `3.0/4.0`, MEXT's field-split branches,
+> GKS's four-scale branches) can be compared against a GPA at all. **Half of this catalog's real
+> thresholds are positions in a cohort rather than grades**, which is a different thing for an
+> applicant to know and to evidence.
 
 **This reframes what the file is for.** The instinct is that `requirements.json` exists to hold
 thresholds. It mostly does not, and cannot: for a quarter of the records the honest and *useful*

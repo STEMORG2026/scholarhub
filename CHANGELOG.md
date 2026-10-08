@@ -1,5 +1,67 @@
 # Changelog
 
+## [0.39.0] - 2026-10-08
+
+### Added — five more records, and 41 of 50
+
+| Record | What the provider actually says | Kind |
+|---|---|---|
+| `daad-epos` | **"far above average results (upper third)"** — a real bar, as a cohort position | `rank` 33/100 |
+| `hit-scholarship` | "Excellent academic performance", no figure; plus real English and Chinese thresholds | `prose` + **`language`** |
+| `iccr-sushma-swaraj-scholarship` | no bar of its own — defers to "the concerned institute's website for eligibility criteria" | `prose` + `delegated_to` |
+| `tsinghua-scholarships` | an index of four separate programmes | `prose` |
+| `tongji-scholarships` | an index of eight separate programmes | `prose` |
+
+Measured with a confirmed `3.62/4`: `not-recorded` falls **14 → 9**, `criterion-only` rises
+**18 → 21**, `delegated` **9 → 10**.
+
+### Added — a seventh shape: the page is an index, not an award
+
+Tsinghua's scholarship page lists the Chinese Government Scholarship, the Asian Future Leaders
+Scholarship, the Atomic Energy Scholarship and full scholarships attached to particular master's
+programmes. Tongji's lists eight. Neither publishes a bar, because neither *is* an award.
+
+This is deliberately **not** `delegated_to`. A hub is not an award that delegates its bar; it is a
+page listing several awards, and the useful thing to tell a reader is *which one they are looking
+at*. The Erasmus Mundus catalogue entry has been that shape since v0.33.0 and is now written up
+alongside the others in §3.1.
+
+### Measured — half the catalog's real thresholds are not grades
+
+Six records now carry a comparable figure. **Three of them are a class rank** — TU Delft's top
+10%, MS²'s best 35%, DAAD EPOS's upper third — and a reader's profile carries no class rank. Only
+**three** can be compared against a GPA: KAUST's `3.0/4.0`, MEXT's field-split branches, and GKS's
+four-scale branches.
+
+That is worth stating plainly, because it is not what "the catalog has six thresholds" suggests.
+**A cohort position is a different thing for an applicant to know and to evidence than a grade
+average is**, and half of this catalog's real bars are the former.
+
+### Noted — the divergence warnings are now the catalog's problem, not the file's
+
+Three warnings now fire: `tu-delft-van-effen`, `ms2-emjm` and `daad-epos` each carry a comparable
+figure in this file while the catalog record still has `eligibility.gpa_minimum = null`.
+
+That is a consequence of the wiring worth recording. Since v0.37.0 the app **prefers** this file
+and falls back to the catalog scalar only for records nobody has sourced — so the scalar is now a
+legacy field, and each warning marks a record where the two disagree. When the last nine records
+are sourced the scalar carries nothing that this file does not, and the three warnings become a
+prompt to drop it rather than to reconcile it.
+
+### Refused, and why
+
+- **`uc-international-first-year`** — the page renders its content through a client-side
+  `PageAssist` component; the fetch returned the heading and nothing else. Same failure as ETH's
+  JavaScript accordions. **Not recorded**, because writing `unstated` would assert that the
+  provider publishes no threshold about a page that was never read.
+- **`csc-government-scholarship`** — `campuschina.org` returns no readable content. The catalog
+  already records CSC as HTTP-412-blocked rather than guessed; this is the same wall.
+- **`resco-emjm`** — Cloudflare interstitial, third attempt. Treated as unreachable by fetch.
+
+`npm test` unchanged at **256** — data only, no new rules. Requirements validation 0 errors, 3
+warnings, all three real. **No user-visible behaviour changes** beyond five more records
+answering instead of reporting `not-recorded`.
+
 ## [0.38.0] - 2026-10-08
 
 ### Fixed — 18 of 36 records were rendering a sentence that was false about them

@@ -664,5 +664,83 @@
         "last_verified": "2026-10-08"
       }
     ]
+  },
+  "tsinghua-scholarships": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "This page is an index, not one award: it lists the separate scholarship programmes Tsinghua's graduate admissions office administers for international students — the Chinese Government Scholarship, the Asian Future Leaders Scholarship Program, the Atomic Energy Scholarship Program of China, and full scholarships attached to particular master's programmes (Schwarzman Scholars, Nuclear Engineering and Management, Public Health, and several Public Administration programmes). No academic threshold is published at this level; each of those programmes publishes its own eligibility, and the Chinese Government Scholarship is a separate record in this catalog.",
+        "source": "https://yz.tsinghua.edu.cn/en/Financial_Aid/Scholarship_Application.htm",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "tongji-scholarships": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "This page is an index, not one award: Tongji's international students office lists eight separate scholarship programmes — Chinese Government Scholarship (Bilateral Program / Category A), CSC Silk Road Program, CSC High Level Postgraduate Program, Shanghai Municipal Government Scholarship, Tongji University International Student Excellence Scholarship, Tongji & Bank of China Global Talent Scholarship, the Marine Scholarship of China, and the Youth of Excellence Scheme. No academic threshold is published at this level. The only numeric criteria visible here are age limits, and they belong to the individual programmes rather than to the page: the Shanghai Municipal Government Scholarship sets 25 and under for bachelor's, 35 for master's and 40 for doctoral, and the CSC High Level Postgraduate Program sets 35 for master's and 40 for doctoral.",
+        "source": "https://study.tongji.edu.cn/en/Admission_Information/Scholarship/School_Scholarship.htm",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "hit-scholarship": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "HIT publishes one academic requirement and no figure for it: applicants must show \"Excellent academic performance\". No GPA, grade average, marks percentage, degree classification or class rank is published as a bar. The rest of the eligibility is structural — degree level and age together: a high school diploma holder under 25 for a bachelor's, a bachelor's degree holder under 30 for a master's, a master's degree holder under 35 for a doctoral. Bachelor's applicants must also submit a China Scholastic Competency Assessment (CSCA) score report, with no minimum score stated. Note that the award is tiered (Elite 100% tuition waiver, First 50%, Second 30%, Third 20%) and subject to an annual review that can terminate it — a renewal condition rather than an entry one.",
+        "source": "https://studyathit.hit.edu.cn/18367/list.htm",
+        "last_verified": "2026-10-08"
+      },
+      {
+        "kind": "language",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "Chinese-taught programmes: HSK level 4 with a score of 210 or above (valid for two years). English-taught programmes: Academic IELTS above 6.0 with no subtest lower than 5.5, or TOEFL iBT above 80, or an authorised equivalent. Applicants whose previous degree was taught in the relevant language may supply a certificate from that institution instead of a test score.",
+        "source": "https://studyathit.hit.edu.cn/18367/list.htm",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "daad-epos": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "rank",
+          "minimum": 33,
+          "of": 100,
+          "applies_to": "the upper third of the first academic exam (\"far above average results\")"
+        },
+        "text": "DAAD EPOS states a real academic bar, and it is a position in a cohort rather than a score: candidates must have \"completed an academic degree with far above average results (upper third)\", and the selection criteria repeat it as \"above-average result for first academic exam – top performance third\". The other gates are non-academic: a Bachelor's degree, normally a four-year course, in an appropriate subject; at least two years' professional experience after the first degree; academic degrees normally no more than six years old; and residence in Germany for no longer than 15 months at the deadline. For courses taught in German, DSH 2 or TestDaF 4 must be passed before the course starts, with a minimum of B1 at application.",
+        "source": "https://www2.daad.de/deutschland/stipendium/datenbank/en/21148-scholarship-database?detail=50076777",
+        "last_verified": "2026-10-08"
+      }
+    ]
+  },
+  "iccr-sushma-swaraj-scholarship": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose",
+          "delegated_to": "the admitting university, per subject"
+        },
+        "text": "The scheme publishes no academic threshold of its own, and says so in effect: applicants are advised to \"research in a dedicated manner on the specific admission criteria laid down by various Universities for each subject\" and to \"refer to ... the concerned institute's website for eligibility criteria\". What it does publish is subject prerequisites and exclusions — candidates for science or engineering at undergraduate level must have studied Physics, Chemistry and Mathematics at Standard XII, and a GMAT score is mandatory for MBA — plus age limits of 18 minimum, 35 maximum for undergraduate, postgraduate, certificate and diploma courses, and 40 maximum for PhD, with no upper limit for Hindi, Sanskrit or Indian performing arts courses. Medical, paramedical, law and integrated courses are excluded. Mark-sheets that do not show the student's grades are not accepted, so a transcript is required even though no grade bar is stated.",
+        "source": "https://www.cgibirgunj.gov.in/docs/1772693562ICCR-Advertisement.pdf",
+        "last_verified": "2026-10-08"
+      }
+    ]
   }
 }
