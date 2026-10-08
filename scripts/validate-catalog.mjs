@@ -270,10 +270,14 @@ async function probe(url) {
         // nothing to recover — the response itself is returned either way, so
         // swallowing it here cannot hide a problem the caller would act on.
         //
-        // The reason is inside the block rather than above it because
-        // `no-empty` reads the block, not the comment: an empty `catch {}` with a
-        // paragraph over it is still an unexplained swallow to every reader and
-        // every tool.
+        // The reason is inside the block rather than above it because `no-empty`
+        // reads the block, not the comment: an empty catch with a paragraph over it
+        // is still an unexplained swallow to every reader and every tool.
+        //
+        // This wording is deliberate. Writing the pattern itself here — a catch with
+        // empty braces — made a scanner report this line as an empty catch, because it
+        // matches on the text and cannot tell code from a comment about the code. The
+        // explanation of why a block is empty is not the block.
       }
       return res;
     } finally {
