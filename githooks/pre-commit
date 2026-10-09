@@ -1,0 +1,99 @@
+#!/bin/sh
+# scholarhub pre-commit — the cheapest tier of the ladder.
+#
+# THE LADDER, cheapest first, strictly nested:
+#
+#     pre-commit   ⊆   pre-push   ⊆   CI (`verify`)
+#
+# This tier must stay fast enough that nobody is tempted to reach for `--no-verify`. It runs a
+# secret scan and the linter — about two seconds. Everything slower belongs at push time, and
+# the full suite (tests, both validators, the render smoke test) belongs there.
+#
+# This is a pre-flight, not the authority. CI is the authority. Passing here means the cheap
+# defects are already gone, not that the change is correct.
+#
+# DESIGN RULES (borrowed from the sibling projects, each of which learned it the hard way)
+#   1. Every stage runs. Failures accumulate and are reported together, rather than making the
+#      author discover problems one commit at a time.
+#   2. A missing tool is a FAILURE, not a skip.
+#   3. No `|| true` around anything that decides pass or fail.
+#
+# Install: npm run hooks:install
+# Bypass deliberately, never routinely: git commit --no-verify
+
+set -u
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT" || exit 1
+
+FAIL=0
+FAILED_STAGES=""
+
+fail() {
+  FAIL=1
+  FAILED_STAGES="$FAILED_STAGES $1"
+}
+
+# ── stage 1: nothing that looks like a credential is going in ────────────────
+#
+# A heuristic pre-filter, and honest about being one. It looks only at lines being ADDED, so a
+# string that has been in the tree for a year is not this commit's problem; and it requires
+# both a name that promises a credential and a value long enough to be one, because a bare
+# grep for "key" matches half of this repository's AI-provider code.
+#
+# It is NOT a substitute for real secret scanning. It cannot catch a credential pasted into a
+# file that is already committed, and it has no entropy model. Deliberate sentinels are named
+# `CANARY…` and are skipped; add `secret-scan:allow` to any line that is deliberate.
+#
+# The separator classes are `{0,3}`, not `{1,3}`. The first version required at least one
+# character before `[=:]`, so it consumed the separator itself and `apiKey: "sk-…"` matched
+# nothing — the scan reported "clean" on a deliberately planted key. Found by running it, not
+# by reading it, which is the only way this kind of pattern is ever found.
+scan_secrets() {
+  added="$(git diff --cached -U0 | grep -E '^\+' | grep -vE '^\+\+\+' || true)"
+  if [ -z "$added" ]; then
+    echo "  secret scan: nothing staged"
+    return 0
+  fi
+
+  hits="$(printf '%s\n' "$added" \
+    | grep -inE '(api[_-]?key|apikey|secret|token|passwd|password|private[_-]?key|access[_-]?key|client[_-]?secret)[^A-Za-z0-9]{0,3}[=:][^A-Za-z0-9]{0,3}[A-Za-z0-9_/+=.-]{20,}' \
+    | grep -viE 'CANARY|example|placeholder|redacted|secret-scan:allow' || true)"
+
+  if [ -n "$hits" ]; then
+    printf '%s\n' "$hits" | head -5
+    echo "  FAIL: something above looks like a credential being committed."
+    echo "        If it is deliberate, name it CANARY… or add 'secret-scan:allow' to the line."
+    return 1
+  fi
+  echo "  secret scan: clean"
+  return 0
+}
+
+# ── stage 2: the linter ──────────────────────────────────────────────────────
+# The first stage of `npm test`, and the cheapest thing in it. Running the whole suite here
+# would double the cost of every commit for no extra protection — pre-push runs it in full.
+run_lint() {
+  if ! command -v npm >/dev/null 2>&1; then
+    echo "  FAIL: npm is not on PATH, so the linter cannot run."
+    return 1
+  fi
+  if ! npm run --silent lint; then
+    return 1
+  fi
+  echo "  lint: clean"
+  return 0
+}
+
+echo "── pre-commit ──"
+scan_secrets || fail "secret scan"
+run_lint || fail "lint"
+
+echo ""
+if [ "$FAIL" -ne 0 ]; then
+  echo "pre-commit FAILED:$FAILED_STAGES"
+  echo "Fix the above, or 'git commit --no-verify' to override deliberately."
+  exit 1
+fi
+echo "pre-commit OK — commit-msg still to run, and pre-push before this leaves the machine."
+exit 0

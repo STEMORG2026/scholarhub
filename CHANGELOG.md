@@ -1,5 +1,45 @@
 # Changelog
 
+## [0.52.0] - 2026-10-09
+
+### Added — local enforcement: a three-hook ladder, and the rule defined once
+
+Until now nothing stopped a bad commit locally. `AGENTS.md` said so in as many words — *"This repository has no git hooks"* — and the audit had never raised it, so it was a gap nobody had named.
+
+`githooks/` now holds three hooks, installed with **`npm run hooks:install`** (one command, once per clone). They are a **ladder**, strictly nested, cheapest first:
+
+| Hook | What it runs | Cost |
+|---|---|---|
+| `commit-msg` | the Conventional Commits rule | instant |
+| `pre-commit` | a secret scan over the staged diff, then the linter | ~2s |
+| `pre-push` | `npm test`, `npm run build`, the bundle assertion, and **the refusal of a direct push to `main`** | ~5s |
+
+**`pre-commit` is kept cheap on purpose.** A hook slow enough to be annoying is a hook people learn to skip with `--no-verify`, and then it protects nothing. Anything slower belongs at push time.
+
+**The `pre-push` ref policy is the part that earns its place.** "Never push to `main`" is enforced by GitHub, but that refusal arrives *after* the push, from a server, phrased as a repository-rule violation. The hook refuses it before the push leaves, in the language of the rule itself.
+
+### The rule now exists once
+
+`scripts/check-commit-msg.mjs` is the single definition of the commit-message rule. The `commit-msg` hook and the `Conventional Commits` CI job both call it, so they cannot disagree about what a valid message is — which is the property the whole local tier rests on. The CI job shrank from twenty-five lines of inline shell to one command.
+
+It is importable — the CLI is guarded — so the rule is unit-tested in-process rather than by spawning it. **298 tests, 12 of them new.**
+
+### Two bugs found by running the code, not by reading it
+
+- **The secret scan reported "clean" on a deliberately planted key.** Its separator classes required at least one character *before* `[=:]`, so they consumed the separator itself and `apiKey: "sk-…"` matched nothing at all. Now `{0,3}`, verified three ways: a planted key fails, a `CANARY` sentinel passes, an inline `secret-scan:allow` passes.
+- **The first version of the checker executed on import**, so the test file could not import it. The CLI is guarded now, which is why the rule is testable in-process.
+
+### Deliberately not claimed
+
+The secret scan is a **heuristic, not a scanner** — it has no entropy model and cannot see a credential already in the tree. It is *not* the fix for `SUP-007`, which stays open and needs either GitHub's native secret scanning (a repository setting) or a paid gitleaks licence.
+
+### Verified
+
+- `sh githooks/pre-push --self-test` — proves the hook can refuse: the ref policy rejects `main`, allows an ordinary branch, and a failed stage latches the exit code.
+- The secret scan fails on a planted key, passes on a `CANARY` sentinel, and passes with `secret-scan:allow`.
+- The commit-message rule's negative controls: dropping `data:` from the type list fails two named tests.
+- Coverage **rose** to 95.82 / 87.75 / 96.27 against floors of 92 / 82 / 92.
+
 ## [0.51.0] - 2026-10-09
 
 ### Changed — the policy checks now block, and the protection check runs itself

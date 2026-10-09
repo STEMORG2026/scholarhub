@@ -163,8 +163,23 @@ Never force-push or rewrite history on `main`. Never delete or bypass the protec
 
 Four layers, and only the last two are authoritative:
 
-1. **Nothing at commit time.** This repository has no git hooks — `core.hooksPath` is unset and `.git/hooks` holds only the sample files. Nothing stops a commit locally.
-2. **Local gate (fast, bypassable).** `npm test` and `npm run build`, roughly a second together. Bypassable by simply not typing them, which is why they cannot be the last line of defence.
+1. **Local hooks (opt-in, bypassable).** `githooks/` holds a `commit-msg`, a `pre-commit` and a `pre-push` hook. Git does not read a committed directory by default, so they exist only after **`npm run hooks:install`** — one command, once per clone. Until it is run, nothing stops a commit locally. `git commit --no-verify` bypasses them deliberately at any time.
+
+   The three are a **ladder**, strictly nested, cheapest first — `commit-msg ⊆ pre-commit ⊆ pre-push ⊆ CI`:
+
+   | Hook | What it runs | Cost |
+   |---|---|---|
+   | `commit-msg` | the Conventional Commits rule, from `scripts/check-commit-msg.mjs` | instant |
+   | `pre-commit` | a secret scan over the staged diff, then the linter | ~2s |
+   | `pre-push` | `npm test`, `npm run build`, the bundle assertion, and the **refusal of a direct push to `main`** | ~5s |
+
+   **`pre-commit` is kept cheap on purpose.** A hook slow enough to be annoying is a hook people learn to skip with `--no-verify`, and then it protects nothing. Anything slower belongs at push time.
+
+   **The secret scan is a heuristic, not a scanner.** It looks only at lines being *added*, requires both a credential-shaped name and a 20+ character value, skips anything containing `CANARY`, `example`, `placeholder` or `redacted`, and honours an inline `secret-scan:allow`. It has no entropy model and cannot catch a credential already in the tree. It is not a substitute for the repository-level scanning tracked as `SUP-007`.
+
+   **None of this is the authority.** A hook is a pre-flight: passing it means the cheap defects are gone, not that the change is correct. CI re-runs everything, and the merge gate is what actually stops a bad change.
+
+2. **Local gate (fast, bypassable).** `npm test` and `npm run build`, roughly five seconds together. Bypassable by simply not typing them, which is why they cannot be the last line of defence.
 3. **Remote CI.** `.github/workflows/ci.yml` runs `npm ci`, `npm test`, `npm run build` and a build-artifact assertion on every pull request and every push to `main`. It invokes the same canonical command as layer 2, deliberately — a CI job with its own private check list drifts from what a developer can reproduce.
 4. **The merge gate (authoritative).** The `verify` check is a **required status check**, with `strict_required_status_checks_policy` on, so a PR cannot merge while it is red *or* while the branch is behind `main`. Verified by attempting a direct push and reading the rejection: `Required status check "verify" is expected`.
 

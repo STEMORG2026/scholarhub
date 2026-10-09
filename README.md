@@ -101,8 +101,14 @@ Requirements: Node.js 20+ and npm.
 
 ```sh
 npm install
+npm run hooks:install   # point git at githooks/ — once per clone; see AGENTS.md
 npm run dev
 ```
+
+`npm run hooks:install` is optional but recommended. It installs three local hooks — a
+`commit-msg` check, a `pre-commit` secret scan and linter, and a `pre-push` run of the full gate.
+They are a pre-flight, not the authority: CI re-runs everything and the merge gate is what
+actually stops a bad change. Skip the command and nothing is enforced locally.
 
 Open the URL printed by Vite. For a static production build:
 

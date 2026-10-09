@@ -1,0 +1,26 @@
+#!/bin/sh
+# scholarhub commit-msg hook — the commit-message rule, applied before the commit exists.
+#
+# WHY THIS IS A HOOK AND NOT ONLY A CI JOB
+# The `Conventional Commits` CI job already refuses a bad message, but it does so *after* the
+# commit has been written — the fix is then an amend or a rebase, and on a branch that has
+# been pushed it is a rewrite. Catching it here costs nothing and the message is still editable.
+#
+# The rule itself lives in `scripts/check-commit-msg.mjs`, so this hook and the CI job cannot
+# disagree about what a valid message is. That matters: the point of the local tier is that
+# passing it predicts passing the remote one.
+#
+# Install: npm run hooks:install
+# Bypass deliberately, never routinely: git commit --no-verify
+set -eu
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+# A missing interpreter is a FAILURE, not a skip: "not installed" must never read as "passed".
+if ! command -v node >/dev/null 2>&1; then
+  echo "FAIL: node is not on PATH, so the commit-message rule cannot be checked."
+  echo "      Install Node (see .nvmrc / ci.yml) or commit with --no-verify deliberately."
+  exit 1
+fi
+
+exec node "$REPO_ROOT/scripts/check-commit-msg.mjs" "$1"
