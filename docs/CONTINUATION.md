@@ -11,7 +11,7 @@ done and released:
 |---|---|
 | **1. Finish the audit's deferred recommendations** | ✅ Done — v0.42.0, v0.42.1 |
 | **2. The class-rank feature** | ✅ Done — v0.43.0 (comparison), v0.44.0 (input) |
-| **3. The sourcing pass** | ⏸ 49 of 50 — 1 blocked (CSC), with a precise reason |
+| **3. The sourcing pass** | ✅ Closed at 49 of 50 — CSC is blocked, and the reason is measured |
 
 The last section is a list of **decisions and directions**, not unfinished work. Nothing there
 blocks anything.
@@ -91,14 +91,33 @@ and *"it is not available"* are different claims, and only the second belongs in
 **The lesson from Fulbright held.** Fulbright was recovered by finding the right path; the same move
 recovered three more. Try a different route before accepting a block.
 
-**CSC is the last one, and its reason is now precise rather than a status code.** The Council's own
-application guide returns an **empty document** to both the fetching tool and a real browser. The
-reachable restatements are **host-university programme pages** — HIT Shenzhen's Type B announcement
-carries the age rules (under 35 for a master's, under 40 for a doctoral) and the language rules
-(TOEFL ≥ 80, IELTS ≥ 6.0), and no GPA bar — but those are one host university's route-specific rules,
-not the Council's general ones. **This project sources the provider**: HIT's own scholarship cites
-HIT's own page because HIT *is* its provider. So CSC stays unrecorded rather than recorded from the
-wrong page. **If it is ever recovered, the route is a CSC page that renders — not a host university's.**
+**CSC is the last one, the pass is closed at 49 of 50, and the reason is measured rather than
+assumed.** A second check (v0.47.0) tried the move that recovered the previous four — a different
+*route*, not a retry — and read no more, but it did establish what the block actually is:
+
+- `campuschina.org` and `csc.edu.cn` sit behind the **same China Telecom Global CDN edge**
+  (`ctgcdn.com`), which is why the two behave identically.
+- Both answer **HTTP 412 carrying a JavaScript bot-protection challenge** rather than a page.
+- The challenge is served to **every route tried**: every user agent (Chrome, `curl`, Googlebot,
+  mobile Safari, and an empty one), every path (the root, `/scholarships/`, `/universities/`, and
+  the record's own application path), and **both address families**.
+- A headless browser gets an **empty document** instead of the challenge page, so it is not solved
+  from here.
+
+**The check also found a sentence that was false about the host.** The note claimed `campuschina.org`
+*"resolves only an IPv6 (AAAA) address"*. It resolves an **IPv4 address too** (`203.33.8.147`), and
+both answer 412 — so that clause described how *this machine's resolver* was read, written down as a
+property of the host. Same class as v0.46.0's *"region-blocked"*. The note no longer infers that
+*"the block is on this network rather than on the portal"* either: what was measured is that every
+client tried met the challenge, and that is what it now says.
+
+The reachable restatements of CSC's rules are **host-university programme pages** — HIT Shenzhen's
+Type B announcement carries the age rules (under 35 for a master's, under 40 for a doctoral) and the
+language rules (TOEFL ≥ 80, IELTS ≥ 6.0), and no GPA bar — but those are one host university's
+route-specific rules, not the Council's general ones. **This project sources the provider**: HIT's
+own scholarship cites HIT's own page because HIT *is* its provider. So CSC stays unrecorded rather
+than recorded from the wrong page. **If it is ever recovered, the route is a CSC page that renders —
+not a host university's.**
 
 **Two display defects were found by sourcing, one in each of the last two releases.** Fulbright
 (v0.45.0) exposed `quote` being `null` on a `meets`/`fails` verdict, hiding a provider's alternative
@@ -114,27 +133,33 @@ pass rather than the argument for stopping.
 
 Nothing here is in flight. These are the open questions, in the order they matter.
 
-1. **The sourcing pass is at 49 of 50, and the last one is CSC.** Four records that were listed as
-   blocked in v0.45.0 came off the list in v0.46.0 — ETH, RESCO, UC and NSF — and the NSF entry
-   turned out not to be blocked at all. The detail is in §3 above. **The decision is whether to
-   accept 49/50 as the end of the pass.** The case for stopping: the one remaining record is blocked
-   by a provider whose own guide will not render, and the only reachable restatements are
-   route-specific host-university pages that this project's provenance rule will not accept. The
-   case for one more attempt: the last four were recovered by exactly the move that had been
-   dismissed for them.
+1. **The sourcing pass is closed at 49 of 50 — the decision is made, not pending.** The one attempt
+   still owed was made in v0.47.0, on the move that recovered the previous four, and it did not
+   recover CSC; it turned the reason from a status code into a measurement (§3). The pass ends
+   here: one record, blocked, with a reason that names what was tried. **This closure unblocks
+   item 3.**
 
 2. **`direction` is still unbuilt and still unneeded.** It would only be required if a rule ever
    encoded a downward *scale* rather than a position — MS²'s German "up to 2.8" is the standing
    example, and it is deliberately recorded as `prose`. Build it when a second such case appears,
    not before.
 
-3. **The catalog's `eligibility.gpa_minimum` scalar is now legacy.** The app prefers
-   `data/requirements.json` and falls back to the scalar only for unsourced records. **Five**
-   validation warnings mark where the two disagree — tu-delft, ms2, daad-epos, fulbright and, as of
-   v0.46.0, eth. All five are the same shape: a **figure** rule (`numeric`, `branches` or `rank`)
-   against a `null` scalar, because a bare number in that scalar would be scale-ambiguous — no record
-   carries `gpa_scale`. Records whose finding is *prose* write the scalar and do not warn. **When the
-   pass is declared finished, the right move is to drop the scalar, not reconcile it.**
+3. **The catalog's `eligibility.gpa_minimum` scalar is legacy — and dropping it is the next action,
+   now that the pass is declared finished.** The app prefers `data/requirements.json` and falls back
+   to the scalar only for unsourced records. **Five** validation warnings mark where the two disagree
+   — tu-delft, ms2, daad-epos, fulbright and, as of v0.46.0, eth. All five are the same shape: a
+   **figure** rule (`numeric`, `branches` or `rank`) against a `null` scalar, because a bare number
+   in that scalar would be scale-ambiguous — no record carries `gpa_scale`. Records whose finding is
+   *prose* write the scalar and do not warn. **The right move is to drop the scalar, not reconcile
+   it.**
+
+   **Scope, so this is not mistaken for a delete of one field:** the scalar is *read* by `compareGpa`
+   in `src/compare.js` (the fallback path), *warned about* by `scripts/validate-requirements.mjs`, and
+   used as fixture data in `src/ingest.test.js`; it is documented in `docs/DATA-SCHEMA.md` and
+   `docs/scholarship.template.json`. And **5 of the 50 records carry a *prose* scalar, not a number**
+   (`groundwater-emjm`, `mext-research-students`, `gks-graduate`, `kaust-fellowship`, `pec-pg-brazil`),
+   so "drop the field" and "drop the number" are not the same edit. Worth its own release, not a
+   footnote to this one.
 
 4. **The Phase 3 open items are all closed.** The `unresolvable` sentence variants landed in
    v0.38.0; `delegated` and `not-published` in v0.37.0. Nothing is waiting on a reader any more.
