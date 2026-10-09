@@ -1,0 +1,98 @@
+name: Conventions
+
+# WHY THIS IS SEPARATE FROM ci.yml
+# `ci.yml` runs the canonical local command (`npm test`, then `npm run build`) so that a
+# green local run predicts a green pipeline. These two jobs are not that. They are
+# *policy* checks on the shape of the contribution — the branch name and the commit
+# messages — and no developer produces them by typing anything locally. Folding them
+# into `ci.yml` would break the property that file exists to protect: every check in it
+# is reproducible on the developer's machine.
+#
+# They live in their own workflow so the required status checks have one clear owner and
+# cannot be silently dropped by an edit to the larger file. STEMMA does the same thing,
+# for the same reason, in its `required-checks.yml`.
+#
+# BOTH RULES WERE ALREADY WRITTEN DOWN AND WERE NOT ENFORCED.
+# `AGENTS.md` §"Branch and merge policy" says branch as `<type>/<slug>`. §"Commit
+# conventions" says Conventional Commits. Until now the only thing holding either was a
+# careful human, and `AGENTS.md` itself makes the argument: a local gate is "bypassable
+# by simply not typing them, which is why they cannot be the last line of defence".
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# Least privilege: both jobs only read the repository.
+permissions:
+  contents: read
+
+concurrency:
+  group: conventions-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  branching-strategy:
+    name: Branching Strategy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check the branch name
+        env:
+          # On a pull_request the source branch is github.head_ref. github.ref_name is
+          # "<n>/merge" and would satisfy any pattern, so it must not be used here.
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+          # `dependabot` is in this list because Dependabot opens PRs from
+          # `dependabot/npm_and_yarn/...`, and `.github/dependabot.yml` deliberately
+          # routes every dependency change through the same gate as any other PR. A
+          # branch rule that rejected them would make that file's stated policy
+          # unenforceable.
+          if [[ ! "$BRANCH" =~ ^(feat|fix|data|docs|test|chore|ci|refactor|dependabot)/.+ ]]; then
+            echo "::error::Branch '$BRANCH' does not follow <type>/<slug> (AGENTS.md)."
+            echo "Allowed: feat/ fix/ data/ docs/ test/ chore/ ci/ refactor/ dependabot/"
+            exit 1
+          fi
+          echo "Branch name OK: $BRANCH"
+
+  conventional-commits:
+    name: Conventional Commits
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # Unlike ci.yml, which checks out shallow because no step inspects history,
+          # this job reads every commit in the pull request's range.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check every commit message
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          # The type list is written out rather than delegated to a linter's default,
+          # because `data:` is this repository's most-used type (17 of the last 60
+          # commits) and it is NOT in the conventional-commits default set. Delegating
+          # would reject the repository's own history on day one.
+          pattern='^(feat|fix|data|docs|test|chore|ci|refactor|revert|perf)(\([^)]+\))?!?: .+'
+          bad=0
+          # --no-merges: a merge of `main` into the branch is not a contribution, and
+          # its subject ("Merge branch 'main' ...") is not a Conventional Commit.
+          while IFS= read -r subject; do
+            [ -z "$subject" ] && continue
+            if [[ ! "$subject" =~ $pattern ]]; then
+              echo "::error::Not a Conventional Commit: $subject"
+              bad=1
+            fi
+          done < <(git log --no-merges --format=%s "$BASE..$HEAD")
+
+          if [ "$bad" -ne 0 ]; then
+            echo
+            echo "Expected: <type>(<scope>): <description>"
+            echo "Types: feat fix data docs test chore ci refactor revert perf"
+            exit 1
+          fi
+          echo "All commit messages are Conventional Commits."
