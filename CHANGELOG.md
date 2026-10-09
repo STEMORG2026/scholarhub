@@ -1,5 +1,60 @@
 # Changelog
 
+## [0.48.0] - 2026-10-09
+
+### Added — the CI controls this repository documented but did not enforce, and the two scans it lacked
+
+Four new workflows, all additive. Nothing in `ci.yml`, the app, the catalog or the data changed, and
+`verify` is still the only required check.
+
+**`conventions.yml` — the rules `AGENTS.md` already stated.** The branch-name rule (`<type>/<slug>`)
+and the Conventional Commits rule had been written down for many releases and were held by nothing
+but a careful human. Both are now checked on every pull request.
+
+Two things the check had to get right, **both found by running it against the real history rather
+than a fixture**:
+
+- **`data:` is not in the conventional-commits default set**, and it is this repository's most-used
+  type — 17 of the last 60 commits. Delegating to a linter's default would have rejected the
+  repository's own history on day one, so the types are enumerated instead.
+- **`dependabot` must be allowed as a branch prefix.** Dependabot opens PRs from
+  `dependabot/npm_and_yarn/…`, and `.github/dependabot.yml` deliberately routes every dependency
+  change through the same gate as any other PR. A branch rule that rejected them would have made
+  that file's stated policy unenforceable.
+
+It also found that `AGENTS.md`'s own list was incomplete: `ci:` is used in the history and was never
+named there. It is named now.
+
+**`action-pins.yml` — the pinning `ci.yml` already does, made structural.** `ci.yml` pins its actions
+to commit SHAs and explains why, but nothing checked it, so a future edit could drop a pin back to
+`@v7` with every test still green.
+
+**`codeql.yml`** — static analysis. Nothing here read the source for defects: `npm test` runs tests,
+validators and a render smoke test, and `npm audit` reads dependencies. Neither looks *inside* the
+app. Findings report to the Security tab.
+
+**`scorecard.yml`** — OpenSSF Scorecard. Every supply-chain claim in this repository was
+self-reported; this is the same questions answered by a third party and published as a public score.
+
+### Verified
+
+- **The commit check passes on the real history** (60 commits) and rejects a planted
+  `fixed the parser`, `update stuff`, `feat add thing` and `Feat: capitalised type`. Merge commits
+  are excluded — merging `main` into a branch is not a contribution.
+- **The branch check passes on every prefix this repository has actually used** (`data`, `feat`,
+  `fix`, `docs`, `dependabot`, `ci`, `chore`) and rejects `mybranch`, `patch-1` and `main`.
+- **The pin guard is clean on the new tree and names a planted `actions/checkout@v7`.** Its own first
+  version failed on itself — an unanchored `uses:` grep matched its own help text — so the pattern is
+  anchored to the start of a line, where a real YAML key or list item sits.
+- `TZ=UTC npm test` — 286 tests, 0 fail. Catalog 0 errors/0 warnings. Requirements 0 errors,
+  5 known warnings. Render smoke 28 renders, 0 uncaught errors.
+
+### Not done, deliberately
+
+`verify` remains the only required check. `conventions.yml` and `action-pins.yml` report, but adding
+either to the ruleset is a separate decision — and a required check must be one a workflow on `main`
+actually produces, or the pull request waits for it forever. `AGENTS.md` now records that trap.
+
 ## [0.47.0] - 2026-10-09
 
 ### Changed — the CSC block reason now claims only what was measured, and the pass closes at 49 of 50
