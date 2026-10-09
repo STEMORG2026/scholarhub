@@ -1,0 +1,71 @@
+name: CodeQL
+
+# WHY THIS EXISTS
+# Nothing in this repository reads the source for security defects. `npm test` runs the
+# unit tests, the catalog and requirements validators and the render smoke test; `npm
+# audit` reports known advisories in dependencies. None of those look *inside* the code.
+# This is a static analysis of the app itself — React views, the catalog loaders, the
+# document-ingestion parser, the AI request path — for injection, unsafe deserialisation,
+# path handling and the rest of the default query set.
+#
+# NOT A REQUIRED CHECK, ON PURPOSE
+# `verify` is the merge gate, and it is the canonical local command. A security scanner
+# reports findings; it does not decide whether a change is correct. Findings land in the
+# Security tab, and the schedule means a query-pack update can surface something in
+# unchanged code without waiting for a commit.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly, off the hour to avoid the top-of-hour runner stampede.
+    - cron: '23 4 * * 2'
+
+# Least privilege: the analysis job narrows this further below.
+permissions:
+  contents: read
+
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      # Required to upload the results.
+      security-events: write
+      # Required to fetch internal or private CodeQL packs.
+      packages: read
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The app is plain JavaScript/JSX, so there is nothing to compile.
+          - language: javascript-typescript
+            build-mode: none
+          # The workflows are code too, and the `actions` queries catch things like
+          # untrusted input reaching a `run:` step.
+          - language: actions
+            build-mode: none
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@24c54180a607b1449ed407dd24f251e4e9147c8d # v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@24c54180a607b1449ed407dd24f251e4e9147c8d # v4
+        with:
+          category: /language:${{ matrix.language }}
