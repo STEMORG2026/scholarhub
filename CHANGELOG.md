@@ -1,5 +1,81 @@
 # Changelog
 
+## [0.46.0] - 2026-10-09
+
+### Added — four records recovered from the blocked list, 45 → 49 of 50
+
+None of the four was unblockable. Three needed a different *route*, and one was never blocked at all.
+
+**ETH Zurich ESOP** — the criteria sit inside a client-rendered accordion, which is why the fetching
+tool saw only a table of contents. Rendered, they read: *"Very good result in Bachelor's degree
+programme (top 10% of Bachelor's degree programme = grade A; this is based on self-assessment)."*
+That is a **class position**, so it is a `rank` rule — and it is now **answerable**: a reader in the
+top 8% gets **meets**, a reader in the top 20% gets **fails**. ETH also states the exclusion
+plainly: *"If you are already enrolled in a Master's degree programme at ETH Zurich, or hold a
+Master degree, you are not eligible for ESOP."*
+
+**RESCO (EMJM)** — behind Cloudflare, and the consortium's *"Who can apply?"* page carries the full
+requirements: a bachelor's degree or equivalent, **180 ECTS**, obtained after at least three years of
+higher education, in Civil, Mechanical or Architectural Engineering or a closely related AEC field;
+plus English at **B2** — IELTS 6.5, TOEFL iBT 80, Cambridge B2 First 173, C1 Advanced 160, TOEIC 800,
+not older than three years. **No grade bar is published**, which is itself the finding.
+
+**University of Canterbury International First Year** — behind PageAssist. Selection is
+*"quality of academic achievement … character, and evidence of leadership potential, and of
+involvement in cultural, sport, and/or community activities; financial circumstances; and strategic
+objectives of the University"* — four weighted criteria and **no grade bar**. Two rounds exist (NZ
+Incoming First-Year, closing 6 August; Offshore/UCIC, closing 31 October), both valued at $15,000.
+
+**NSF GRFP** — recorded here as *"region-blocked on both `nsf.gov` and `nsfgrfp.org`"*. **It is not.**
+The pages load without trouble in a browser; the block was a limitation of the fetching tool, not a
+property of the source. NSF's own eligibility page states the gate plainly: the applicant *"must, at
+the time of submission, be a U.S. citizen, national, or a permanent resident ('green-card'
+holder)"* — a citizenship bar, with no academic threshold published.
+
+### Fixed — a sentence that was false about the record it was attached to
+
+The `criterion-only` sentence read *"This programme records how academic performance is weighed but
+publishes no threshold"*. That is true of a record that weighs grades without publishing a bar, and
+**false of NSF GRFP, whose gate is citizenship and which weighs academic performance not at all**.
+A record can publish no academic threshold for either reason, so the sentence now states the fact
+they share. A negative control pins it: the sentence must not contain *"weigh"*.
+
+This is the third time this project has shipped a sentence that was confidently wrong about the
+record it was attached to — the `branches` wording that claimed "scales or branches" for 18 records
+with neither, the v0.44.0 strip heading that said "your confirmed GPA" to a reader with only a class
+position, and now this. Twice the defect was found by **sourcing a new record** rather than by
+reading the code, which is the argument for finishing the sourcing pass.
+
+### Not recovered — one record, and the reason is now precise
+
+**CSC** is the only record left without requirements, and the reason is no longer a status code. The
+provider's own application guide returns an **empty document** to both the fetching tool and a real
+browser. The reachable restatements are **host-university programme pages** — HIT Shenzhen's Type B
+announcement carries the age rules (under 35 for a master's, under 40 for a doctoral) and the
+language rules (TOEFL ≥ 80, IELTS ≥ 6.0), and no GPA bar. Those are one host university's route-specific
+rules, not the Council's general ones, and this project sources the **provider**: HIT's own scholarship
+cites HIT's own page precisely because HIT *is* its provider. So CSC stays unrecorded rather than
+recorded from the wrong page.
+
+### Verification
+
+`npm test` **284 → 285**. Requirements validation **0 errors, 5 warnings** — the ETH entry joins the
+four pre-existing ones, all the same known divergence: a figure rule against a `null` catalog scalar
+that cannot hold a position. Coverage 95.76/87.79/96.06, floors 92/82/92. Bundle unchanged at
+502,580 bytes, headroom 9,420.
+
+Measured end to end, on the real catalog:
+
+| Reader | ETH ESOP |
+|---|---|
+| no class position | `unresolvable` — *"This programme requires a class rank"* |
+| `top 8%` | **meets** |
+| `top 20%` | **fails** |
+| `12 of 120` (exactly top 10%) | **meets** — the boundary is inclusive |
+
+RESCO, UC and NSF each report `criterion-only`, which is the honest answer for a programme that
+publishes no comparable bar.
+
 ## [0.45.0] - 2026-10-09
 
 ### Added — Fulbright sourced, 44 → 45 of 50, and it publishes a real numeric bar

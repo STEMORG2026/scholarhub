@@ -810,5 +810,80 @@
         "last_verified": "2026-10-09"
       }
     ]
+  },
+  "eth-excellence-scholarship": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "rank",
+          "minimum": 10,
+          "of": 100,
+          "applies_to": "top 10% of the Bachelor's degree programme"
+        },
+        "text": "ETH states one academic criterion and no grade figure for it — a class position: \"Very good result in Bachelor's degree programme (top 10% of Bachelor's degree programme = grade A; this is based on self-assessment).\" The 10% is a position, not a grade average, and ETH asks the applicant to self-assess it rather than to evidence it. Also ineligible: applicants already enrolled in a Master's degree programme at ETH Zurich, or holding a Master's degree. Selection may include a phone/VC interview in February.",
+        "source": "https://ethz.ch/students/en/studies/financial/scholarships/excellencescholarship.html",
+        "last_verified": "2026-10-09"
+      }
+    ]
+  },
+  "resco-emjm": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "Academic Requirements (verbatim): \"Applicants must hold a Bachelor's degree (or equivalent, 180 ECTS credits) obtained after at least three years of higher education.\" Acceptable degrees include BSc (Honours), BEng (Honours), MEng, or a Bachelor within the Bologna educational framework. Preferred academic backgrounds are Civil Engineering, Mechanical Engineering, Architectural Engineering, or any other degree closely related to the Architecture, Engineering and Construction (AEC) industry. No GPA, grade average, marks percentage or class rank is published as a bar — admission turns on holding the degree and on English proficiency.",
+        "source": "https://resco-master.eu/admission/who-can-apply/",
+        "last_verified": "2026-10-09"
+      },
+      {
+        "kind": "credits",
+        "of": {
+          "kind": "count",
+          "minimum": 180,
+          "unit": "ECTS"
+        },
+        "text": "Applicants must hold a Bachelor's degree (or equivalent, 180 ECTS credits) obtained after at least three years of higher education. Acceptable degrees: BSc (Honours), BEng (Honours), MEng, or a Bachelor within the Bologna educational framework. Preferred backgrounds: Civil, Mechanical or Architectural Engineering, or a degree closely related to the Architecture, Engineering and Construction (AEC) industry.",
+        "source": "https://resco-master.eu/admission/who-can-apply/",
+        "last_verified": "2026-10-09"
+      },
+      {
+        "kind": "language",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "Applicants must demonstrate a good command of English, corresponding to level B2 of the Common European Framework of Reference for Languages (CEFR), both written and spoken. Accepted proofs include IELTS 6.5 or higher; TOEFL iBT 80 or higher; Cambridge English B2 First 173 or higher; Cambridge C1 Advanced 160 or higher; TOEIC 800 or higher. Test results must not be older than three years at the time of application. Applicants who have completed their previous studies entirely in English may be exempted, provided they supply an official letter from their home university confirming English as the medium of instruction.",
+        "source": "https://resco-master.eu/admission/who-can-apply/",
+        "last_verified": "2026-10-09"
+      }
+    ]
+  },
+  "uc-international-first-year": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "Selection will be based on (verbatim): \"quality of academic achievement in a programme of study as defined in clause 2.3 (and note 2) of the regulations; character, and evidence of leadership potential, and of involvement in cultural, sport, and/or community activities; financial circumstances; and strategic objectives of the University.\" No GPA, grade average, marks percentage or class rank is published as a bar — academic achievement is one of four weighted criteria. Special eligibility: the applicant must be completing or have completed, on or after 1 January of the year before application, a university entrance-level qualification permitting entry to a UC undergraduate degree; must have applied for admission by the closing date; must be a full-fee-paying international student; and must not have undertaken partial study in an undergraduate degree at a New Zealand tertiary institution. Two rounds exist — NZ Incoming First-Year (closing 6 August) and Offshore/UCIC (closing 31 October) — both valued at $15,000.",
+        "source": "https://scholarshipscanterbury.communityforce.com/Funds/FundDetails.aspx?496F49596D593768464E3537506B6F754D5442315A782F7274587A7153535865367053594C58687456576876326F79384A4E585448457353476D647A6573786F6E4B7531455038534558383D",
+        "last_verified": "2026-10-09"
+      }
+    ]
+  },
+  "nsf-grfp": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "prose"
+        },
+        "text": "Eligibility is defined by citizenship, field and career stage rather than by a grade bar. At the time of submission the applicant must (verbatim): be \"a U.S. citizen, national, or a permanent resident ('green-card' holder)\"; intend to enrol or be enrolled full-time in an eligible research-based master's or doctoral degree programme in an eligible STEM field; never have previously accepted an NSF GRFP; have declined any previously offered GRFP by the deadline; and have completed less than one academic year in a graduate degree programme. No GPA, grade average, marks percentage or class rank is published as a bar — the official eligibility guidelines live in the NSF GRFP Notice of Funding Opportunity.",
+        "source": "https://www.nsf.gov/funding/initiatives/grfp/eligibility",
+        "last_verified": "2026-10-09"
+      }
+    ]
   }
 }
