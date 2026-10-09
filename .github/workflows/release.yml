@@ -11,6 +11,10 @@ name: Release
 # reader *verify* that the artifact they downloaded was produced by this workflow from this
 # commit, instead of being told so.
 #
+# It also attaches a **CycloneDX SBOM**, so a reader can see every transitive package the
+# release was built from without installing it. `npm sbom` ships with npm, so this needs
+# no new dependency and no third-party action.
+#
 # WHY IT RE-RUNS THE GATE
 # A tag can be pushed straight to a commit that never passed `verify` — a tag push is not a
 # pull request, so no required check applies to it. The release therefore re-proves the
@@ -77,14 +81,40 @@ jobs:
           sha256sum scholarhub-dist.tar.gz > scholarhub-dist.tar.gz.sha256
           cat scholarhub-dist.tar.gz.sha256
 
+      - name: Generate a CycloneDX SBOM
+        run: |
+          set -euo pipefail
+          # `npm sbom` ships with npm itself, so this needs no new dependency and no
+          # third-party action — the toolchain that builds the app also describes it.
+          # `--package-lock-only` reads the lockfile rather than node_modules, so the SBOM
+          # lists exactly what `npm ci` would install rather than whatever happens to be
+          # on this runner.
+          npm sbom --sbom-format cyclonedx --package-lock-only > scholarhub-sbom.cdx.json
+
+          # A silently empty SBOM is worse than no SBOM, so assert it is populated.
+          grep -q '"bomFormat": "CycloneDX"' scholarhub-sbom.cdx.json
+          components=$(grep -c '"bom-ref"' scholarhub-sbom.cdx.json)
+          if [ "$components" -lt 2 ]; then
+            echo "SBOM lists $components component refs — too few to be real"
+            exit 1
+          fi
+          echo "SBOM: CycloneDX, $components component refs"
+
+          # Unlike the tarball above, an SBOM carries a serial number and a timestamp by
+          # convention, so it is not byte-reproducible. The checksum still verifies the
+          # download; it just does not mean "the same bytes every build".
+          sha256sum scholarhub-sbom.cdx.json > scholarhub-sbom.cdx.json.sha256
+
       - name: Attest the build provenance
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
         with:
           subject-path: scholarhub-dist.tar.gz
 
-      - name: Attach the artifact and checksum to the release
+      - name: Attach the artifacts to the release
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: |
             scholarhub-dist.tar.gz
             scholarhub-dist.tar.gz.sha256
+            scholarhub-sbom.cdx.json
+            scholarhub-sbom.cdx.json.sha256
