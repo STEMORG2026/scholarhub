@@ -1,5 +1,59 @@
 # Changelog
 
+## [0.45.0] - 2026-10-09
+
+### Added — Fulbright sourced, 44 → 45 of 50, and it publishes a real numeric bar
+
+The first record recovered from the blocked list, and it took a new route rather than a retry:
+the landing page and the `program-information` page both carry no criteria, and the eligibility
+page is not at the path the Humphrey grant uses. It is `/fulbright/ffsp/general-requirements/`.
+
+**It publishes a genuine academic threshold: "60% aggregate or 3.0 GPA system."**
+
+`not-recorded` in the app falls **6 → 5**.
+
+### Found — the widely repeated "3.0/4.0" is not the commission's
+
+Third-party guides render the requirement as *"60%+ or 3.0/4.0 GPA"*. The commission's own page
+says **"3.0 GPA system"** and never names a scale. So no scale is recorded here, and the difference
+is noted in the record rather than smoothed over — the same shape as Chevening's 2:1, which is
+repeated everywhere and absent from Chevening's own criteria.
+
+**The consequence is deliberate and visible:** only the percentage route can be compared as a
+figure. A reader whose confirmed value is a GPA gets a scale mismatch — *"The programme's figure
+(60) is on a 100-point scale and yours is on a 4-point scale"* — rather than a verdict built on a
+guessed 4.0. A reader at 65% gets **"meets"**.
+
+### Fixed — a defect Fulbright exposed: the provider's wording was invisible on a verdict
+
+`quote` was `null` on `meets` and `fails`, on the reasoning that a clear answer needs no quote.
+Fulbright shows why that is wrong: **its requirement is one sentence containing two routes**, and a
+reader who failed the percentage route was told *"below the recorded requirement"* with the 3.0
+alternative **invisible** — the one sentence that would have told them about the other route was
+suppressed exactly when it mattered.
+
+A verdict can be clear about one route and silent about another in the same sentence. The
+provider's own wording is now carried on every verdict, not only on a refusal. Two tests: one
+asserting the wording survives a `meets` *and* a `fails`, and one asserting a requirement with no
+wording still quotes `null` rather than an empty string — which would render as a bare
+*"The provider writes:"* with nothing after it.
+
+### Added — the 16-year education gate, as a `credits` requirement
+
+Fulbright also requires **"minimum 16 years of education"**, and clarifies that a four-year
+bachelor's meets it or a bachelor's plus a Master's does, while three-year degree holders without a
+Master's and holders of multiple shorter bachelor's are explicitly ineligible.
+
+That is recorded as a `credits` requirement with a `count` rule and the unit **`years of
+education`** — not credits. §3.4 defines that kind as *"a statement about the length and shape of a
+prior degree, not about grades earned in it"*, which is exactly what a 16-year rule is; the unit
+says `years` because that is what the provider counts, and a bare "16" would mean something
+different in every system.
+
+`npm test` **282 → 284**. Requirements validation 0 errors, **4 warnings** — all four the same real
+divergence, one per record that now carries a figure while the catalog's `gpa_minimum` is still
+`null`. Bundle unchanged.
+
 ## [0.44.0] - 2026-10-09
 
 ### Added — the class-rank input side, so the feature is finally reachable

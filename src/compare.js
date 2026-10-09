@@ -210,7 +210,8 @@ export function compareGpa(record, value, requirement, classRank) {
       sentence: meets
         ? `Your confirmed ${value.value}/${value.scale} is at or above the recorded requirement of ${match.value}/${match.scale}.`
         : `Your confirmed ${value.value}/${value.scale} is below the recorded requirement of ${match.value}/${match.scale}.`,
-      quote: null,
+      // Carried on a verdict, for the same reason as the numeric branch above.
+      quote: req.text || null,
     };
   }
 
@@ -296,7 +297,15 @@ export function compareGpa(record, value, requirement, classRank) {
     sentence: meets
       ? `Your confirmed ${value.value}/${value.scale} is at or above the recorded requirement of ${req.value}/${req.scale}.`
       : `Your confirmed ${value.value}/${value.scale} is below the recorded requirement of ${req.value}/${req.scale}.`,
-    quote: null,
+    // The provider's own wording, carried on a verdict as well as on a refusal.
+    //
+    // This was `null` on meets/fails, on the reasoning that a clear answer needs no
+    // quote. Fulbright shows why that is wrong: its requirement is one sentence
+    // containing two routes — "60% aggregate or 3.0 GPA system" — and a reader who
+    // fails the percentage route was told "below the recorded requirement" with the
+    // 3.0 alternative invisible. A verdict can be clear about one route and silent
+    // about another in the same sentence.
+    quote: req.text || null,
   };
 }
 
