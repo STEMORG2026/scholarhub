@@ -155,6 +155,20 @@ Do not create new top-level directories without documenting the reason. Country 
 4. Open a PR, then merge it.
 5. Delete the branch after merge.
 
+### Who merges: a human
+
+**An agent opens the pull request and stops. Merging is the owner's decision, made by a person who has read the change.**
+
+This is a **process rule, not an enforced one**, and the distinction is worth stating plainly rather than hiding. An agent working in this repository acts with the owner's credentials, so GitHub cannot tell the two apart — the commits, the pushes and any merge all carry the same identity. There is no setting that stops the agent merging without also stopping the owner. Anyone who tells you otherwise has not checked.
+
+So the rule is kept where it can be kept: as a stated boundary, and by the agent not pressing the button. It is written here rather than promised in a chat window.
+
+### Making it structural — and the trap in the obvious version
+
+The obvious move, `required_approving_review_count: 1`, **would freeze this repository rather than gate it.** With one account, the author of every pull request is also the only possible approver, and GitHub forbids self-approval. Nothing would merge at all. That is the same failure as a required status check no workflow produces: a rule that cannot be satisfied, which reads as "everyone is blocked" rather than "the rule is wrong".
+
+To make "nothing merges without a human approval" enforceable, a **second identity** is required — a bot account or a GitHub App that opens the pull requests, so their author is not the human who approves. Then the ruleset can require one approval, and no change can land unread. Until that exists, the honest description of this gate is *convention*, and it should not be described as more.
+
 Direct pushes to `main` are rejected, and **the rejection names the rule that fired**. A rule protecting `main` is now enforced in two places: classic branch protection (`enforce_admins` enabled, so it applies to administrators too) and an active **ruleset** (`main-protection`, `bypass_actors: []`, `current_user_can_bypass: "never"`). Both apply as a *union* — a ruleset does not override classic protection, it adds to it.
 
 Never force-push or rewrite history on `main`. Never delete or bypass the protection to land a change; if a change genuinely cannot go through a PR, that is a signal the change needs rethinking, not that the rule needs an exception.

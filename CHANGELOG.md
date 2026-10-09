@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.52.1] - 2026-10-09
+
+### Changed — the merge boundary is written down, and the trap in enforcing it
+
+`AGENTS.md` now states who merges: **an agent opens the pull request and stops; a human merges.**
+
+It also records why that is a *process* rule rather than an enforced one. An agent working in this repository acts with the owner's credentials, so GitHub cannot distinguish the two — the commits, the pushes and any merge all carry one identity. There is no setting that stops the agent merging without also stopping the owner.
+
+And it documents the trap in the obvious fix. `required_approving_review_count: 1` **would freeze this repository rather than gate it**: with one account, the author of every pull request is also the only possible approver, and GitHub forbids self-approval, so nothing would merge at all. The same shape as a required status check that no workflow produces — a rule that cannot be satisfied, which reads as *everyone is blocked* rather than *the rule is wrong*.
+
+Making it enforceable needs a **second identity**: a bot account or GitHub App that opens the pull requests, so their author is not the human who approves. Until that exists, the honest description of this gate is *convention*.
+
 ## [0.52.0] - 2026-10-09
 
 ### Added — local enforcement: a three-hook ladder, and the rule defined once
