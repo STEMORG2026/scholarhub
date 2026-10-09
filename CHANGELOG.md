@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.51.0] - 2026-10-09
+
+### Changed — the policy checks now block, and the protection check runs itself
+
+**Three checks are now required on `main`**, alongside `verify`: `Branching Strategy`, `Conventional Commits` and `Every action is pinned to a commit SHA`. They were added in v0.48.0 and reported without blocking, which is the state `AGENTS.md` describes as an unenforced config being worse than none.
+
+All three trigger on `pull_request`, which is the property that matters: **a required check that no workflow produces never reports, so the pull request waits for it forever.** That is a whole-repository deadlock rather than a red build, with nothing visibly broken. It is now written down in `AGENTS.md` and `.github/BRANCH-PROTECTION.md`, with the check-by-name step before adding a fifth.
+
+**`npm run check:protection` now runs on every pull request and every push to `main`**, as a job in `conventions.yml`. The strongest control in this repository — the required checks that make a red build unmergeable — was previously verified only when somebody remembered to type the command. `GITHUB_TOKEN` turns out to be sufficient to read the ruleset: that was assumed to be a problem and is not, which was settled by running it rather than by reasoning about scopes.
+
+It is deliberately **not** a required check: it reads the ruleset over the network, and a required check that depends on GitHub's API means an API outage blocks every merge. It still runs on every pull request, so a drift is visible immediately.
+
+### The three files had to move together
+
+`check:protection` asserts the required contexts, so this change had to land in three places at once or the verifier would catch it: the ruleset, `scripts/check-branch-protection.mjs`, and `.github/BRANCH-PROTECTION.md`. **The mismatch was observed before it was fixed** — with the script's expectation updated and the ruleset not yet changed, `npm run check:protection` failed, naming all three:
+
+```
+FAIL  required status checks are [verify], expected to include "Branching Strategy"
+FAIL  required status checks are [verify], expected to include "Conventional Commits"
+FAIL  required status checks are [verify], expected to include "Every action is pinned to a commit SHA"
+```
+
+That is the check doing its job rather than a formality.
+
+### Verified
+
+- Dependabot's PRs still satisfy all four: branches are `dependabot/…`, commits are `chore(deps): …`, and its action bumps stay SHA-pinned.
+- All 7 workflow files parse; the pin guard is clean.
+- `TZ=UTC npm test` — 286 tests, 0 fail.
+
 ## [0.50.0] - 2026-10-09
 
 ### Added — every release now carries a CycloneDX SBOM
