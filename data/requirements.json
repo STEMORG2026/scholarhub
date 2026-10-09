@@ -783,5 +783,32 @@
         "last_verified": "2026-10-09"
       }
     ]
+  },
+  "fulbright-foreign-student": {
+    "requirements": [
+      {
+        "kind": "gpa",
+        "of": {
+          "kind": "numeric",
+          "minimum": 60,
+          "scale": 100
+        },
+        "text": "Academic Performance: 60% aggregate or 3.0 GPA system. The provider states two routes in one sentence and does not name the scale of the GPA one, so only the percentage route can be compared as a figure — a reader whose confirmed value is a GPA gets a scale-mismatch rather than a verdict, which is the honest answer rather than a guessed conversion. NOTE ON THE WIDELY REPEATED FIGURE: third-party guides render this as \"60%+ or 3.0/4.0 GPA\". The 4.0 does not appear on the commission's own page, which says \"3.0 GPA system\" without naming a scale, so no scale is recorded here. The rest of the eligibility is non-academic: Nepali citizenship and current residence; at least 3 years of post-bachelor's full-time professional work in Nepal in a field relevant to the proposed study; a J-1 visa qualification; and English proficiency — TOEFL 100+ or a subject GRE — required only once shortlisted.",
+        "source": "https://usefnepal.org/fulbright/ffsp/general-requirements/",
+        "last_verified": "2026-10-09",
+        "varies_by": "grading system — 60% aggregate, or a 3.0 GPA on a scale the provider does not state"
+      },
+      {
+        "kind": "credits",
+        "of": {
+          "kind": "count",
+          "minimum": 16,
+          "unit": "years of education"
+        },
+        "text": "Education: minimum 16 years of education. A four-year bachelor's degree meets it; so does a bachelor's plus a Master's. Explicitly ineligible: three-year bachelor's degree holders who have not completed a full Master's, and applicants holding multiple shorter bachelor's degrees without a Master's. The provider expresses this in years of education rather than credits, which is why the unit says so.",
+        "source": "https://usefnepal.org/fulbright/ffsp/general-requirements/",
+        "last_verified": "2026-10-09"
+      }
+    ]
   }
 }

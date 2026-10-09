@@ -240,6 +240,29 @@ test('a numeric rule on the reader scale is a real comparison', () => {
   assert.equal(compareGpa(record('a'), gpa(3, 4), req).verdict, 'meets', 'equal meets');
 });
 
+test("the provider's own wording is carried on a verdict, not only on a refusal", () => {
+  // Fulbright's requirement is one sentence with two routes in it — "60% aggregate or
+  // 3.0 GPA system". A reader who fails the percentage route must be able to see the
+  // alternative, and it lives in the requirement's text. `quote` was `null` on
+  // meets/fails, which made that sentence invisible exactly when it mattered.
+  const req = { kind: 'numeric', value: 60, scale: 100, text: '60% aggregate or 3.0 GPA system' };
+  const met = compareGpa(record('a'), gpa(75, 100), req);
+  assert.equal(met.verdict, 'meets');
+  assert.equal(met.quote, '60% aggregate or 3.0 GPA system');
+
+  const missed = compareGpa(record('a'), gpa(55, 100), req);
+  assert.equal(missed.verdict, 'fails');
+  assert.equal(missed.quote, '60% aggregate or 3.0 GPA system');
+});
+
+test('a requirement with no wording still quotes nothing, rather than an empty string', () => {
+  // A catalog-derived requirement has no `text`. An empty string would render as a
+  // bare "The provider writes:" with nothing after it.
+  const r = compareGpa(record('a'), gpa(3.62, 4), { kind: 'numeric', value: 3, scale: 4 });
+  assert.equal(r.verdict, 'meets');
+  assert.equal(r.quote, null);
+});
+
 test('a scale mismatch is never silently converted', () => {
   const r = compareGpa(record('a'), gpa(3.62, 4), { kind: 'numeric', value: 3, scale: 5 });
   assert.equal(r.verdict, 'unknown');

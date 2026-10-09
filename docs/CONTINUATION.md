@@ -11,6 +11,7 @@ done and released:
 |---|---|
 | **1. Finish the audit's deferred recommendations** | ✅ Done — v0.42.0, v0.42.1 |
 | **2. The class-rank feature** | ✅ Done — v0.43.0 (comparison), v0.44.0 (input) |
+| **3. The sourcing pass** | ⏸ 45 of 50 — 5 blocked, each with a documented cause |
 
 The last section is a list of **decisions and directions**, not unfinished work. Nothing there
 blocks anything.
@@ -71,19 +72,31 @@ entirely**. Confirmed in a browser on both render sites.
   The gate is now on the *result* ("this record produced an answer"), which is what it always
   meant.
 
+## 3. The sourcing pass — 45 of 50
+
+Fulbright was recovered in v0.45.0 by finding the right page rather than retrying the same URL —
+its eligibility page is `/fulbright/ffsp/general-requirements/`, not the path the Humphrey grant
+uses. **Try that approach on the remaining five before accepting them as blocked.**
+
+One display defect was found by sourcing it: `quote` was `null` on a `meets`/`fails` verdict, so
+the provider's own wording was invisible exactly when a requirement contained an alternative route
+(Fulbright's is *"60% aggregate or 3.0 GPA system"*). Fixed in v0.45.0 — the wording is now carried
+on every verdict.
+
 ---
 
 ## What is actually next — decisions, not tasks
 
 Nothing here is in flight. These are the open questions, in the order they matter.
 
-1. **The sourcing pass is paused at 44 of 50, and the remaining 6 are blocked.** Each has a
-   documented cause: ETH (criteria exist only in a client-rendered accordion; only aggregators
-   carry them, and those are not acceptable sources), NSF (**region-blocked on both `nsf.gov` and
-   `nsfgrfp.org`** — deliberate, not routed around), CSC (HTTP-412), UC (client-side `PageAssist`),
-   RESCO (Cloudflare), Fulbright (eligibility page not at the path Humphrey uses). **The decision
-   is whether to accept 44/50 as the end of the pass**, since the marginal value of the last six
-   is lower than any of them individually suggests.
+1. **The sourcing pass is at 45 of 50, and the remaining 5 are blocked.** Each has a documented
+   cause: ETH (criteria exist only in a client-rendered accordion; only aggregators carry them, and
+   those are not acceptable sources), NSF (**region-blocked on both `nsf.gov` and `nsfgrfp.org`** —
+   deliberate, not routed around), CSC (HTTP-412), UC (client-side `PageAssist`), RESCO
+   (Cloudflare). **Fulbright was on this list and is not any more** — it was recovered by finding
+   the right path rather than retrying the same one, which is worth trying for the others before
+   accepting them as blocked. **The decision is whether to accept 45/50 as the end of the pass**,
+   since the marginal value of the last five is lower than any of them individually suggests.
 
 2. **`direction` is still unbuilt and still unneeded.** It would only be required if a rule ever
    encoded a downward *scale* rather than a position — MS²'s German "up to 2.8" is the standing
