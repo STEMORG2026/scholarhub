@@ -4,7 +4,9 @@ Repository-level guidance for agents and contributors working inside `scholarhub
 
 ## Project identity
 
-ScholarHub is a static, client-side scholarship discovery application. There is no server, no database, and no authentication. All personalization (profile, shortlist, theme) lives in browser localStorage. The canonical data source is `data/scholarships.json`.
+ScholarHub is a static, client-side scholarship discovery application.
+
+**If you are picking this up cold, read `docs/CONTINUATION.md` first.** It records what is in progress, the exact next steps, and the design decisions worth preserving — including the ones that cost something to learn. There is no server, no database, and no authentication. All personalization (profile, shortlist, theme) lives in browser localStorage. The canonical data source is `data/scholarships.json`.
 
 ## Scope discipline
 

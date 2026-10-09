@@ -89,7 +89,7 @@ export function gpaRequirement(record) {
  * to pick the branch their transcript belongs to, and ScholarHub hands the rule
  * back rather than choosing for them.
  */
-export function compareGpa(record, value, requirement) {
+export function compareGpa(record, value, requirement, classRank) {
   const req = requirement || gpaRequirement(record);
 
   // 5. No figure — and this is where two facts that used to share a sentence
@@ -134,16 +134,49 @@ export function compareGpa(record, value, requirement) {
     };
   }
 
-  // 3c. A rank or a percentile is a real bar, but the reader's confirmed values
-  //     are a GPA and an English score. Neither is a class rank, so the honest
-  //     answer names what would be needed.
-  if (req.kind === 'rank' || req.kind === 'percentile') {
-    const what = req.kind === 'rank' ? 'class rank' : 'percentile';
+  // 3c. A rank is a **position**, and position runs the other way.
+  //
+  //     Every `rank` rule in the sourced file means "the top N%" — TU Delft's top 10%,
+  //     MS²'s best 35%, DAAD EPOS's upper third. So the reader is within the bar when
+  //     their own position is *less* than or equal to N, and a reader in the top 8%
+  //     meets a top-10% requirement. That is the opposite comparison from `numeric`
+  //     and `count`, where larger is better.
+  //
+  //     This is why a class rank does not need the `direction` field that is still an
+  //     open item. `direction` is for a *downward scale* — MS²'s German "up to 2.8",
+  //     where the number itself runs backwards — and that is a different thing from a
+  //     *position*, where the number is ordinary and only the comparison flips. The
+  //     kind says which; no flag is required.
+  if (req.kind === 'rank') {
+    const band = req.applies_to ? ` (${req.applies_to})` : '';
+    if (typeof classRank === 'number' && Number.isFinite(classRank)) {
+      const meets = classRank <= req.value;
+      return {
+        verdict: meets ? 'meets' : 'fails',
+        reason: null,
+        sentence: meets
+          ? `Your recorded position, top ${classRank}%, is within the top ${req.value}% this programme asks for.`
+          : `Your recorded position, top ${classRank}%, is outside the top ${req.value}% this programme asks for.`,
+        quote: req.text,
+      };
+    }
+    return {
+      verdict: 'unknown',
+      reason: 'unresolvable',
+      sentence: `This programme requires a class rank — top ${req.value} of ${req.of}${band}. Add your class position to your profile to check it.`,
+      quote: req.text,
+    };
+  }
+
+  // 3c-bis. A percentile runs the *ordinary* way — GKS asks for "a score percentile of
+  //     80% or above" — but nothing in a reader's profile produces one, so it stays
+  //     unanswerable and says so rather than borrowing the rank comparison.
+  if (req.kind === 'percentile') {
     const band = req.applies_to ? ` (${req.applies_to})` : '';
     return {
       verdict: 'unknown',
       reason: 'unresolvable',
-      sentence: `This programme requires a ${what} — top ${req.value} of ${req.of}${band}. Your profile has no confirmed ${what}, so this cannot be checked.`,
+      sentence: `This programme requires a percentile — ${req.value} of ${req.of} or above${band}. Your profile has no confirmed percentile, so this cannot be checked.`,
       quote: req.text,
     };
   }
@@ -281,8 +314,13 @@ export const VERDICT_LABEL = {
  * Run every record's GPA requirement against a confirmed value, returning a
  * lookup keyed by record id. Records are passed in so this stays pure and the
  * caller (the component) owns the catalog read.
+ *
+ * `classRank` is the reader's position in their cohort, expressed as "top N%" — the
+ * same form every `rank` rule in the sourced file uses. Optional: without it, rank
+ * rules stay `unresolvable` and say what would be needed, which is what they did
+ * before a reader could record one.
  */
-export function compareAllGpa(records, value, requirementsIndex) {
+export function compareAllGpa(records, value, requirementsIndex, classRank) {
   const out = {};
   for (const record of records || []) {
     // The sourced file wins when it has an entry, and the catalog scalar is the
@@ -295,7 +333,7 @@ export function compareAllGpa(records, value, requirementsIndex) {
     const requirement = fromFile || gpaRequirement(record);
     out[record.id] = {
       requirement,
-      ...compareGpa(record, value, requirement),
+      ...compareGpa(record, value, requirement, classRank),
     };
   }
   return out;
