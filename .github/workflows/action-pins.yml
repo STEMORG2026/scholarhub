@@ -1,0 +1,64 @@
+name: Action pins
+
+# WHY THIS EXISTS
+# `ci.yml` already pins its actions to commit SHAs and says why, in a comment: a mutable
+# tag "can be moved under you by whoever owns the action". That reasoning is only as good
+# as the next edit. Nothing checked it, so a future commit could drop a pin back to
+# `@v7` and the property would be gone with every test still green — the same shape of
+# silent regression this repository has been bitten by before.
+#
+# A one-time sweep is not a control either. This runs on every push, every pull request,
+# and weekly, so a pin cannot be removed without a red check, and a Dependabot bump that
+# lands a floating ref is caught even if it arrives on a branch nobody reviews.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  schedule:
+    # Weekly, so a bad pin is caught even in a quiet week.
+    - cron: '17 6 * * 1'
+
+# Least privilege: this job only reads.
+permissions:
+  contents: read
+
+concurrency:
+  group: action-pins-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pins:
+    name: Every action is pinned to a commit SHA
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: No unpinned action reference
+        run: |
+          set -euo pipefail
+          # Two things this pattern has to avoid, both found by running it:
+          #  1. Comments. A commented-out `uses:` is documentation, not a reference.
+          #  2. Its own help text. An unanchored `uses:` grep matches the `echo` at the
+          #     bottom of this step, so the check would fail on itself. The match is
+          #     therefore anchored to the start of a line, where a real YAML key or list
+          #     item sits.
+          unpinned="$(
+            find .github/workflows -type f \( -name '*.yml' -o -name '*.yaml' \) -print0 \
+              | xargs -0 sed 's/#.*//' \
+              | grep -oE '^[[:space:]]*(-[[:space:]]+)?uses:[[:space:]]*[^ #]+@[^[:space:]]+' \
+              | grep -vE '@[0-9a-f]{40}$' \
+              | grep -vE '^[[:space:]]*(-[[:space:]]+)?uses:[[:space:]]*\./' \
+              || true
+          )"
+          if [ -n "$unpinned" ]; then
+            echo "::error::These actions are not pinned to a commit SHA:"
+            echo "$unpinned"
+            echo
+            echo "Pin each one to a 40-character commit SHA, keeping the version as a comment."
+            exit 1
+          fi
+          echo "All actions in .github/workflows are pinned to commit SHAs."

@@ -170,11 +170,31 @@ Four layers, and only the last two are authoritative:
 
 **The context name is exactly `verify`** — the *job's* `name:` in the workflow, not the workflow's `name:`. If the job is ever renamed, the ruleset must be updated in the same change or the gate waits forever for a check that no longer reports.
 
+### The workflows, and which of them gate a merge
+
+| Workflow | Job(s) | Gates a merge? |
+|---|---|---|
+| `ci.yml` | `verify` | **Yes** — the merge gate |
+| `conventions.yml` | `Branching Strategy`, `Conventional Commits` | Not yet — added in v0.48.0 |
+| `action-pins.yml` | `Every action is pinned to a commit SHA` | Not yet — added in v0.48.0 |
+| `codeql.yml` | `Analyze (javascript-typescript)`, `Analyze (actions)` | No — reports to the Security tab |
+| `scorecard.yml` | `Scorecard analysis` | No — publishes an external score |
+
+**A workflow that reports a required check must trigger on `pull_request`.** A required check that no workflow produces never reports, so the pull request waits for it forever. That is a whole-repository deadlock rather than a red build — every PR blocked, with nothing visibly broken — and it is worth checking by name before adding a check to the ruleset.
+
+`conventions.yml` and `action-pins.yml` are deliberately separate from `ci.yml` so that the required checks have one clear owner. `ci.yml` runs the canonical local command and must stay reproducible on a developer's machine; the two policy checks are not that.
+
 **Watch the interaction with Dependabot.** `strict_required_status_checks_policy: true` means any merge into `main` invalidates other open PRs until CI re-runs. That is correct for a multi-person repo and mildly annoying for a solo one with bot PRs open. It can be relaxed per-repo without touching the required check itself.
 
 ## Commit conventions
 
-Use Conventional Commits: `feat:`, `fix:`, `data:`, `docs:`, `test:`, `chore:`. One logical change per commit.
+Use Conventional Commits: `feat:`, `fix:`, `data:`, `docs:`, `test:`, `chore:`, `ci:`. One logical change per commit.
+
+`ci:` was added here in v0.48.0 because the history already used it (three commits) while this list did not name it — the check below found the gap, which is the point of having one.
+
+`data:` is this repository's own type for a change to the catalog or to `requirements.json`, and it is **not** in the conventional-commits default set. That is why `.github/workflows/conventions.yml` enumerates the types instead of delegating to a linter's default: the default would reject this repository's own history on day one.
+
+**Enforced, not remembered** (v0.48.0). `.github/workflows/conventions.yml` checks the branch name and every commit in a pull request's range. Both rules had been written down here for many releases and were held by nothing but a careful human — and one commit in this repository's history (`Sourcing batch 7; …`, v0.41.0) shows what that is worth.
 
 ## AI provider policy
 
