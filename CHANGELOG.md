@@ -1,5 +1,44 @@
 # Changelog
 
+## [0.43.0] - 2026-10-09
+
+### Added — a class rank is now answerable (the comparison side)
+
+Three records carry a real academic threshold expressed as a **class position**: TU Delft's top
+10%, MS²'s best 35%, and DAAD EPOS's upper third. None could be checked, because a profile has no
+class rank. `compareGpa` and `compareAllGpa` now take one, and a `rank` rule produces a verdict
+instead of `unresolvable`.
+
+**A rank is a *position*, and position runs the other way.** Every `rank` rule means "the top N%",
+so the reader meets it when their own position is **≤ N** — a reader in the top 8% meets a top-10%
+bar. That is the opposite comparison from `numeric` and `count`, where larger is better, and it is
+the reason the direction is pinned by three separate tests.
+
+**This is also why a class rank does not need the `direction` field** that is still an open item
+in `REQUIREMENTS-SCHEMA.md` §3.5. `direction` is for a **downward scale** — MS²'s German "up to
+2.8", where the number itself runs backwards. A position is a different thing: the number is
+ordinary and only the comparison flips. `percentile` was split out of the `rank` branch for the
+same reason — GKS asks for "a score percentile of 80% **or above**", so percentile runs the
+*ordinary* way, and `rank` and `percentile` are opposite. They shared one branch before this
+release, which would have inverted one of them.
+
+**Not yet reachable.** The input side is not wired: the profile has no field for a class position,
+and nothing passes one in. The comparison is ready and tested; the reader cannot reach it yet. That
+is deliberate and matches this project's own history — `data/requirements.json` was built in
+v0.29.0 and wired in v0.37.0. `docs/CONTINUATION.md` records the exact remaining steps, including
+the parser design (percentage only, so "8th of 120" is the reader's own division) so it is not
+re-litigated. 33 tests in `src/compare.test.js`; three defect classes planted and each observed to
+fail — inverting the comparison (3 tests), letting percentile share the rank branch (2), treating a
+missing position as satisfied (3).
+
+### Added — `docs/CONTINUATION.md`
+
+Where the work is, and the next steps written down so it can be picked up cold. Records the two
+halves (the audit recommendations, done; the class-rank feature, in progress), the design decisions
+worth preserving, and the standing constraints that have each already cost something: never push to
+`main` (it caught me), a local measurement is not a CI measurement (hit twice in two releases), and
+a scanner finding is a claim rather than a fact (three false positives, all from true statements).
+
 ## [0.42.1] - 2026-10-09
 
 ### Fixed — the comment matched the pattern it was explaining

@@ -141,6 +141,65 @@ test('a rank bar says what would be needed, and does not pretend to check it', (
   assert.match(r.sentence, /best 35%/);
 });
 
+test('a rank is a POSITION, so a better position meets a looser bar', () => {
+  // The comparison runs the opposite way from every other kind: "top 8%" is better
+  // than "top 10%". Getting this backwards would tell a stronger applicant they fail.
+  const req = { kind: 'rank', value: 10, of: 100 };
+  assert.equal(compareGpa(record('a'), gpa(3.5, 4), req, 8).verdict, 'meets', 'top 8% meets a top-10% bar');
+  assert.equal(compareGpa(record('a'), gpa(3.5, 4), req, 10).verdict, 'meets', 'exactly on the bar meets it');
+  assert.equal(compareGpa(record('a'), gpa(3.5, 4), req, 11).verdict, 'fails', 'top 11% misses a top-10% bar');
+});
+
+test('a recorded position produces a real answer, with the numbers in it', () => {
+  const req = { kind: 'rank', value: 35, of: 100, applies_to: 'the best 35% of students' };
+  const met = compareGpa(record('a'), gpa(3.5, 4), req, 20);
+  assert.equal(met.verdict, 'meets');
+  assert.equal(met.reason, null);
+  assert.match(met.sentence, /top 20%/);
+  assert.match(met.sentence, /top 35%/);
+
+  const missed = compareGpa(record('a'), gpa(3.5, 4), req, 40);
+  assert.equal(missed.verdict, 'fails');
+  assert.match(missed.sentence, /outside the top 35%/);
+});
+
+test('with no recorded position, a rank says what would be needed', () => {
+  // The old behaviour, kept: a rank is answerable only if the reader has recorded a
+  // position, and the sentence has to say so rather than implying we failed.
+  const req = { kind: 'rank', value: 10, of: 100, applies_to: 'top 10% of graduates' };
+  const r = compareGpa(record('a'), gpa(3.5, 4), req);
+  assert.equal(r.verdict, 'unknown');
+  assert.equal(r.reason, 'unresolvable');
+  assert.match(r.sentence, /Add your class position/);
+});
+
+test('a rank does not borrow the GPA scale, and the GPA does not satisfy it', () => {
+  // A perfect GPA is not a class rank. Passing no classRank must leave it unresolved
+  // however good the GPA is — the two are different facts about a reader.
+  const req = { kind: 'rank', value: 10, of: 100 };
+  assert.equal(compareGpa(record('a'), gpa(4.0, 4), req).verdict, 'unknown');
+});
+
+test('a percentile does NOT use the rank comparison', () => {
+  // GKS asks for "a score percentile of 80% or above" — larger is better, the ordinary
+  // direction. Sharing the rank branch would invert it and pass the wrong readers.
+  const req = { kind: 'percentile', value: 80, of: 100 };
+  const r = compareGpa(record('a'), gpa(3.5, 4), req, 5);
+  assert.equal(r.verdict, 'unknown');
+  assert.match(r.sentence, /percentile/);
+  assert.match(r.sentence, /or above/);
+});
+
+test('compareAllGpa threads the class rank through to every record', () => {
+  const index = indexRequirements({
+    a: { requirements: [{ kind: 'gpa', of: { kind: 'rank', minimum: 10, of: 100 }, text: 'x' }] },
+    b: { requirements: [{ kind: 'gpa', of: { kind: 'rank', minimum: 5, of: 100 }, text: 'x' }] },
+  });
+  const out = compareAllGpa([record('a'), record('b')], gpa(3.62, 4), index, 8);
+  assert.equal(out.a.verdict, 'meets', 'top 8% is within the top 10%');
+  assert.equal(out.b.verdict, 'fails', 'top 8% is outside the top 5%');
+});
+
 test('a percentile bar names the percentile', () => {
   const r = compareGpa(record('a'), gpa(3.5, 4), { kind: 'percentile', value: 80, of: 100 });
   assert.equal(r.reason, 'unresolvable');
