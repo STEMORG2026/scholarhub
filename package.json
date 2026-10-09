@@ -8,6 +8,7 @@
     "build": "vite build",
     "check:links": "node scripts/validate-catalog.mjs --links",
     "check:protection": "node scripts/check-branch-protection.mjs",
+    "hooks:install": "git config core.hooksPath githooks",
     "lint": "eslint .",
     "preview": "vite preview --host 0.0.0.0",
     "test": "npm run lint && npm run test:cov && node scripts/validate-catalog.mjs && node scripts/validate-requirements.mjs && node scripts/render-smoke.mjs",

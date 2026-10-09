@@ -1,0 +1,146 @@
+#!/bin/sh
+# scholarhub pre-push — the full tier, and the local enforcement of "never push to main".
+#
+# THE LADDER, cheapest first, strictly nested:
+#
+#     pre-commit   ⊆   pre-push   ⊆   CI (`verify`)
+#
+# This tier runs exactly what CI's `verify` job runs — `npm test`, then `npm run build`, then the
+# same assertion that the build produced a deployable bundle. About five seconds. It is the last
+# chance to find a problem before a ref leaves the machine.
+#
+# WHY THE REF POLICY IS THE IMPORTANT PART
+# `main` requires a pull request and GitHub refuses a direct push — proved by attempting one and
+# reading the rejection ("4 of 4 required status checks are expected"). But that refusal arrives
+# *after* the push, from a server, phrased as a repository-rule violation. This refuses it before
+# the push leaves, in the language of the rule itself. Same rule, enforced where the mistake is
+# made rather than where it is caught.
+#
+# DESIGN RULES (borrowed from the sibling projects, each of which learned it the hard way)
+#   1. Policies before time. The ref check is free and runs first, so a push that can never be
+#      accepted does not wait five seconds to find out.
+#   2. Every stage runs. Failures accumulate and are reported together.
+#   3. A missing tool is a FAILURE, not a skip.
+#   4. No `|| true` around anything that decides pass or fail.
+#
+# Install:  npm run hooks:install
+# Bypass deliberately, never routinely:  git push --no-verify
+# Self-test: sh githooks/pre-push --self-test
+
+set -u
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT" || exit 1
+
+FAIL=0
+FAILED_STAGES=""
+
+fail() {
+  FAIL=1
+  FAILED_STAGES="$FAILED_STAGES $1"
+}
+
+# Returns 0 when the ref may be pushed, 1 when it must be refused.
+# Kept as a function so `--self-test` can exercise it without pushing anything.
+allowed_ref() {
+  case "$1" in
+    refs/heads/main) return 1 ;;
+    *) return 0 ;;
+  esac
+}
+
+# ── self-test: prove the hook can refuse ─────────────────────────────────────
+# A hook that cannot refuse is not a hook. This checks the two things that would make this one
+# decorative: that the ref policy actually rejects `main`, and that the failure flag latches.
+if [ "${1:-}" = "--self-test" ]; then
+  echo "── pre-push self-test ──"
+  if allowed_ref refs/heads/main; then
+    echo "  FAIL: the ref policy would allow a push to main"
+    exit 1
+  fi
+  echo "  ok: a push to main is refused"
+  if ! allowed_ref refs/heads/fix/something; then
+    echo "  FAIL: the ref policy would refuse an ordinary branch"
+    exit 1
+  fi
+  echo "  ok: an ordinary branch is allowed"
+  FAIL=0
+  fail "probe" >/dev/null 2>&1
+  if [ "$FAIL" -ne 1 ]; then
+    echo "  FAIL: a failed stage did not latch the exit code"
+    exit 1
+  fi
+  echo "  ok: a failed stage latches the exit code"
+  echo "self-test PASSED — this hook refuses."
+  exit 0
+fi
+
+echo "── pre-push ──"
+
+# ── stage 1: ref policy (free, so it goes first) ─────────────────────────────
+# git feeds "<local ref> <local sha> <remote ref> <remote sha>" on stdin. Skip the read when
+# stdin is a terminal, so running this by hand does not block waiting for input.
+if [ ! -t 0 ]; then
+  while read -r local_ref local_sha remote_ref remote_sha; do
+    [ -z "${remote_ref:-}" ] && continue
+    if ! allowed_ref "$remote_ref"; then
+      echo "  FAIL: refusing to push to $remote_ref."
+      echo "        Every change reaches main through a pull request:"
+      echo "            git push -u origin <type>/<slug>   then open a PR."
+      fail "ref policy"
+    fi
+    if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
+      echo "  FAIL: refusing to delete $remote_ref."
+      fail "ref policy: deletion"
+    fi
+  done
+fi
+if [ "$FAIL" -eq 0 ]; then
+  echo "  ref policy: ok"
+fi
+
+# ── stage 2: the canonical gate ──────────────────────────────────────────────
+# The same command CI runs, deliberately. If these diverge, a green local run stops predicting
+# a green pipeline, which is the property the whole ladder rests on.
+if command -v npm >/dev/null 2>&1; then
+  echo "  npm test…"
+  npm test || fail "npm test"
+else
+  echo "  FAIL: npm is not on PATH."
+  fail "npm missing"
+fi
+
+# ── stage 3: the build, and the same bundle assertion CI makes ───────────────
+if command -v npm >/dev/null 2>&1; then
+  echo "  npm run build…"
+  npm run build || fail "npm run build"
+
+  # A `vite build` that exits 0 with an empty dist/ is a real failure mode and looks exactly
+  # like success. This is the assertion from ci.yml, kept identical on purpose.
+  if [ -f dist/index.html ] && [ -s dist/index.html ]; then
+    js="$(find dist/assets -name 'index-*.js' 2>/dev/null | head -1)"
+    if [ -z "$js" ]; then
+      echo "  FAIL: no main JS bundle in dist/assets"
+      fail "bundle assertion"
+    else
+      size="$(wc -c < "$js")"
+      echo "  bundle: $js ($size bytes)"
+      if [ "$size" -gt 512000 ]; then
+        echo "  FAIL: bundle is $size bytes, over the 500 kB ceiling"
+        fail "bundle size"
+      fi
+    fi
+  else
+    echo "  FAIL: dist/index.html is missing or empty"
+    fail "bundle assertion"
+  fi
+fi
+
+echo ""
+if [ "$FAIL" -ne 0 ]; then
+  echo "pre-push FAILED:$FAILED_STAGES"
+  echo "Fix the above, or 'git push --no-verify' to override deliberately."
+  exit 1
+fi
+echo "pre-push OK — CI re-runs all of this, plus the checks that are not local."
+exit 0
