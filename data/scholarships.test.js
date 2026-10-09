@@ -76,3 +76,19 @@ test('every country named by a nationality scope is a real country', () => {
   }
   assert.deepEqual(bad, [], 'nationality_scope names something that is not a country: ' + bad.join(', '));
 });
+
+test('the CSC block reason claims only what was measured', () => {
+  // The note said "the host resolves only an IPv6 (AAAA) address". It does not.
+  // An A record exists and answers 412 exactly as the AAAA does, so that line
+  // described how this machine's resolver was read, written down as a property
+  // of the host — the same class of mistake as recording a source as
+  // "region-blocked" when the fetching tool was what failed. A negative control,
+  // for the same reason as the criterion-only sentence: the defect was a claim
+  // that was false about the record it was attached to, and only asserting the
+  // absence of the claim catches it coming back.
+  const csc = scholarships.find((entry) => entry.id === 'csc-government-scholarship');
+  assert.ok(csc.deadline_notes, 'CSC carries a block reason');
+  assert.doesNotMatch(csc.deadline_notes, /only an IPv6/i);
+  assert.match(csc.deadline_notes, /IPv4/, 'the note records the address families that were tried');
+  assert.match(csc.deadline_notes, /412/, 'the note names the status the source returns');
+});

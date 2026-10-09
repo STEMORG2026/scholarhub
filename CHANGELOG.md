@@ -1,5 +1,53 @@
 # Changelog
 
+## [0.47.0] - 2026-10-09
+
+### Changed — the CSC block reason now claims only what was measured, and the pass closes at 49 of 50
+
+**CSC is the last record without requirements, and the sourcing pass is now declared finished at
+49 of 50.** One more attempt was made, on the move that recovered the previous four — a different
+*route* rather than a retry. It did not recover the record; it produced a sharper reason, and it
+found a sentence that was **false about the host it described**.
+
+The note said `campuschina.org` *"resolves only an IPv6 (AAAA) address"*. **It does not.** The host
+resolves an **IPv4 address as well** (`203.33.8.147`), and both families answer identically. That
+clause described how this machine's resolver was read, written down as a property of the host — the
+same class of mistake as v0.46.0's *"region-blocked"*. **"I could not reach it" and "it is not
+there" are different claims, and only the second belongs in a block reason.**
+
+**What the second check established**, in place of the status code the note used to carry:
+
+- `campuschina.org` and `csc.edu.cn` sit behind the **same China Telecom Global CDN edge**
+  (`ctgcdn.com`), which is why the two behave identically.
+- Both answer **HTTP 412 carrying a JavaScript bot-protection challenge** rather than a page.
+- The challenge was served to **every route tried**: every user agent (Chrome, `curl`, Googlebot,
+  mobile Safari, and an empty one), every path (the root, `/scholarships/`, `/universities/`, and
+  this record's own application path), and **both address families**.
+- A headless browser receives an **empty document** (`<html><head></head><body></body></html>`)
+  instead of the challenge page, so the challenge is not solved from here.
+- The unverifiable claim that *"the block is on this network rather than on the portal"* is gone.
+  What was measured is that **every client tried** met the challenge, which is what the note now
+  says; it no longer infers a cause the check cannot see.
+- The link probe agrees by a different route, reporting the application path as **HTTP 412**.
+
+**`last_verified` deliberately stays at 2026-10-07.** The record's *content* was not verified today
+— the source still refuses to be read. Only the block was re-checked, and the note carries that
+date itself.
+
+### Added — a negative control pins the correction
+
+`data/scholarships.test.js` gains a test asserting the CSC note does **not** claim the host is
+IPv6-only, and **does** record the address families tried and the status the source returns.
+**Proven by planting the old wording and watching exactly that test fail**, then restoring the file
+and confirming it byte-identical by `sha256`.
+
+### Verification
+
+`npm test` **285 → 286**. Requirements validation **0 errors, 5 warnings** — unchanged, all the same
+known catalog-scalar divergence. Coverage 95.76/87.79/96.06, floors 92/82/92. Render smoke **28
+renders, 0 uncaught errors**. Bundle 502,580 → **502,964** bytes (the note is longer), still under
+the 500 KiB warning threshold. Link probe 0 dead.
+
 ## [0.46.0] - 2026-10-09
 
 ### Added — four records recovered from the blocked list, 45 → 49 of 50
