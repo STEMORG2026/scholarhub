@@ -179,6 +179,8 @@ Four layers, and only the last two are authoritative:
 | `action-pins.yml` | `Every action is pinned to a commit SHA` | Not yet — added in v0.48.0 |
 | `codeql.yml` | `Analyze (javascript-typescript)`, `Analyze (actions)` | No — reports to the Security tab |
 | `scorecard.yml` | `Scorecard analysis` | No — publishes an external score |
+| `release.yml` | `Build and attest` | No — runs on a tag, not a PR |
+| `scheduled.yml` | `Official links still resolve`, `Dependency advisories` | No — runs weekly, not on a PR |
 
 **A workflow that reports a required check must trigger on `pull_request`.** A required check that no workflow produces never reports, so the pull request waits for it forever. That is a whole-repository deadlock rather than a red build — every PR blocked, with nothing visibly broken — and it is worth checking by name before adding a check to the ruleset.
 
