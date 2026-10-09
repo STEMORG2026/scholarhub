@@ -7,7 +7,19 @@ scrollback, not in the repository.
 
 ## The rule
 
-**Nothing reaches `main` except through a pull request whose `verify` check has passed.**
+**Nothing reaches `main` except through a pull request that passes four checks:**
+
+| Required check | Owned by | What it decides |
+|---|---|---|
+| `verify` | `ci.yml` | The canonical local command — `npm test`, then `npm run build`. |
+| `Branching Strategy` | `conventions.yml` | The branch is `<type>/<slug>`. |
+| `Conventional Commits` | `conventions.yml` | Every commit in the range is a Conventional Commit. |
+| `Every action is pinned to a commit SHA` | `action-pins.yml` | No workflow references a mutable action tag. |
+
+**A required check must be one a workflow on `main` actually produces, and that workflow must
+trigger on `pull_request`.** A required check that nothing produces never reports, so the pull
+request waits for it forever — a whole-repository deadlock rather than a red build, with nothing
+visibly broken. All four above satisfy this; check it by name before adding a fifth.
 
 ## Where it lives
 
@@ -19,7 +31,7 @@ sources of truth for the same rule is two places for it to drift.
 
 | Rule | Setting | Why |
 |---|---|---|
-| `required_status_checks` | context **`verify`**, `strict_required_status_checks_policy: true` | CI can be red and a merge still succeed without this — the gate was advisory until v0.30.0. The context is the **job** name, not the workflow name. |
+| `required_status_checks` | the **four** contexts in the table above, `strict_required_status_checks_policy: true` | CI can be red and a merge still succeed without this — the gate was advisory until v0.30.0. Each context is a **job** name, not a workflow name, so renaming a job requires updating the ruleset in the same change or the gate waits forever. |
 | `pull_request` | `required_review_thread_resolution: true` | An unresolved review comment blocks the merge. |
 | `deletion` | — | `main` cannot be deleted. |
 | `non_fast_forward` | — | History cannot be rewritten under anyone who has cloned. |
@@ -46,15 +58,19 @@ the table above. A document describing a control is a claim; a script that reads
 control is evidence, and this file would otherwise go stale the first time someone
 adjusted a setting.
 
-It is not part of `npm test`, because it needs the network and `gh` authentication — a
-gate that fails when the network is down is a gate people learn to ignore. Run it after
-changing anything about the ruleset, and in the same breath as the direct-push probe:
+It is **not** part of `npm test`, because it needs the network and `gh` authentication — a
+gate that fails when the network is down is a gate people learn to ignore. It is instead a
+job in `.github/workflows/conventions.yml`, so it runs on **every pull request and every
+push to `main`** rather than only when somebody remembers to type it. That job sets
+`GH_TOKEN` from `GITHUB_TOKEN` and asserts nothing beyond reading the ruleset.
+
+Run it in the same breath as the direct-push probe:
 
 ```bash
 SHA=$(git commit-tree "$(git rev-parse origin/main^{tree})" -p "$(git rev-parse origin/main)" -m "gate probe")
 git push origin "$SHA:refs/heads/main"
 # expect: ! [remote rejected] ... (push declined due to repository rule violations)
-#         remote: - Required status check "verify" is expected.
+#         remote: - Required status check "<one of the four>" is expected.
 ```
 
 The probe uses a **dangling commit object**, so nothing in the working tree or on any
