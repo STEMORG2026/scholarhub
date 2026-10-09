@@ -37,7 +37,7 @@ export const UNKNOWN_REASONS = [
   'not-published', // the provider's page was checked and publishes no threshold
   'not-recorded', // nobody has looked — the catalog does not carry one
   'delegated', // the award sets no bar; a named body does
-  'criterion-only', // the provider weighs academic performance but publishes no bar
+  'criterion-only', // a criterion is stated, but no comparable bar is published
   'unresolvable', // recorded, but the two sides cannot be lined up
   'no-value', // the reader has not confirmed a value to compare
   'no-scale', // a value with no scale cannot be compared against a scaled rule
@@ -220,11 +220,18 @@ export function compareGpa(record, value, requirement, classRank) {
   //     sourced records — and it is the finding the sourcing pass kept producing:
   //     the usual case is a criterion that is *weighed*, not a threshold that is
   //     enforced.
+  //
+  //     The sentence says only that there is no bar. It used to say the provider
+  //     "records how academic performance is weighed", which is true of the
+  //     weighed case and false of NSF GRFP — whose gate is citizenship, not
+  //     grades, and which weighs academic performance not at all. A record can
+  //     publish no academic threshold for either reason, so the sentence states
+  //     the fact they share.
   if (req.kind === 'criterion-only') {
     return {
       verdict: 'unknown',
       reason: 'criterion-only',
-      sentence: 'This programme records how academic performance is weighed but publishes no threshold, so there is no figure to compare against. Read the provider\u2019s own wording below.',
+      sentence: 'This programme publishes no threshold for academic performance, so there is no figure to compare against. Read the provider\u2019s own wording below.',
       quote: req.text,
     };
   }

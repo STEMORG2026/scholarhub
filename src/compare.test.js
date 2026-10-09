@@ -102,6 +102,23 @@ test('the criterion sentence never claims scales or branches', () => {
   assert.match(r.sentence, /publishes no threshold/i);
 });
 
+test('the criterion sentence does not claim the provider weighs academic performance', () => {
+  // NSF GRFP is the record that broke this. Its gate is citizenship, not grades
+  // — it weighs academic performance not at all — and the sentence said the
+  // programme "records how academic performance is weighed". A record can
+  // publish no academic threshold for either reason, so the sentence states only
+  // the fact they share. Another negative control, for the same reason as the
+  // one above: the defect was a claim that was false about the record it was
+  // attached to.
+  const r = compareGpa(record('a'), gpa(3.5, 4), {
+    kind: 'criterion-only',
+    text: 'Must be a U.S. citizen, national, or a permanent resident.',
+  });
+  assert.doesNotMatch(r.sentence, /weigh/i);
+  assert.match(r.sentence, /publishes no threshold/i);
+  assert.equal(r.quote, 'Must be a U.S. citizen, national, or a permanent resident.');
+});
+
 test('the two prose cases do NOT share a sentence', () => {
   // Provenance, not phrasing: a sourced finding is a criterion; an unparsed
   // catalog string may list several scales. `src/ingest.test.js` caught this

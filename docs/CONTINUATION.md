@@ -11,7 +11,7 @@ done and released:
 |---|---|
 | **1. Finish the audit's deferred recommendations** | ✅ Done — v0.42.0, v0.42.1 |
 | **2. The class-rank feature** | ✅ Done — v0.43.0 (comparison), v0.44.0 (input) |
-| **3. The sourcing pass** | ⏸ 45 of 50 — 5 blocked, each with a documented cause |
+| **3. The sourcing pass** | ⏸ 49 of 50 — 1 blocked (CSC), with a precise reason |
 
 The last section is a list of **decisions and directions**, not unfinished work. Nothing there
 blocks anything.
@@ -72,16 +72,41 @@ entirely**. Confirmed in a browser on both render sites.
   The gate is now on the *result* ("this record produced an answer"), which is what it always
   meant.
 
-## 3. The sourcing pass — 45 of 50
+## 3. The sourcing pass — 49 of 50
 
-Fulbright was recovered in v0.45.0 by finding the right page rather than retrying the same URL —
-its eligibility page is `/fulbright/ffsp/general-requirements/`, not the path the Humphrey grant
-uses. **Try that approach on the remaining five before accepting them as blocked.**
+**Four records came off the blocked list in v0.46.0, and none of them was unblockable.** Three needed
+a different *route* rather than a retry; one had been recorded as blocked and never was.
 
-One display defect was found by sourcing it: `quote` was `null` on a `meets`/`fails` verdict, so
-the provider's own wording was invisible exactly when a requirement contained an alternative route
-(Fulbright's is *"60% aggregate or 3.0 GPA system"*). Fixed in v0.45.0 — the wording is now carried
-on every verdict.
+| Record | Recorded cause | What actually worked |
+|---|---|---|
+| ETH Zurich ESOP | criteria only in a client-rendered accordion | rendering the accordion — *"top 10% of Bachelor's degree programme = grade A; this is based on self-assessment"*, a `rank` rule that now **produces verdicts** |
+| RESCO (EMJM) | Cloudflare | the consortium's own *"Who can apply?"* page: bachelor's / **180 ECTS** / 3 years, plus English at B2 (IELTS 6.5, TOEFL 80). No grade bar |
+| University of Canterbury | client-side PageAssist | the scholarship portal: four weighted criteria, **no grade bar** |
+| NSF GRFP | **"region-blocked on both `nsf.gov` and `nsfgrfp.org`"** | **not blocked at all** — the pages load in a browser. The gate is citizenship: *"must be a U.S. citizen, national, or a permanent resident"* |
+
+**The NSF entry is the one worth reading.** A tool failure had been written down as a property of the
+source, and it stayed written down for a release. The distinction matters: *"I could not fetch it"*
+and *"it is not available"* are different claims, and only the second belongs in a block reason.
+
+**The lesson from Fulbright held.** Fulbright was recovered by finding the right path; the same move
+recovered three more. Try a different route before accepting a block.
+
+**CSC is the last one, and its reason is now precise rather than a status code.** The Council's own
+application guide returns an **empty document** to both the fetching tool and a real browser. The
+reachable restatements are **host-university programme pages** — HIT Shenzhen's Type B announcement
+carries the age rules (under 35 for a master's, under 40 for a doctoral) and the language rules
+(TOEFL ≥ 80, IELTS ≥ 6.0), and no GPA bar — but those are one host university's route-specific rules,
+not the Council's general ones. **This project sources the provider**: HIT's own scholarship cites
+HIT's own page because HIT *is* its provider. So CSC stays unrecorded rather than recorded from the
+wrong page. **If it is ever recovered, the route is a CSC page that renders — not a host university's.**
+
+**Two display defects were found by sourcing, one in each of the last two releases.** Fulbright
+(v0.45.0) exposed `quote` being `null` on a `meets`/`fails` verdict, hiding a provider's alternative
+route exactly when it mattered. NSF (v0.46.0) exposed the `criterion-only` sentence claiming the
+provider *"records how academic performance is weighed"* — true of a record that weighs grades
+without a bar, false of one gated on citizenship. **Twice now, sourcing a record found a sentence that
+was confidently wrong about the record it was attached to.** That is the argument for finishing the
+pass rather than the argument for stopping.
 
 ---
 
@@ -89,14 +114,14 @@ on every verdict.
 
 Nothing here is in flight. These are the open questions, in the order they matter.
 
-1. **The sourcing pass is at 45 of 50, and the remaining 5 are blocked.** Each has a documented
-   cause: ETH (criteria exist only in a client-rendered accordion; only aggregators carry them, and
-   those are not acceptable sources), NSF (**region-blocked on both `nsf.gov` and `nsfgrfp.org`** —
-   deliberate, not routed around), CSC (HTTP-412), UC (client-side `PageAssist`), RESCO
-   (Cloudflare). **Fulbright was on this list and is not any more** — it was recovered by finding
-   the right path rather than retrying the same one, which is worth trying for the others before
-   accepting them as blocked. **The decision is whether to accept 45/50 as the end of the pass**,
-   since the marginal value of the last five is lower than any of them individually suggests.
+1. **The sourcing pass is at 49 of 50, and the last one is CSC.** Four records that were listed as
+   blocked in v0.45.0 came off the list in v0.46.0 — ETH, RESCO, UC and NSF — and the NSF entry
+   turned out not to be blocked at all. The detail is in §3 above. **The decision is whether to
+   accept 49/50 as the end of the pass.** The case for stopping: the one remaining record is blocked
+   by a provider whose own guide will not render, and the only reachable restatements are
+   route-specific host-university pages that this project's provenance rule will not accept. The
+   case for one more attempt: the last four were recovered by exactly the move that had been
+   dismissed for them.
 
 2. **`direction` is still unbuilt and still unneeded.** It would only be required if a rule ever
    encoded a downward *scale* rather than a position — MS²'s German "up to 2.8" is the standing
@@ -104,9 +129,12 @@ Nothing here is in flight. These are the open questions, in the order they matte
    not before.
 
 3. **The catalog's `eligibility.gpa_minimum` scalar is now legacy.** The app prefers
-   `data/requirements.json` and falls back to the scalar only for unsourced records. Three
-   validation warnings mark where the two disagree. **When the pass is declared finished, the
-   right move is to drop the scalar, not reconcile it.**
+   `data/requirements.json` and falls back to the scalar only for unsourced records. **Five**
+   validation warnings mark where the two disagree — tu-delft, ms2, daad-epos, fulbright and, as of
+   v0.46.0, eth. All five are the same shape: a **figure** rule (`numeric`, `branches` or `rank`)
+   against a `null` scalar, because a bare number in that scalar would be scale-ambiguous — no record
+   carries `gpa_scale`. Records whose finding is *prose* write the scalar and do not warn. **When the
+   pass is declared finished, the right move is to drop the scalar, not reconcile it.**
 
 4. **The Phase 3 open items are all closed.** The `unresolvable` sentence variants landed in
    v0.38.0; `delegated` and `not-published` in v0.37.0. Nothing is waiting on a reader any more.
