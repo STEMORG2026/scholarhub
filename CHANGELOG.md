@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.50.0] - 2026-10-09
+
+### Added — every release now carries a CycloneDX SBOM
+
+The v0.49.0 release workflow attests a tarball; this adds the inventory of what is *inside* it. **`npm sbom` ships with npm**, so this needed no new dependency and no third-party action — the toolchain that builds the app also describes it.
+
+`--package-lock-only` means the SBOM is read from the lockfile rather than from `node_modules`, so it lists exactly what `npm ci` would install rather than whatever happens to be on the runner. The released document has **166 components**.
+
+**The step asserts it is populated.** A silently empty SBOM is worse than no SBOM, so it checks the `bomFormat` marker and imposes a component-count floor. Verified both ways: it passes on a real SBOM (167 component refs) and rejects an empty document.
+
+**One caveat, stated rather than glossed:** unlike the tarball, the SBOM is **not byte-reproducible** — it carries a serial number and a timestamp by convention. Its checksum verifies the download; it does not mean "the same bytes every build". The tarball keeps that property and remains the attested subject.
+
+### Verified
+
+- `npm sbom --sbom-format cyclonedx --package-lock-only` produces a valid CycloneDX 1.5 document, 166 components.
+- The validation logic passes on a real SBOM and rejects an empty one.
+- The workflow still parses; the pin guard is clean.
+
 ## [0.49.0] - 2026-10-09
 
 ### Added — attested releases, and a scheduled home for the two checks CI deliberately excludes
