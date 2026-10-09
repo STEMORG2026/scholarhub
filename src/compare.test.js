@@ -16,6 +16,7 @@ import {
   gpaRequirement,
   compareGpa,
   compareAllGpa,
+  parseClassRank,
   VERDICT_LABEL,
 } from './compare.js';
 import { indexRequirements } from './requirements.js';
@@ -256,6 +257,57 @@ test('an unconfirmed value yields no-value, not a pass', () => {
     const r = compareGpa(record('a'), empty, { kind: 'numeric', value: 3, scale: 4 });
     assert.equal(r.verdict, 'unknown');
     assert.equal(r.reason, 'no-value');
+  }
+});
+
+// --- parseClassRank ---------------------------------------------------------
+
+test('a class position is read from the forms a reader actually types', () => {
+  for (const [input, expected] of [
+    ['8', 8],
+    ['8%', 8],
+    ['top 8%', 8],
+    ['Top 8 %', 8],
+    ['8.5', 8.5],
+    ['  12  ', 12],
+    [8, 8],
+    [100, 100],
+    [1, 1],
+  ]) {
+    assert.equal(parseClassRank(input), expected, 'parseClassRank(' + JSON.stringify(input) + ')');
+  }
+});
+
+test('a rank within a cohort is converted to a percentage', () => {
+  // 8th of 120 is top 6.67%, not top 8%. Reading the bare "8" as a percentage
+  // would flatter the reader — and on a comparison that runs backwards,
+  // flattering means telling them they meet bars they do not.
+  assert.equal(parseClassRank('8 of 120'), 6.67);
+  assert.equal(parseClassRank('8th of 120'), 6.67);
+  assert.equal(parseClassRank('8 out of 120'), 6.67);
+  assert.equal(parseClassRank('1 of 100'), 1);
+  assert.equal(parseClassRank('120 of 120'), 100);
+});
+
+test('an incoherent cohort is rejected rather than divided', () => {
+  // "of 0" has no meaning, and a rank cannot exceed the cohort. These are typos
+  // or a misunderstanding of the field, and the answer is to ask again.
+  for (const input of ['0 of 120', '8 of 0', '130 of 120', '8 of -120']) {
+    assert.equal(parseClassRank(input), null, 'parseClassRank(' + JSON.stringify(input) + ')');
+  }
+});
+
+test('an unreadable class position is null, never a guess', () => {
+  // null leaves rank rules `unresolvable`, which says "add this". A
+  // half-understood number would say "you do not qualify".
+  for (const input of ['', '   ', 'top of my class', 'first', null, undefined, {}, [], 'abc']) {
+    assert.equal(parseClassRank(input), null, 'parseClassRank(' + JSON.stringify(input) + ')');
+  }
+});
+
+test('an out-of-range class position is rejected, not clamped', () => {
+  for (const input of ['0', '0%', '150', '101', '-5', 0, 101, -5]) {
+    assert.equal(parseClassRank(input), null, 'parseClassRank(' + JSON.stringify(input) + ')');
   }
 });
 

@@ -301,6 +301,72 @@ export function compareGpa(record, value, requirement, classRank) {
 }
 
 /**
+ * Read a reader's class position from what they typed, as "top N%".
+ *
+ * **Percentage is the natural form and the honest one.** A reader who knows
+ * "8th of 120" has to do the division themselves — and so does this parser,
+ * below — because a position alone cannot be compared against "top 10%".
+ *
+ * Returns `null` for anything it cannot read, which leaves rank rules
+ * `unresolvable`. That is the safe direction and the whole point: `unresolvable`
+ * says "add your class position", whereas a number we half-understood says "you
+ * do not qualify" — on the one comparison in this app that runs backwards.
+ *
+ * Accepted: a bare number ("8"), "8%", "top 8%", "8 of 120", "8th of 120",
+ * "8/120". Rejected: anything with no digits, and anything out of range.
+ * Out-of-range values are **rejected, not clamped** — clamping would invent a
+ * number the reader did not give.
+ */
+export function parseClassRank(input) {
+  if (typeof input === 'number') {
+    return Number.isFinite(input) && input > 0 && input <= 100 ? input : null;
+  }
+  if (typeof input !== 'string') return null;
+
+  const text = input.trim();
+  if (!text) return null;
+
+  // A minus sign is not a position. Reject the whole string rather than reading
+  // the digits after it: "-5" must not become "top 5%". (Both bugs here were
+  // found by the tests for them — a negative cohort and a negative position both
+  // used to fall through to the percentage branch, which flatters the reader, and
+  // on a comparison that runs backwards, flattering means passing them into bars
+  // they do not meet.
+
+  if (text.includes('-')) return null;
+
+  // "8 of 120", "8th of 120", "8 out of 120", "8/120" — a position and a cohort
+  // size. This comes first, because a bare "8" in that context is a rank, not a
+  // percentage, and reading it as 8% would flatter the reader: 8th of 120 is
+  // top 6.67%.
+  //
+  // When a cohort word is present but the cohort itself cannot be read, the whole
+  // thing is rejected rather than falling through to the percentage branch —
+  // "8 of about 120" is not "top 8%", and guessing would be a confident claim
+  // resting on a string we did not understand.
+  if (/(?:out\s+of|of|\/)/i.test(text)) {
+    const placed = text.match(/^(\d+(?:\.\d+)?)\s*(?:st|nd|rd|th)?\s*(?:out\s+of|of|\/)\s*(\d+(?:\.\d+)?)/i);
+    if (!placed) return null;
+    const rank = Number(placed[1]);
+    const cohort = Number(placed[2]);
+    if (!Number.isFinite(rank) || !Number.isFinite(cohort) || rank <= 0 || cohort <= 0 || rank > cohort) return null;
+    // Two decimals is plenty, and rounding here keeps the reported sentence
+    // honest — an unrounded 6.66666… in a sentence is noise a reader cannot act
+    // on.
+    return Math.round((rank / cohort) * 10000) / 100;
+  }
+
+  // Otherwise the first number in the string is the percentage: "8", "8%",
+  // "top 8%", "Top 8 %", "8.5".
+  const percent = text.match(/(\d+(?:\.\d+)?)/);
+  if (!percent) return null;
+
+  const value = Number(percent[1]);
+  if (!Number.isFinite(value) || value <= 0 || value > 100) return null;
+  return value;
+}
+
+/**
  * The readable label for a verdict, to sit beside the existing eligibility
  * badge without inventing new colour semantics for the same three states.
  */

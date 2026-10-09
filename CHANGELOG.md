@@ -1,5 +1,66 @@
 # Changelog
 
+## [0.44.0] - 2026-10-09
+
+### Added — the class-rank input side, so the feature is finally reachable
+
+v0.43.0 built the comparison and could not be used. This wires the input, and three records that
+have never been checkable now produce a verdict: TU Delft's top 10%, MS²'s best 35%, DAAD EPOS's
+upper third.
+
+- **A profile field**, "Class position (optional)", beside the GPA field.
+- **`parseClassRank`** in `src/compare.js` — a pure parser, so it is testable.
+- **The panel runs when the reader has *either* a GPA or a class position**, not a GPA alone.
+- **The heading names what is being compared.** It said "Your confirmed GPA against the catalog",
+  which would have been a false claim to a reader who has a position and no GPA.
+
+### Fixed — two things the tests caught, both of which would have flattered the reader
+
+**`parseClassRank` read `"8 of -120"` and `"-5"` as valid percentages.** The digit regex matched
+the digits after the minus and ignored the sign, so both fell through to the percentage branch:
+`"-5"` became "top 5%". On a comparison that runs *backwards*, flattering the reader means passing
+them into bars they do not meet. A minus sign now rejects the whole string, and a string that
+names a cohort but whose cohort cannot be read is rejected rather than falling through —
+`"8 of about 120"` is not "top 8%".
+
+**The detail dialog hid every verdict from a reader with a class position.** Its row was gated on
+`confirmedGpa`, which was correct while a GPA was the only comparable value and is not any more.
+The gate is now on the *result* — "this record produced an answer" — which is what it always
+meant. `no-value` is still excluded, because "no GPA is on your profile yet" is a fact about the
+reader rather than about the programme, and the profile summary says it once instead of fifty
+times.
+
+### Changed — the row label follows the value
+
+The per-record row said "Your GPA" unconditionally. A rank rule is answered by the reader's class
+position, so labelling that row "Your GPA" would misname the value the sentence beside it is
+about. It now reads "Your class position" for a rank rule and "Your GPA" otherwise.
+
+### Verified end to end, measured rather than reasoned
+
+| Reader | Result |
+|---|---|
+| no GPA, no position | 0 met — the three rank records say *"Add your class position"* |
+| `top 8%` only | **3 met** |
+| `40 of 120` (top 33.33%) | **1 met, 2 failed** |
+| GPA `3.62` + `12 of 120` (top 10%) | **6 met, and `unresolvable` gone entirely** |
+
+The third row is the one worth reading: `33.33%` **fails** DAAD EPOS's upper third (33) while
+**meeting** MS²'s top 35%. The boundary discriminates in the right direction on both sides of it,
+which is the whole risk of a comparison that runs backwards.
+
+Confirmed in a browser on both render sites — the strip heading adapts, and TU Delft's dialog
+reads *"Your class position — Requirement met — Your recorded position, top 8%, is within the top
+10% this programme asks for."*
+
+**Not verifiable by any test in this repository, and said so:** the panel only produces a
+comparison once the profile view has mounted it, so a browser check has to visit the profile
+before opening a record. That is pre-existing lazy-chunk behaviour, not a defect, and it is the
+reason the browser step is in the verification recipe rather than assumed.
+
+`npm test` **277 → 282**. Coverage 95.74 / 87.76 / 96.06, floors 92/82/92. Bundle 502,580 bytes,
+headroom 9,420 of the 512,000 assertion.
+
 ## [0.43.0] - 2026-10-09
 
 ### Added — a class rank is now answerable (the comparison side)
@@ -22,7 +83,11 @@ same reason — GKS asks for "a score percentile of 80% **or above**", so percen
 *ordinary* way, and `rank` and `percentile` are opposite. They shared one branch before this
 release, which would have inverted one of them.
 
-**Not yet reachable.** The input side is not wired: the profile has no field for a class position,
+> **Corrected in v0.44.0.** This entry originally said the feature was "not yet reachable" — the
+> input side was not wired. It is now. Left here rather than deleted, because the two-step shape
+> was deliberate and the record of it explains why v0.43.0 changed nothing a reader could see.
+
+**Not yet reachable (as of v0.43.0).** The input side is not wired: the profile has no field for a class position,
 and nothing passes one in. The comparison is ready and tested; the reader cannot reach it yet. That
 is deliberate and matches this project's own history — `data/requirements.json` was built in
 v0.29.0 and wired in v0.37.0. `docs/CONTINUATION.md` records the exact remaining steps, including
