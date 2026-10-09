@@ -1,5 +1,45 @@
 # Changelog
 
+## [0.49.0] - 2026-10-09
+
+### Added — attested releases, and a scheduled home for the two checks CI deliberately excludes
+
+Two workflows, both additive. `verify` is still the only required check.
+
+**`release.yml` — what was released, provably.** Every release in this repository has been a tag and a
+hand-written note, and `gh release view v0.48.0` reports **`assets=0`**. The tag says which commit was
+released; nothing said what was *built* from it, or that the build came from that commit rather than
+from a laptop. This builds the site from the tagged commit, packs it, and has GitHub sign a
+**build-provenance attestation** over the artifact — so a reader can *verify* it was produced by this
+workflow from this commit instead of being told so.
+
+Two details that matter:
+
+- **It re-runs the gate.** A tag can be pushed straight to a commit that never passed `verify` — a tag
+  push is not a pull request, so no required check applies to it. The release re-proves the build
+  rather than assuming the merge proved it.
+- **The archive is reproducible.** Sorted entries, fixed ownership, a zero mtime and `gzip -n`, so two
+  builds of the same commit produce the same bytes. That is what makes the published checksum mean
+  anything. **Verified locally: two packs one second apart produced an identical `sha256`.**
+
+**`scheduled.yml` — where the excluded checks live.** `ci.yml` leaves out `check:links` because
+network weather would make it a false red, and treats `npm audit` as a report rather than a gate. Both
+exclusions are correct and both checks are still worth having. They now run weekly, where a failure
+means a *dead* link rather than a flaky one — the script already distinguishes the two, so a red run
+here is a real finding.
+
+### Verified
+
+- All seven workflow files parse; jobs and triggers resolve as intended.
+- The pin guard is clean on the new tree.
+- The release archive is **byte-deterministic** across two builds.
+- `TZ=UTC npm test` — 286 tests, 0 fail.
+
+### Not done, deliberately
+
+Still no deploy. This repository has no Pages site (the API returns 404 for one) and the app is a
+static bundle. Attesting what *would* be published is in scope; publishing is not.
+
 ## [0.48.0] - 2026-10-09
 
 ### Added — the CI controls this repository documented but did not enforce, and the two scans it lacked
