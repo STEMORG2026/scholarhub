@@ -175,8 +175,8 @@ Four layers, and only the last two are authoritative:
 | Workflow | Job(s) | Gates a merge? |
 |---|---|---|
 | `ci.yml` | `verify` | **Yes** — the merge gate |
-| `conventions.yml` | `Branching Strategy`, `Conventional Commits` | Not yet — added in v0.48.0 |
-| `action-pins.yml` | `Every action is pinned to a commit SHA` | Not yet — added in v0.48.0 |
+| `conventions.yml` | `Branching Strategy`, `Conventional Commits`, `Branch protection still matches its documentation` | **Two of the three** — the first two are required; the protection job reports |
+| `action-pins.yml` | `Every action is pinned to a commit SHA` | **Yes** — required |
 | `codeql.yml` | `Analyze (javascript-typescript)`, `Analyze (actions)` | No — reports to the Security tab |
 | `scorecard.yml` | `Scorecard analysis` | No — publishes an external score |
 | `release.yml` | `Build and attest` | No — runs on a tag, not a PR |
@@ -184,7 +184,9 @@ Four layers, and only the last two are authoritative:
 
 **A workflow that reports a required check must trigger on `pull_request`.** A required check that no workflow produces never reports, so the pull request waits for it forever. That is a whole-repository deadlock rather than a red build — every PR blocked, with nothing visibly broken — and it is worth checking by name before adding a check to the ruleset.
 
-`conventions.yml` and `action-pins.yml` are deliberately separate from `ci.yml` so that the required checks have one clear owner. `ci.yml` runs the canonical local command and must stay reproducible on a developer's machine; the two policy checks are not that.
+`conventions.yml` and `action-pins.yml` are deliberately separate from `ci.yml` so that the required checks have one clear owner. `ci.yml` runs the canonical local command and must stay reproducible on a developer's machine; the policy checks are not that.
+
+**`check:protection` is a job here rather than a required check, on purpose.** It reads the live ruleset over the network; making it required would mean a GitHub API outage blocks every merge. It is still run on every pull request, so a drift from `.github/BRANCH-PROTECTION.md` is visible immediately.
 
 **Watch the interaction with Dependabot.** `strict_required_status_checks_policy: true` means any merge into `main` invalidates other open PRs until CI re-runs. That is correct for a multi-person repo and mildly annoying for a solo one with bot PRs open. It can be relaxed per-repo without touching the required check itself.
 
