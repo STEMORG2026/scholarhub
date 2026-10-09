@@ -1,0 +1,72 @@
+name: Scheduled checks
+
+# WHY THIS EXISTS
+# `ci.yml` leaves two things out on purpose, and both exclusions are right:
+#
+#   * `npm run check:links` probes every official link over the network, and the catalog
+#     documents that 401/403/405/429 responses from government and university sites mean
+#     *unverified, not broken*. On a pull request that would produce red builds for
+#     network weather and teach everyone to ignore the pipeline.
+#   * `npm audit` reports an advisory the owner has deliberately deferred, so it is
+#     reported rather than enforced.
+#
+# Neither belongs on a pull request. Both are worth knowing about on a schedule: a dead
+# link is a real defect whether or not it can gate a merge, and a new advisory is news.
+# This is where they live, so the merge gate stays a statement about *the change* and
+# these stay a statement about *the world*.
+#
+# The idea is taken from the sibling projects, which each keep a scheduled quality run
+# separate from their merge gate for exactly this reason.
+
+on:
+  schedule:
+    # Mondays, 03:40 UTC — 09:25 in Kathmandu, and off the hour to avoid the top-of-hour
+    # runner stampede.
+    - cron: '40 3 * * 1'
+  # So it can be run on demand rather than waited for.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scheduled-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  links:
+    name: Official links still resolve
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      # Fails on a *dead* link and warns on an unreachable one — the distinction the
+      # catalog is built on. A red run here is therefore a real finding, not weather.
+      - name: Probe every official link
+        run: npm run check:links
+
+  advisories:
+    name: Dependency advisories
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      # Reported, not enforced — the same asymmetry ci.yml documents. `|| true` keeps this
+      # job green so that the *links* job failing means a dead link, and an advisory being
+      # present does not mask it.
+      - name: Report advisories
+        run: npm audit --audit-level=high || true

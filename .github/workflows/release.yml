@@ -1,0 +1,90 @@
+name: Release
+
+# WHY THIS EXISTS
+# Every release in this repository has been a tag and a hand-written note. The tag says
+# which commit was released; nothing said what was *built* from it, or that the build came
+# from that commit rather than from somebody's laptop. Every release to date carries zero
+# assets — `gh release view v0.48.0` reports `assets=0`.
+#
+# This builds the site from the tagged commit, packs it with a checksum, and has GitHub
+# sign a build-provenance attestation over the result. That attestation is what lets a
+# reader *verify* that the artifact they downloaded was produced by this workflow from this
+# commit, instead of being told so.
+#
+# WHY IT RE-RUNS THE GATE
+# A tag can be pushed straight to a commit that never passed `verify` — a tag push is not a
+# pull request, so no required check applies to it. The release therefore re-proves the
+# build rather than assuming the merge proved it.
+#
+# WHY IT DOES NOT DEPLOY
+# There is no deployment here and there should not be one: this repository has no Pages
+# site (the API returns 404 for it), and the app is a static bundle. Publishing is out of
+# scope; attesting what would be published is not.
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and attest
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      # Attach the artifact and its checksum to the release.
+      contents: write
+      # The provenance attestation is signed with this OIDC token — without it there is no
+      # signature, and an unsigned attestation proves nothing.
+      id-token: write
+      # Required to write the attestation.
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      # The canonical gate, on the tagged commit.
+      - run: npm test
+      - run: npm run build
+
+      - name: Pack the build reproducibly and record its checksum
+        run: |
+          set -euo pipefail
+          # The same assertion ci.yml makes: a `vite build` that exits 0 with an empty
+          # dist/ looks exactly like success.
+          test -s dist/index.html || { echo "dist/index.html is missing or empty"; exit 1; }
+
+          # Sorted entries, fixed ownership and a zero mtime, and `gzip -n` to omit the
+          # gzip header timestamp. Two builds of the same commit then produce the same
+          # bytes, which is what makes the checksum mean anything.
+          tar --sort=name --owner=0 --group=0 --numeric-owner --mtime='@0' \
+            -cf - dist | gzip -n > scholarhub-dist.tar.gz
+
+          sha256sum scholarhub-dist.tar.gz > scholarhub-dist.tar.gz.sha256
+          cat scholarhub-dist.tar.gz.sha256
+
+      - name: Attest the build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
+        with:
+          subject-path: scholarhub-dist.tar.gz
+
+      - name: Attach the artifact and checksum to the release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          files: |
+            scholarhub-dist.tar.gz
+            scholarhub-dist.tar.gz.sha256
