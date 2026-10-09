@@ -96,3 +96,26 @@ jobs:
             exit 1
           fi
           echo "All commit messages are Conventional Commits."
+
+  protection:
+    name: Branch protection still matches its documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      # `check:protection` reads the LIVE ruleset and fails when it does not match
+      # `.github/BRANCH-PROTECTION.md`. It used to be a manual, opt-in command, so the
+      # strongest control in this repository was verified only when somebody remembered
+      # to type it. It runs here instead.
+      #
+      # No `npm ci`: the script uses only Node built-ins and the preinstalled `gh`.
+      # GH_TOKEN is set explicitly because `gh` reads it before any stored credential.
+      - name: Verify the live ruleset
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/check-branch-protection.mjs

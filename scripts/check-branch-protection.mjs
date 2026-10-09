@@ -26,7 +26,17 @@ const EXPECTED = {
   // rather than advisory for an admin.
   bypassActors: 0,
   requiredRuleTypes: ['deletion', 'non_fast_forward', 'pull_request', 'required_status_checks'],
-  statusContexts: ['verify'],
+  // Every check that must pass before `main` moves. `verify` is the merge gate and the
+  // canonical local command; the other three are the policy checks added in v0.48.0,
+  // promoted to required in v0.51.0. Each one triggers on `pull_request`, which is the
+  // property that matters — a required check that no workflow produces never reports, and
+  // the pull request then waits for it forever.
+  statusContexts: [
+    'verify',
+    'Branching Strategy',
+    'Conventional Commits',
+    'Every action is pinned to a commit SHA',
+  ],
   strictStatusChecks: true,
   reviewThreadResolution: true,
 };
