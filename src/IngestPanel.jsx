@@ -19,13 +19,16 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { FileText, ShieldCheck, AlertTriangle, Check, X } from 'lucide-react';
-import { compareAllGpa } from './compare.js';
+import { compareAllGpa, parseClassRank } from './compare.js';
 import { indexRequirements, summarise } from './requirements.js';
 
 /** The human label for a proposal's field. */
 const FIELD_LABEL = { gpa: 'GPA', english: 'English test', classification: 'Degree classification' };
 
-export default function IngestPanel({ onConfirm, currentGpa, currentLanguage, currentClassification, onClear, records, onComparison }) {
+export default function IngestPanel({ onConfirm, currentGpa, currentLanguage, currentClassification, onClear, records, onComparison, classRankText }) {
+  // The reader's class position, parsed from whatever they typed. `null` when there is
+  // nothing readable, which is also the value that leaves rank rules `unresolvable`.
+  const classRank = parseClassRank(classRankText);
   const [state, setState] = useState({ status: 'idle' });
   const fileRef = useRef(null);
 
@@ -98,7 +101,7 @@ export default function IngestPanel({ onConfirm, currentGpa, currentLanguage, cu
   // of it, which is the same discipline as the extractor next door.
   const [requirements, setRequirements] = useState(null);
   useEffect(() => {
-    if (!currentGpa || requirements) return undefined;
+    if ((!currentGpa && classRank === null) || requirements) return undefined;
     let alive = true;
     import('../data/requirements.json')
       .then((mod) => { if (alive) setRequirements(indexRequirements(mod.default)); })
@@ -107,11 +110,11 @@ export default function IngestPanel({ onConfirm, currentGpa, currentLanguage, cu
       // an error or to a wrong one.
       .catch(() => { if (alive) setRequirements(new Map()); });
     return () => { alive = false; };
-  }, [currentGpa, requirements]);
+  }, [currentGpa, classRank, requirements]);
 
   const comparison = React.useMemo(
-    () => (currentGpa ? compareAllGpa(records || [], currentGpa, requirements) : null),
-    [currentGpa, records, requirements],
+    () => (currentGpa || classRank !== null ? compareAllGpa(records || [], currentGpa, requirements, classRank) : null),
+    [currentGpa, classRank, records, requirements],
   );
   // The detail dialog lives in `App`, and it needs the per-record sentence. It
   // cannot import `compare.js` without putting that module back on the
@@ -128,6 +131,15 @@ export default function IngestPanel({ onConfirm, currentGpa, currentLanguage, cu
   const notPublished = tally ? tally.byReason['not-published'] || 0 : 0;
   const delegated = tally ? tally.byReason.delegated || 0 : 0;
   const criterionOnly = tally ? tally.byReason['criterion-only'] || 0 : 0;
+  // The heading names what is being compared. Saying "your confirmed GPA" to a reader
+  // who has recorded a class position and no GPA would be the same class of false
+  // claim this project keeps having to correct — a sentence that is confidently wrong
+  // about the thing it is attached to.
+  const compareSubject = currentGpa && classRank !== null
+    ? 'Your GPA and class position against the catalog'
+    : currentGpa
+      ? 'Your confirmed GPA against the catalog'
+      : 'Your recorded class position against the catalog';
 
   return (
     <div className="form-card ingest-card">
@@ -179,7 +191,7 @@ export default function IngestPanel({ onConfirm, currentGpa, currentLanguage, cu
               records record no comparable requirement, and the summary says so
               rather than showing a percentage nobody can audit. */}
           <div className="gpa-compare-head">
-            <b>Your confirmed GPA against the catalog</b>
+            <b>{compareSubject}</b>
             <span>{meets} met · {fails} not met · {unknown} not checkable</span>
           </div>
           <p className="gpa-compare-lede">

@@ -2,141 +2,133 @@
 
 Updated 2026-10-09. This file exists so that work can be picked up cold.
 
-## The two halves of the work
+## Status: nothing is in flight
 
-| Half | State |
+`main` is clean, shippable, and has no half-finished work on it. Both pieces that were open are
+done and released:
+
+| Piece | State |
 |---|---|
-| **1. Finish the audit's deferred recommendations** | ✅ **Done and shipped** — v0.42.0, v0.42.1 |
-| **2. Continue building ScholarHub** | ⏸ **In progress** — see below |
+| **1. Finish the audit's deferred recommendations** | ✅ Done — v0.42.0, v0.42.1 |
+| **2. The class-rank feature** | ✅ Done — v0.43.0 (comparison), v0.44.0 (input) |
+
+The last section is a list of **decisions and directions**, not unfinished work. Nothing there
+blocks anything.
 
 ---
 
-## Half 1 — done
+## 1. The audit — done
 
-Audit score **63.4 → 74.8/100**, maturity `mvp → beta`, **no critical since v0.40.0**. Three
-releases tagged and published: `v0.41.0`, `v0.42.0`, `v0.42.1`.
+Score **63.4 → 74.8/100**, maturity `mvp → beta`, **no critical since v0.40.0**.
 
-Shipped: ESLint (now the first stage of `npm test`), coverage floors (92/82/92 against
-95.59/87.26/96.03), the `source-map-js` high-severity advisory fixed (0 vulnerabilities), an
-ErrorBoundary, `.editorconfig`, `.github/CODEOWNERS`, `.github/BRANCH-PROTECTION.md` and
-`npm run check:protection`.
+Shipped: ESLint as the first stage of `npm test`, coverage floors (92/82/92 against
+95.74/87.76/96.06), the `source-map-js` HIGH advisory fixed (0 vulnerabilities), an ErrorBoundary,
+`.editorconfig`, `.github/CODEOWNERS`, `.github/BRANCH-PROTECTION.md` and `npm run check:protection`,
+and release tags with GitHub releases.
 
-Still open from the audit, each with a written reason: `INV-SEC-001` security headers and
-`SEC-025` password hashing (no server, no auth — false positives), `SUP-022/023/024` SLSA/VSA/Sigstore (nothing to attest for a static bundle), `CICD-006`/`FND-011` IaC and Dockerfile (no
-container), `CICD-008` error tracking (needs a backend this project deliberately lacks).
-Prettier is deliberately not adopted — it would reformat the whole repository, and an unenforced
-formatter config is worse than none.
+**Still open, each with a written reason rather than a shrug:**
+
+| Finding | Why it is not being fixed |
+|---|---|
+| `INV-SEC-001` security headers, `SEC-018` | No server. Response headers belong to the host. Only a `<meta http-equiv>` CSP could live in the repo. |
+| `SEC-025` password hashing | **False positive.** There is no authentication anywhere; the only match is `type="password"` on the masked API-key input. |
+| `SUP-022/023/024` SLSA, VSA, Sigstore | Nothing to attest. There is no container and no release artifact. |
+| `CICD-006` IaC, `FND-011` Dockerfile | No infrastructure and no container. |
+| `CICD-008` error tracking | Needs a backend to receive reports, which this project deliberately does not have. The ErrorBoundary shows the reader the error instead. |
+| `CQ-002` formatter | **Prettier deliberately not adopted.** It would reformat every file in the repository — a change to make on purpose, not as a footnote — and an unenforced formatter config is worse than none. `.editorconfig` covers the editor-level basics. |
+
+## 2. The class-rank feature — done
+
+Three records carry a real academic threshold expressed as a **class position**: TU Delft's top
+10%, MS²'s best 35%, DAAD EPOS's upper third. All three now produce a verdict.
+
+**The design point, which is the part worth not losing: a rank is a *position*, and position runs
+the other way.** Every `rank` rule means "the top N%", so the reader meets it when their own
+position is **≤ N** — a reader in the top 8% meets a top-10% bar. That is the opposite comparison
+from `numeric` and `count`, where larger is better.
+
+**This is why the feature does not need the `direction` field** still open in
+`REQUIREMENTS-SCHEMA.md` §3.5. `direction` is for a downward **scale** — MS²'s German "up to 2.8",
+where the *number itself* runs backwards. A position is a different thing: the number is ordinary
+and only the **comparison** flips. The `rank` kind already says which; no flag is required.
+
+`percentile` runs the *ordinary* way — GKS asks for "a score percentile of 80% **or above**" — so
+`rank` and `percentile` are opposite, and they were split into separate branches in v0.43.0. They
+shared one before that, which would have inverted one of them.
+
+**Verified end to end.** With a recorded `top 8%`: **3 met**. With `40 of 120` (top 33.33%):
+**1 met, 2 failed** — and the boundary is exactly right, `33.33%` fails DAAD EPOS's upper third
+(33) while meeting MS²'s top 35%. With a GPA *and* a rank: **6 met, and `unresolvable` gone
+entirely**. Confirmed in a browser on both render sites.
+
+**Two things the tests caught during the build, worth remembering:**
+
+- `parseClassRank` read `"8 of -120"` and `"-5"` as valid percentages, because the digits after a
+  minus were matched and the minus ignored. On a comparison that runs backwards, flattering the
+  reader means passing them into bars they do not meet.
+- The detail dialog gated its verdict row on `confirmedGpa`, which was correct while a GPA was the
+  only comparable value — and hid **every** verdict from a reader with a class position instead.
+  The gate is now on the *result* ("this record produced an answer"), which is what it always
+  meant.
 
 ---
 
-## Half 2 — the class-rank feature
+## What is actually next — decisions, not tasks
 
-### Why this feature
+Nothing here is in flight. These are the open questions, in the order they matter.
 
-Measured, not guessed. Three records carry a real academic threshold expressed as a **class
-position**:
+1. **The sourcing pass is paused at 44 of 50, and the remaining 6 are blocked.** Each has a
+   documented cause: ETH (criteria exist only in a client-rendered accordion; only aggregators
+   carry them, and those are not acceptable sources), NSF (**region-blocked on both `nsf.gov` and
+   `nsfgrfp.org`** — deliberate, not routed around), CSC (HTTP-412), UC (client-side `PageAssist`),
+   RESCO (Cloudflare), Fulbright (eligibility page not at the path Humphrey uses). **The decision
+   is whether to accept 44/50 as the end of the pass**, since the marginal value of the last six
+   is lower than any of them individually suggests.
 
-| Record | Rule |
-|---|---|
-| `tu-delft-van-effen` | `rank: 10 of 100` — "top 10% of graduates" |
-| `ms2-emjm` | `rank: 35 of 100` — "the best 35% of students" |
-| `daad-epos` | `rank: 33 of 100` — "the upper third" |
+2. **`direction` is still unbuilt and still unneeded.** It would only be required if a rule ever
+   encoded a downward *scale* rather than a position — MS²'s German "up to 2.8" is the standing
+   example, and it is deliberately recorded as `prose`. Build it when a second such case appears,
+   not before.
 
-A reader's profile has no class rank, so all three currently return `unresolvable`. Adding the
-field is the single highest-value build available: **three records move from `unresolvable` to
-`meets`/`fails`**, which is more than any grade-conversion work would unlock. (Compare: of the six
-records with a comparable figure, only three — KAUST, MEXT, GKS — can be checked against a GPA at
-all.)
+3. **The catalog's `eligibility.gpa_minimum` scalar is now legacy.** The app prefers
+   `data/requirements.json` and falls back to the scalar only for unsourced records. Three
+   validation warnings mark where the two disagree. **When the pass is declared finished, the
+   right move is to drop the scalar, not reconcile it.**
 
-### ✅ Done in this increment (committed)
-
-`src/compare.js`:
-
-- `compareGpa(record, value, requirement, classRank)` and
-  `compareAllGpa(records, value, requirementsIndex, classRank)` — the class rank is threaded
-  through.
-- The `rank` branch now produces a **real verdict** when a position is present.
-- The `percentile` branch was **split out of the `rank` branch** (they shared one before).
-
-**33 tests in `src/compare.test.js`**, including three that pin the direction:
-
-- `top 8%` **meets** a top-10% bar; `top 11%` fails; exactly `10` meets.
-- a percentile does **not** use the rank comparison;
-- with no position recorded, a rank says what would be needed (`Add your class position`).
-
-Three defect classes planted and each observed to fail: inverting the comparison (3 tests),
-letting percentile share the rank branch (2 tests), treating a missing position as satisfied
-(3 tests).
-
-### ⏸ Not done — the exact next steps
-
-1. **`parseClassRank(input)`** — a pure parser, to live in `src/compare.js` next to
-   `gpaRequirement`. Returns a number (top N%) or `null`. Design decided: **percentage only,
-   deliberately narrow** — a reader typing "8th of 120" does their own division. Rationale to
-   preserve: a silently misread position produces a confident wrong verdict on the one comparison
-   that runs backwards. Reject `0` and `>100` rather than clamping.
-
-   Two bash heredocs failed with `Bad substitution` because the test bodies contain `${...}` — use
-   the Edit/Write tool for anything with template literals.
-
-2. **Profile field** — `src/App.jsx`, in the profile form at the `Current GPA (optional)` label
-   (line 295). Add a "Class position (top %)" input bound to `profile.classRank`, mirroring how
-   `profile.gpa` is bound. It persists via the existing `sh-profile` write.
-
-3. **Wire it in** — `src/App.jsx` line ~300 passes props to `<IngestPanel>`; add
-   `currentClassRank={parseClassRank(profile.classRank)}`.
-
-4. **`src/IngestPanel.jsx`** — accept `currentClassRank` in the signature (line 28). Two changes:
-   - the comparison is currently gated on `currentGpa` alone (line ~92). It must run when the
-     reader has **either** a GPA or a class rank.
-   - pass `currentClassRank` into `compareAllGpa`.
-   - the strip heading says "Your confirmed GPA against the catalog". That is only true when a
-     GPA exists — it needs to adapt when only a class rank is present, or the panel will make the
-     same class of false claim this project keeps correcting.
-
-5. **Verify** — full chain, then in a browser: record a class position, and confirm `tu-delft`,
-   `ms2` and `daad-epos` each show a verdict rather than "cannot be checked".
-
-### 🔑 The design decision not to lose
-
-**A rank is a *position*, and position runs the other way.** Every `rank` rule means "the top
-N%", so the reader meets it when their own position is **≤ N**: top 8% meets a top-10% bar.
-
-This is why the class-rank feature does **not** need the `direction` field that is still an open
-item in `docs/REQUIREMENTS-SCHEMA.md` §3.5. `direction` is for a **downward scale** — MS²'s
-German "up to 2.8", where the *number itself* runs backwards. A position is different: the number
-is ordinary and only the **comparison** flips. The `rank` kind already says which; no flag is
-required. Do not add `direction` for this.
-
-Note also that `percentile` runs the *ordinary* way — GKS asks for "a score percentile of 80% or
-above, larger is better. `rank` and `percentile` are opposite, which is why they were split into
-separate branches.
+4. **The Phase 3 open items are all closed.** The `unresolvable` sentence variants landed in
+   v0.38.0; `delegated` and `not-published` in v0.37.0. Nothing is waiting on a reader any more.
 
 ---
 
 ## Standing constraints
 
-- **Never push to `main`.** Branch → PR → merge. This was enforced, and it caught me: I committed
-  a version bump straight onto `main` and the ruleset rejected it
+Each of these has already cost something, which is why it is written down.
+
+- **Never push to `main`.** Branch → PR → merge. This is **enforced**, not remembered, and it
+  caught me: I committed a version bump straight onto `main` and the ruleset rejected it
   (`push declined due to repository rule violations`). A rule that lives only in memory gets
-  broken by accident; the fix is to make it structurally impossible.
-- **A local measurement is not a CI measurement.** Hit twice in two releases: dates (UTC vs
-  UTC+05:45) and coverage (this environment injects two shim files into every Node process; they
-  must be excluded with `--test-coverage-include`). Run `TZ=UTC npm test` before believing a local
-  result.
-- **A scanner finding is a claim, not a fact.** Three false positives here all came from *true*
-  statements: the smoke test's leak canary, a `type="password"` API-key field, and a comment
-  explaining an empty catch.
-- Node's test runner **refuses `.jsx`**. No component can be unit-tested; put anything worth
-  testing in a plain `.js` module.
+  broken by accident.
+- **A local measurement is not a CI measurement.** Hit **twice in two releases**: dates (the
+  validator compared against UTC while Nepal is UTC+05:45 — fixed with a one-day tolerance) and
+  coverage (this development environment injects `node-language-shim.cjs` and
+  `node-safe-delete-shim.cjs` into every Node process, 43% between them — fixed with
+  `--test-coverage-include`). Run `TZ=UTC npm test` before believing a local result.
+- **A scanner finding is a claim, not a fact.** Three false positives in this project's short audit
+  history, and **all three came from statements that were true**: the smoke test's leak canary, a
+  `type="password"` API-key field, and a comment that explained an empty catch by quoting the
+  pattern. Verify before repeating.
+- **Node's test runner refuses `.jsx`.** No component can be unit-tested; put anything worth
+  testing in a plain `.js` module and let the `.jsx` only arrange it.
+- **`renderToStaticMarkup` cannot test an error boundary**, and a boundary catches errors in
+  **descendants** — a throw written inline in its own JSX happens *above* it.
+- **Bash heredocs fail with `Bad substitution` when the content contains a dollar-brace
+  interpolation.** Use the Edit/Write tool for anything with template literals. Two attempts were
+  lost to this.
+- **Coverage floors only ratchet up.** Raise them, never lower them.
 
-## Where things stand
+## Where to look
 
-- `main` is shippable at all times; the rank logic is committed but **not reachable** until step 4
-  lands. That is deliberate and matches the project's own history — `data/requirements.json` was
-  built in v0.29.0 and wired in v0.37.0.
-- 41 of 50 records carry a sourced requirement. The remaining 6 are blocked with documented
-  reasons (ETH: criteria only in a client-rendered accordion; NSF: region-blocked on both
-  `nsf.gov` and `nsfgrfp.org`; CSC: HTTP-412; UC: client-side `PageAssist`; RESCO: Cloudflare;
-  Fulbright: eligibility page not at the path Humphrey uses).
-- Sourcing pass is paused in favour of the build. Resume after the class-rank feature ships.
+- `AGENTS.md` — the working agreement, including the traps above.
+- `docs/REQUIREMENTS-SCHEMA.md` — the requirement entity, and every open item with its reasoning.
+- `USA-AUDIT-TRIAGE.md` — the audit, with every finding verified and classified.
+- `CHANGELOG.md` — what each release changed and why, including the mistakes.
